@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+ext {
+    supportVersion = '26.1.0'
+    retrofitVersion = '2.3.0'
+    butterknifeVersion = '8.8.1'
+}
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -20,9 +26,22 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    //Support
+    implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
+
+    //Retrofit 2
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.5.0'
+    // Retrofit XML converter (Simple)
+    implementation 'com.squareup.retrofit2:converter-simplexml:2.3.0'
+
+    //Butterknife
+    implementation "com.jakewharton:butterknife:$butterknifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }
