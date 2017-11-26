@@ -49,7 +49,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:paddingTop="@dimen/padding_little"
-        android:shadowRadius="2dp"
         android:text="@string/check_again"
         android:textAllCaps="true"/>
 

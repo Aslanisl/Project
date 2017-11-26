@@ -12,4 +12,6 @@
     <color name="close_black">#de000000</color>
     <color name="black">#000000</color>
 
+    <color name="qr_viewfinder_mask">#85000000</color>
+
 </resources>

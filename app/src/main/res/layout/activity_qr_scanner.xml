@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.livetyping.moydom.ui.activity.QrScannerActivity">
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/activity_qr_scanner_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_scanner_layout="@layout/custom_qr_scanner">
+    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+
+    <ImageView
+        android:id="@+id/activity_qr_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/info"/>
+
+    <TextView
+        style="@style/White16CenteredRg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_qr_info"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:layout_marginEnd="@dimen/spacing_two_normal"
+        android:layout_marginStart="@dimen/spacing_two_normal"
+        android:text="@string/bring_list_with_code_qr"/>
+
+    <TextView
+        android:id="@+id/activity_qr_scanner_enter_code"
+        style="@style/White14CenteredUpMd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/spacing_huge"
+        android:background="@drawable/background_transparent_corners"
+        android:paddingBottom="@dimen/padding_little"
+        android:paddingEnd="@dimen/padding_huge"
+        android:paddingStart="@dimen/padding_huge"
+        android:paddingTop="@dimen/padding_little"
+        android:text="@string/enter_code_manually"
+        android:textAllCaps="true"/>
+
+    <ImageView
+        android:id="@+id/activity_qr_scanner_flash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/activity_qr_scanner_enter_code"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:padding="@dimen/padding_normal"
+        android:src="@drawable/flashlight_off"/>
+
+</RelativeLayout>
