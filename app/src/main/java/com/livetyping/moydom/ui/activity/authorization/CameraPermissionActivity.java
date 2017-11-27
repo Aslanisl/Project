@@ -1,4 +1,4 @@
-package com.livetyping.moydom.ui.activity;
+package com.livetyping.moydom.ui.activity.authorization;
 
 import android.Manifest;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

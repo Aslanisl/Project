@@ -1,4 +1,4 @@
-package com.livetyping.moydom.ui.activity;
+package com.livetyping.moydom.ui.activity.authorization;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -17,6 +17,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class QrScannerActivity extends BaseActivity{
+public class QrScannerActivity extends BaseActivity {
 
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_CAMERA_CODE_FROM_ACTIVITY = 2;
@@ -35,18 +36,17 @@ public class QrScannerActivity extends BaseActivity{
     private boolean mTorchSwitched = false;
     private boolean mAskedPermission = false;
     private BeepManager mBeepManager;
-    private String lastText;
+    private String mLastText;
 
     private BarcodeCallback mCallback = new BarcodeCallback() {
         @Override
         public void barcodeResult(BarcodeResult result) {
-            if(result.getText() == null || result.getText().equals(lastText)) {
+            if(result.getText() == null || result.getText().equals(mLastText)) {
                 // Prevent duplicate scans
                 return;
             }
-
-            lastText = result.getText();
-            mScannerView.setStatusText(result.getText());
+            //TODO send result.getText() to server
+            mLastText = result.getText();
             mBeepManager.playBeepSoundAndVibrate();
         }
 

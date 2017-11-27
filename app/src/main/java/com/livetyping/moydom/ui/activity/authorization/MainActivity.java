@@ -1,8 +1,9 @@
-package com.livetyping.moydom.ui.activity;
+package com.livetyping.moydom.ui.activity.authorization;
 
 import android.os.Bundle;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 
 public class MainActivity extends BaseActivity {
 

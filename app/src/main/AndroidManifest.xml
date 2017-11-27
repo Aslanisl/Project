@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.LauncherActivity"
+            android:name=".ui.activity.authorization.LauncherActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -23,20 +23,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".ui.activity.authorization.MainActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.QrScannerActivity"
+            android:name=".ui.activity.authorization.QrScannerActivity"
             android:theme="@style/AppTheme.FullScreen"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.CameraPermissionActivity"
+            android:name=".ui.activity.authorization.CameraPermissionActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.ManuallyEnterCodeActivity"
+            android:name=".ui.activity.authorization.ManuallyEnterCodeActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

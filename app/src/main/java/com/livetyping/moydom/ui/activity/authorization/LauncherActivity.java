@@ -1,9 +1,10 @@
-package com.livetyping.moydom.ui.activity;
+package com.livetyping.moydom.ui.activity.authorization;
 
 import android.os.Bundle;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 
 public class LauncherActivity extends BaseActivity {
 

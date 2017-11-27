@@ -6,14 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.livetyping.moydom.ui.activity.ManuallyEnterCodeActivity">
+    tools:context="com.livetyping.moydom.ui.activity.authorization.ManuallyEnterCodeActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/activity_manually_code_toolbar"
+    <include layout="@layout/toolbar"/>
+
+    <TextView
+        style="@style/Gray12LeftRg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_normal"
+        android:labelFor="@+id/activity_manually_code_edit"
+        android:text="@string/enter_code_from_company"/>
+
+    <EditText
+        android:id="@+id/activity_manually_code_edit"
+        style="@style/Gray16LeftRg"
         android:layout_width="match_parent"
-        android:background="@color/colorPrimary"
-        android:layout_height="wrap_content">
-
-    </android.support.v7.widget.Toolbar>
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:hint="@string/code"
+        android:imeOptions="actionDone"
+        android:inputType="text"/>
 
 </LinearLayout>

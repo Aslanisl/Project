@@ -11,4 +11,9 @@
     <string name="enable_access_settings">Перейти в настройки</string>
     <string name="have_to_go_setting_to_enable_access_to_camera">Необходимо перейти в настройки, чтобы предоставить доступ</string>
     <string name="enter_manually">Ввести вручную</string>
+    <string name="done">Готово</string>
+    <string name="code">Код</string>
+    <string name="enter_code_from_company">Введите код полученый от управляющей компании</string>
+    <string name="please_wait">Пожалуйста, подождите</string>
+
 </resources>
