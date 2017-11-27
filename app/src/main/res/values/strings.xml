@@ -13,6 +13,12 @@
     <string name="enter_manually">Ввести вручную</string>
     <string name="done">Готово</string>
     <string name="code">Код</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="leave_number">Оставить номер</string>
+    <string name="phone">Телефон</string>
+    <string name="code_not_found">К сожалению, такой код не найден</string>
+    <string name="leave_phone_number">Если вы уверены, что ваш код верный, обратитесь в управляющую компанию или оставьте ваш номер телефона и мы вам перезвоним</string>
+    <string name="leave_phone_number_we_will_call">Оставьте номер телефона и мы свяжемся с вами</string>
     <string name="enter_code_from_company">Введите код полученый от управляющей компании</string>
     <string name="please_wait">Пожалуйста, подождите</string>
 

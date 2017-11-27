@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -96,5 +97,8 @@ public class ManuallyEnterCodeActivity extends BaseActivity {
 
     private void callCode(){
         //TODO call to server
+        //if error start intent below
+        Intent intent = new Intent(this, CodeNotFoundActivity.class);
+        startActivity(intent);
     }
 }

@@ -28,8 +28,8 @@
         </activity>
         <activity
             android:name=".ui.activity.authorization.QrScannerActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
             android:name=".ui.activity.authorization.CameraPermissionActivity"
@@ -37,6 +37,14 @@
         </activity>
         <activity
             android:name=".ui.activity.authorization.ManuallyEnterCodeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.activity.authorization.EnterPhoneActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ui.activity.authorization.CodeNotFoundActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>

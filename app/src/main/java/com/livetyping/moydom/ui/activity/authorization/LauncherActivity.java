@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -15,7 +16,8 @@ public class LauncherActivity extends BaseActivity {
 
         //Check for some options
         //Just go to qr activity now
-        new IntentIntegrator(this).setOrientationLocked(false).setCaptureActivity(QrScannerActivity.class).initiateScan();
+        Intent intent = new Intent(this, QrScannerActivity.class);
+        startActivity(intent);
         finish();
     }
 }

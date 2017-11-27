@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class QrScannerActivity extends BaseActivity {
+public class QrScannerActivity extends BaseActivity implements BarcodeCallback{
 
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_CAMERA_CODE_FROM_ACTIVITY = 2;
@@ -37,23 +37,6 @@ public class QrScannerActivity extends BaseActivity {
     private boolean mAskedPermission = false;
     private BeepManager mBeepManager;
     private String mLastText;
-
-    private BarcodeCallback mCallback = new BarcodeCallback() {
-        @Override
-        public void barcodeResult(BarcodeResult result) {
-            if(result.getText() == null || result.getText().equals(mLastText)) {
-                // Prevent duplicate scans
-                return;
-            }
-            //TODO send result.getText() to server
-            mLastText = result.getText();
-            mBeepManager.playBeepSoundAndVibrate();
-        }
-
-        @Override
-        public void possibleResultPoints(List<ResultPoint> resultPoints) {
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +50,27 @@ public class QrScannerActivity extends BaseActivity {
             mFlashView.setVisibility(View.GONE);
         }
 
-        mScannerView.decodeContinuous(mCallback);
+        mScannerView.decodeContinuous(this);
         mBeepManager = new BeepManager(this);
+    }
+
+    @Override
+    public void barcodeResult(BarcodeResult result) {
+        if(result.getText() == null || result.getText().equals(mLastText)) {
+            // Prevent duplicate scans
+            return;
+        }
+        //TODO send result.getText() to server
+        mLastText = result.getText();
+        mBeepManager.playBeepSoundAndVibrate();
+        //if error start intent below
+        Intent intent = new Intent(this, CodeNotFoundActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void possibleResultPoints(List<ResultPoint> resultPoints) {
+
     }
 
     @TargetApi(23)
