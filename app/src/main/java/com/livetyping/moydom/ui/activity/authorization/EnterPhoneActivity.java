@@ -29,7 +29,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
 
     private boolean mEnableDoneButton = false;
-
+    private String mPhone;
     private Call<ResponseBody> mSendPhoneCall;
 
     @Override
@@ -89,15 +89,13 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     public void onTextChanged(boolean maskFilled, @NonNull final String extractedValue) {
         if (maskFilled){
             mEnableDoneButton = true;
+            mPhone = extractedValue;
             invalidateOptionsMenu();
         }
     }
 
     private void sendPhone(){
-        String phone = mPhoneEdit.getText().toString();
-        String formattedPhone = phone.replaceAll("[( )]", "").trim();
-        formattedPhone = formattedPhone.replace("+7", "8");
-        showToast(formattedPhone);
+        showToast(mPhone);
     }
 
     @Override
