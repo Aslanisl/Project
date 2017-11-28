@@ -27,6 +27,7 @@
         android:layout_marginStart="@dimen/spacing_small"
         android:hint="@string/phone_number"
         android:imeOptions="actionDone"
-        android:inputType="phone"/>
+        android:inputType="number|textNoSuggestions"
+        android:digits="0123456789 -.+()"/>
 
 </LinearLayout>

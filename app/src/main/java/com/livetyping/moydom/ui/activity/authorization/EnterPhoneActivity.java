@@ -1,23 +1,36 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.redmadrobot.inputmask.MaskedTextChangedListener;
+import com.redmadrobot.inputmask.PolyMaskTextChangedListener;
+import com.redmadrobot.inputmask.helper.Mask;
+import com.redmadrobot.inputmask.model.CaretString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 
-public class EnterPhoneActivity extends BaseActivity {
+public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
 
-    private boolean mEnableDoneButton;
+    private boolean mEnableDoneButton = false;
+
+    private Call<ResponseBody> mSendPhoneCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +41,18 @@ public class EnterPhoneActivity extends BaseActivity {
         mToolbar.setTitle(R.string.phone);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener((v) -> onBackPressed());
+
+        final MaskedTextChangedListener listener = new MaskedTextChangedListener(
+                "+7 ([000]) [000] [00] [00]",
+                true,
+                mPhoneEdit,
+                null,
+                this
+        );
+
+        mPhoneEdit.addTextChangedListener(listener);
+        mPhoneEdit.setOnFocusChangeListener(listener);
+        mPhoneEdit.setHint(listener.placeholder());
     }
 
     @Override
@@ -49,5 +74,35 @@ public class EnterPhoneActivity extends BaseActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_done:
+                sendPhone();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
+    @Override
+    public void onTextChanged(boolean maskFilled, @NonNull final String extractedValue) {
+        if (maskFilled){
+            mEnableDoneButton = true;
+            invalidateOptionsMenu();
+        }
+    }
+
+    private void sendPhone(){
+        String phone = mPhoneEdit.getText().toString();
+        String formattedPhone = phone.replaceAll("[( )]", "").trim();
+        formattedPhone = formattedPhone.replace("+7", "8");
+        showToast(formattedPhone);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mSendPhoneCall != null) mSendPhoneCall.cancel();
+    }
 }

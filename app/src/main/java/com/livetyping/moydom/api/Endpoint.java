@@ -15,10 +15,16 @@ public interface Endpoint {
 
     String API_CONTEXT = "users.admin.models.mobiles";
     String FUNCTION_SET_PASSWORD = "set_pass";
+    String FUNCTION_SEND_PHONE = "ins_uuid_phones";
 
     @GET("/rest/")
     Call<ResponseBody> authorizationUser(@Query("p_context") String apiContext,
                                          @Query("p_function") String function,
                                          @QueryName String uuid,
                                          @QueryName String password);
+
+    @GET("/rest/")
+    Call<ResponseBody> sendPhone(@Query("p_context") String apiContext,
+                                 @Query("p_function") String function,
+                                 @QueryName String phone);
 }

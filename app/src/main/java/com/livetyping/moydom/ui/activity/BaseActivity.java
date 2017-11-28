@@ -7,11 +7,15 @@ import android.widget.Toast;
 
 import com.livetyping.moydom.R;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements Callback{
 
     protected ProgressDialog mProgressDialog;
 
@@ -28,22 +32,28 @@ public class BaseActivity extends AppCompatActivity {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.please_wait));
             mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(true);
+            mProgressDialog.setCancelable(false);
             mProgressDialog.setCanceledOnTouchOutside(false);
         }
-        mProgressDialog.setIndeterminate(true);
         mProgressDialog.show();
+    }
+    protected void removeProgress() {
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
     }
 
-    protected void showProgress(boolean indeterminate) {
-        if (mProgressDialog == null) {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.please_wait));
-            mProgressDialog.setIndeterminate(indeterminate);
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setCanceledOnTouchOutside(false);
-        }
-        mProgressDialog.setIndeterminate(indeterminate);
-        mProgressDialog.show();
+    @Override
+    public void onResponse(Call call, Response response) {
+        onServerResponse(call, response);
     }
+
+    @Override
+    public void onFailure(Call call, Throwable t) {
+        onServerFailure(call, t);
+    }
+
+    protected void onServerResponse(Call call, Response response){}
+
+    protected void onServerFailure(Call call, Throwable t){}
 }

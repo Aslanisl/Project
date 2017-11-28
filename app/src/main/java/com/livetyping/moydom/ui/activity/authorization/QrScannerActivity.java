@@ -17,12 +17,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.api.Api;
-import com.livetyping.moydom.api.Endpoint;
-import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.utils.HelpUtils;
 
-import java.net.ResponseCache;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,10 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
-public class QrScannerActivity extends BaseActivity implements BarcodeCallback{
+public class QrScannerActivity extends AuthorizationActivity implements BarcodeCallback{
 
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_CAMERA_CODE_FROM_ACTIVITY = 2;
@@ -44,7 +38,6 @@ public class QrScannerActivity extends BaseActivity implements BarcodeCallback{
     private boolean mTorchSwitched = false;
     private boolean mAskedPermission = false;
     private BeepManager mBeepManager;
-    private String mLastText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,40 +57,9 @@ public class QrScannerActivity extends BaseActivity implements BarcodeCallback{
 
     @Override
     public void barcodeResult(BarcodeResult result) {
-        if(result.getText() == null || result.getText().equals(mLastText)) {
-            // Prevent duplicate scans
-            return;
-        }
-//        //TODO send result.getText() to server
-//        mLastText = result.getText();
-//        mBeepManager.playBeepSoundAndVibrate();
-//        //if error start intent below
-//        Intent intent = new Intent(this, CodeNotFoundActivity.class);
-//        startActivity(intent);
-        mLastText = result.getText();
+        mScannerView.pause();
         String uuid = result.getText();
-        Long timeStampLong = System.currentTimeMillis()/1000;
-        String timeStamp = timeStampLong.toString();
-        String passwordInput = uuid + timeStamp;
-        String md5 = HelpUtils.md5(passwordInput);
-        String password = null;
-        if (md5.length() > 16){
-            password = md5.substring(0, 16);
-        }
-        if (password != null) {
-            Call<ResponseBody> call = Api.getApiService().authorizationUser(Endpoint.API_CONTEXT, Endpoint.FUNCTION_SET_PASSWORD, uuid, password);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    showToast(response.body().toString());
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    showToast(t.getMessage());
-                }
-            });
-        }
+        callAuthorization(uuid);
     }
 
     @Override

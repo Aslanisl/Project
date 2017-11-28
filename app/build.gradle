@@ -49,6 +49,9 @@ dependencies {
     //QR decoder
     implementation 'com.journeyapps:zxing-android-embedded:3.5.0'
 
+    //Phone mask library
+    implementation 'com.redmadrobot:inputmask:2.3.0'
+
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 }

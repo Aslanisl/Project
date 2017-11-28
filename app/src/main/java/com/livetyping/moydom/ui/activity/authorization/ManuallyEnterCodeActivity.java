@@ -1,6 +1,5 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -11,19 +10,11 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.api.Api;
-import com.livetyping.moydom.api.Endpoint;
-import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.utils.HelpUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class ManuallyEnterCodeActivity extends BaseActivity {
+public class ManuallyEnterCodeActivity extends AuthorizationActivity {
 
     private static final int CODE_LENGTH = 16;
     private boolean mEnableDoneButton;
@@ -104,29 +95,6 @@ public class ManuallyEnterCodeActivity extends BaseActivity {
 
     private void callCode(){
         String uuid = mCodeEdit.getText().toString();
-        Long timeStampLong = System.currentTimeMillis()/1000;
-        String timeStamp = timeStampLong.toString();
-        String passwordInput = uuid + timeStamp;
-        String md5 = HelpUtils.md5(passwordInput);
-        String password = null;
-        if (md5.length() > 16){
-            password = md5.substring(0, 16);
-        }
-        if (password != null) {
-            Call<ResponseBody> call = Api.getApiService().authorizationUser(Endpoint.API_CONTEXT, Endpoint.FUNCTION_SET_PASSWORD, uuid, password);
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    showToast(response.body().toString());
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    showToast(t.getMessage());
-                    Intent intent = new Intent(ManuallyEnterCodeActivity.this, CodeNotFoundActivity.class);
-                    startActivity(intent);
-                }
-            });
-        }
+        callAuthorization(uuid);
     }
 }
