@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
+import com.livetyping.moydom.utils.NetworkUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,9 +17,11 @@ import retrofit2.Response;
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity implements Callback{
+public class BaseActivity extends AppCompatActivity implements Callback, NoInternetDialogFragment.OnInternetDialogListener{
 
     protected ProgressDialog mProgressDialog;
+
+    private Call mUnsuccessCall;
 
     protected void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -45,12 +49,28 @@ public class BaseActivity extends AppCompatActivity implements Callback{
 
     @Override
     public void onResponse(Call call, Response response) {
+        removeProgress();
         onServerResponse(call, response);
     }
 
     @Override
     public void onFailure(Call call, Throwable t) {
-        onServerFailure(call, t);
+        removeProgress();
+        if (NetworkUtil.isConnected(this)){
+            onServerFailure(call, t);
+        } else {
+            mUnsuccessCall = call;
+            NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
+            fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
+        }
+    }
+
+    @Override
+    public void tryInternetCallAgain() {
+        if (mUnsuccessCall != null){
+            showProgress();
+            mUnsuccessCall.clone().enqueue(this);
+        }
     }
 
     protected void onServerResponse(Call call, Response response){}

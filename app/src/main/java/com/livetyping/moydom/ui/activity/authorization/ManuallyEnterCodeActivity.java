@@ -71,11 +71,11 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mEnableDoneButton && s.length() != CODE_LENGTH){
-                    mEnableDoneButton = false;
-                    invalidateOptionsMenu();
-                } else if (!mEnableDoneButton && s.length() >= CODE_LENGTH){
+                if (s.length() == CODE_LENGTH){
                     mEnableDoneButton = true;
+                    invalidateOptionsMenu();
+                } else if (mEnableDoneButton){
+                    mEnableDoneButton = false;
                     invalidateOptionsMenu();
                 }
             }

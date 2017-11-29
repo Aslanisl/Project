@@ -3,7 +3,6 @@ package com.livetyping.moydom.ui.activity.authorization;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -11,12 +10,6 @@ import android.widget.EditText;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
-import com.redmadrobot.inputmask.PolyMaskTextChangedListener;
-import com.redmadrobot.inputmask.helper.Mask;
-import com.redmadrobot.inputmask.model.CaretString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

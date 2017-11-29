@@ -1,11 +1,14 @@
 package com.livetyping.moydom.api;
 
+import com.livetyping.moydom.model.BaseModel;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.QueryName;
+import retrofit2.http.Url;
 
 /**
  * Created by Ivan on 25.11.2017.
@@ -13,15 +16,8 @@ import retrofit2.http.QueryName;
 
 public interface Endpoint {
 
-    String API_CONTEXT = "users.admin.models.mobiles";
-    String FUNCTION_SET_PASSWORD = "set_pass";
-    String FUNCTION_SEND_PHONE = "ins_uuid_phones";
-
-    @GET("/rest/")
-    Call<ResponseBody> authorizationUser(@Query("p_context") String apiContext,
-                                         @Query("p_function") String function,
-                                         @QueryName String uuid,
-                                         @QueryName String password);
+    @GET
+    Call<BaseModel> authorizationUser(@Url String url);
 
     @GET("/rest/")
     Call<ResponseBody> sendPhone(@Query("p_context") String apiContext,

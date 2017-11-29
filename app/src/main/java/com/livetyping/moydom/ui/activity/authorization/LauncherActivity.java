@@ -3,7 +3,6 @@ package com.livetyping.moydom.ui.activity.authorization;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.zxing.integration.android.IntentIntegrator;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 

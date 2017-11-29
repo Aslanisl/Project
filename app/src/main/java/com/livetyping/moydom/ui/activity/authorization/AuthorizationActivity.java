@@ -1,22 +1,24 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
-import com.livetyping.moydom.api.Endpoint;
+import com.livetyping.moydom.api.ApiUrlService;
+import com.livetyping.moydom.model.BaseModel;
+import com.livetyping.moydom.model.Error;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.ui.activity.MainActivity;
+import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.utils.HelpUtils;
 
-import okhttp3.ResponseBody;
+import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AuthorizationActivity extends BaseActivity {
-    private Call<ResponseBody> mAuthorizationCall;
+    private Call<BaseModel> mAuthorizationCall;
 
     protected void callAuthorization(String uuid){
         showProgress();
@@ -29,21 +31,36 @@ public class AuthorizationActivity extends BaseActivity {
             password = md5.substring(0, 16);
         }
         if (password != null) {
-            mAuthorizationCall = Api.getApiService().authorizationUser(Endpoint.API_CONTEXT, Endpoint.FUNCTION_SET_PASSWORD, uuid, password);
+            mAuthorizationCall = Api.getApiService().authorizationUser(ApiUrlService.getAuthorizationUrl(uuid, password));
             mAuthorizationCall.enqueue(this);
         }
     }
 
     @Override
     protected void onServerResponse(Call call, Response response) {
-        showToast(response.body().toString());
-        removeProgress();
+        if (response.body() instanceof BaseModel && response.body() != null){
+            BaseModel model = (BaseModel) response.body();
+            List<Error> errorRecords = model.getErrorRecords();
+            if (errorRecords != null && !errorRecords.isEmpty()){
+                Map<String, String> errors = errorRecords.get(0).getErrors();
+                if (errors != null){
+                    if (errors.containsKey(Error.CODE) && errors.get(Error.CODE).equals(Error.CODE_OK)){
+                        successAuthorization();
+                    } else {
+                        unsuccessAuthorization();
+                    }
+                }
+            }
+        }
     }
 
-    @Override
-    protected void onServerFailure(Call call, Throwable t) {
-        showToast(t.getMessage());
-        removeProgress();
+    private void successAuthorization(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void unsuccessAuthorization(){
         Intent intent = new Intent(AuthorizationActivity.this, CodeNotFoundActivity.class);
         startActivity(intent);
     }

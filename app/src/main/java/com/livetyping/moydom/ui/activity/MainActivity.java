@@ -1,4 +1,4 @@
-package com.livetyping.moydom.ui.activity.authorization;
+package com.livetyping.moydom.ui.activity;
 
 import android.os.Bundle;
 
