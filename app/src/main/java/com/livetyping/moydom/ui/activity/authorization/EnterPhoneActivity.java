@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.api.Api;
+import com.livetyping.moydom.api.ApiUrlService;
+import com.livetyping.moydom.model.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
@@ -15,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 
 public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener{
 
@@ -23,7 +27,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
 
     private boolean mEnableDoneButton = false;
     private String mPhone;
-    private Call<ResponseBody> mSendPhoneCall;
+    private Call<BaseModel> mSendPhoneCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,23 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     }
 
     private void sendPhone(){
-        showToast(mPhone);
+        showProgress();
+        mSendPhoneCall = Api.getApiService().sendPhone(ApiUrlService.getCallbackPhoneUrl(mPhone));
+        mSendPhoneCall.enqueue(this);
+    }
+
+    @Override
+    protected void onServerResponse(Call call, Response response) {
+        super.onServerResponse(call, response);
+        if (response.isSuccessful() && response.body() != null){
+            BaseModel model = (BaseModel) response.body();
+            if (model.containsErrors()){
+                showToast(model.getErrorMessage());
+            } else {
+                //TODO
+                showToast("Success");
+            }
+        }
     }
 
     @Override

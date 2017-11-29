@@ -19,8 +19,6 @@ public interface Endpoint {
     @GET
     Call<BaseModel> authorizationUser(@Url String url);
 
-    @GET("/rest/")
-    Call<ResponseBody> sendPhone(@Query("p_context") String apiContext,
-                                 @Query("p_function") String function,
-                                 @QueryName String phone);
+    @GET
+    Call<BaseModel> sendPhone(@Url String url);
 }

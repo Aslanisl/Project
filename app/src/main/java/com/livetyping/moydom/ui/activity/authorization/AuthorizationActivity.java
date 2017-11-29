@@ -8,7 +8,6 @@ import com.livetyping.moydom.model.BaseModel;
 import com.livetyping.moydom.model.Error;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
-import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.utils.HelpUtils;
 
 import java.util.List;
@@ -40,16 +39,10 @@ public class AuthorizationActivity extends BaseActivity {
     protected void onServerResponse(Call call, Response response) {
         if (response.body() instanceof BaseModel && response.body() != null){
             BaseModel model = (BaseModel) response.body();
-            List<Error> errorRecords = model.getErrorRecords();
-            if (errorRecords != null && !errorRecords.isEmpty()){
-                Map<String, String> errors = errorRecords.get(0).getErrors();
-                if (errors != null){
-                    if (errors.containsKey(Error.CODE) && errors.get(Error.CODE).equals(Error.CODE_OK)){
-                        successAuthorization();
-                    } else {
-                        unsuccessAuthorization();
-                    }
-                }
+            if (model.containsErrors()){
+                unsuccessAuthorization();
+            } else {
+                successAuthorization();
             }
         }
     }
