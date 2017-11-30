@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
@@ -105,8 +106,10 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
             if (model.containsErrors()){
                 showToast(model.getErrorMessage());
             } else {
-                //TODO
-                showToast("Success");
+                Intent intent = new Intent(this, QrScannerActivity.class);
+                intent.putExtra(QrScannerActivity.KEY_ALERT_DIALOG_FROM_PHONE, true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             }
         }
     }

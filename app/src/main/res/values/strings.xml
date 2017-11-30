@@ -22,4 +22,8 @@
     <string name="enter_code_from_company">Введите код полученый от управляющей компании</string>
     <string name="please_wait">Пожалуйста, подождите</string>
 
+    <string name="your_application_is_accepted">Ваша заявка принята</string>
+    <string name="we_will_contact_shortly">Мы свяжемся с вами в ближайшее время</string>
+    <string name="good">Хорошо</string>
+
 </resources>

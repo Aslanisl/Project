@@ -2,6 +2,7 @@ package com.livetyping.moydom.ui.activity.authorization;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class QrScannerActivity extends AuthorizationActivity implements BarcodeCallback{
+    public static final String KEY_ALERT_DIALOG_FROM_PHONE = "phone";
 
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_CAMERA_CODE_FROM_ACTIVITY = 2;
@@ -48,8 +50,24 @@ public class QrScannerActivity extends AuthorizationActivity implements BarcodeC
             mFlashView.setVisibility(View.GONE);
         }
 
+        Intent intent = getIntent();
+        if (intent != null){
+            boolean showAlertDialog =  intent.getBooleanExtra(KEY_ALERT_DIALOG_FROM_PHONE, false);
+            if (showAlertDialog){
+                showAlertDialog();
+            }
+        }
+
         mScannerView.decodeContinuous(this);
         mBeepManager = new BeepManager(this);
+    }
+
+    private void showAlertDialog(){
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.your_application_is_accepted)
+                .setMessage(R.string.we_will_contact_shortly)
+                .setPositiveButton(R.string.good, (dialog, which) -> dialog.dismiss())
+                .show();
     }
 
     @Override
