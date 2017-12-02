@@ -13,6 +13,8 @@ import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.model.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
+import com.livetyping.moydom.utils.NetworkUtil;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
@@ -21,7 +23,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener{
+public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener,
+        NoInternetDialogFragment.OnInternetDialogListener{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
@@ -111,6 +114,25 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
+        }
+    }
+
+    @Override
+    protected void onServerFailure(Call call, Throwable t) {
+        super.onServerFailure(call, t);
+        if (NetworkUtil.isConnected(this)){
+            onServerFailure(call, t);
+        } else {
+            NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
+            fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
+        }
+    }
+
+    @Override
+    public void tryInternetCallAgain() {
+        if (mSendPhoneCall != null){
+            showProgress();
+            mSendPhoneCall.clone().enqueue(this);
         }
     }
 

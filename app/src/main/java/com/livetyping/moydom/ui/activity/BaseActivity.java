@@ -17,11 +17,11 @@ import retrofit2.Response;
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity implements Callback, NoInternetDialogFragment.OnInternetDialogListener{
+public class BaseActivity extends AppCompatActivity implements Callback{
 
     protected ProgressDialog mProgressDialog;
 
-    private Call mUnsuccessCall;
+
 
     protected void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -56,21 +56,7 @@ public class BaseActivity extends AppCompatActivity implements Callback, NoInter
     @Override
     public void onFailure(Call call, Throwable t) {
         removeProgress();
-        if (NetworkUtil.isConnected(this)){
-            onServerFailure(call, t);
-        } else {
-            mUnsuccessCall = call;
-            NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
-            fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
-        }
-    }
-
-    @Override
-    public void tryInternetCallAgain() {
-        if (mUnsuccessCall != null){
-            showProgress();
-            mUnsuccessCall.clone().enqueue(this);
-        }
+        onServerFailure(call, t);
     }
 
     protected void onServerResponse(Call call, Response response){}
