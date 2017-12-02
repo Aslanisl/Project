@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Moy Dom</string>
+    <string name="app_name">Мой дом</string>
     <string name="no_internet_connection">Нет интернет соединения</string>
     <string name="check_internet_settings">Проверьте настройки вашего интернета и попробуйте еще раз</string>
     <string name="check_again">Попробовать еще раз</string>
