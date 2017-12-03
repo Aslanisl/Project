@@ -9,6 +9,7 @@ import com.livetyping.moydom.model.Error;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
+import com.livetyping.moydom.ui.utils.Prefs;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
 
@@ -21,6 +22,9 @@ import retrofit2.Response;
 public class AuthorizationActivity extends BaseActivity implements NoInternetDialogFragment.OnInternetDialogListener{
     private Call<BaseModel> mAuthorizationCall;
 
+    private String mUUID;
+    private String mPassword;
+
     protected void callAuthorization(String uuid){
         showProgress();
         Long timeStampLong = System.currentTimeMillis()/1000;
@@ -32,6 +36,8 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
             password = md5.substring(0, 16);
         }
         if (password != null) {
+            mUUID = uuid;
+            mPassword = password;
             mAuthorizationCall = Api.getApiService().authorizationUser(ApiUrlService.getAuthorizationUrl(uuid, password));
             mAuthorizationCall.enqueue(this);
         }
@@ -44,6 +50,9 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
             if (model.containsErrors()){
                 unsuccessAuthorization();
             } else {
+                Prefs prefs = Prefs.getInstance();
+                prefs.savePassword(mPassword);
+                prefs.saveUUID(mUUID);
                 successAuthorization();
             }
         }

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">@color/azur</color>
+    <color name="colorPrimary">@color/azul</color>
     <color name="colorPrimaryDark">@color/sapphire</color>
-    <color name="colorAccent">@color/azur</color>
+    <color name="colorAccent">@color/azul</color>
 
-    <color name="azur">#315ee4</color>
+    <color name="azul">#315ee4</color>
     <color name="sapphire">#2547ab</color>
 
     <color name="white">#ffffff</color>
@@ -13,5 +13,7 @@
     <color name="black">#000000</color>
 
     <color name="qr_viewfinder_mask">#85000000</color>
+
+    <color name="bottom_navigation_view_background">#f8f8f9</color>
 
 </resources>

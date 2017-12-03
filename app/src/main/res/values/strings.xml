@@ -25,5 +25,15 @@
     <string name="your_application_is_accepted">Ваша заявка принята</string>
     <string name="we_will_contact_shortly">Мы свяжемся с вами в ближайшее время</string>
     <string name="good">Хорошо</string>
+    <string name="settings">Настройки</string>
+
+    <string name="my_home">Мой дом</string>
+    <string name="resources">Ресурсы</string>
+    <string name="cameras">Видеокамеры</string>
+    <string name="other">Другое</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="see_all">Посмотреть все</string>
+    <string name="electric_energy">Электроэнергия</string>
 
 </resources>

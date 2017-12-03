@@ -71,6 +71,12 @@ public class NoInternetDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        mOnInternetDialogListener = null;
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
