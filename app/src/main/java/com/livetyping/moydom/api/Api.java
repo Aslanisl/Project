@@ -1,7 +1,5 @@
 package com.livetyping.moydom.api;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.livetyping.moydom.BuildConfig;
 
 import java.security.cert.CertificateException;
@@ -13,12 +11,9 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**

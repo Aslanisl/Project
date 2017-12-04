@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.livetyping.moydom.ui.activity.settings.SettingsActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:fontFamily="@string/font_family_medium"
+        android:text="@string/cameras"
+        android:textSize="@dimen/font_normal"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_settings_cameras_recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:overScrollMode="never">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:fontFamily="@string/font_family_medium"
+        android:text="@string/electric_energy"
+        android:textSize="@dimen/font_normal"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_settings_energy_recycler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:overScrollMode="never">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

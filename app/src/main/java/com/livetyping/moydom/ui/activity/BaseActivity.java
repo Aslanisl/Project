@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
-import com.livetyping.moydom.utils.NetworkUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -4,17 +4,13 @@ import android.content.Intent;
 
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
-import com.livetyping.moydom.model.BaseModel;
-import com.livetyping.moydom.model.Error;
+import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.ui.utils.Prefs;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
-
-import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -62,7 +58,7 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
     protected void onServerFailure(Call call, Throwable t) {
         super.onServerFailure(call, t);
         if (NetworkUtil.isConnected(this)){
-            onServerFailure(call, t);
+            showToast(t.getMessage());
         } else {
             NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
             fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);

@@ -47,6 +47,10 @@
             android:name=".ui.activity.authorization.CodeNotFoundActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".ui.activity.settings.SettingsActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

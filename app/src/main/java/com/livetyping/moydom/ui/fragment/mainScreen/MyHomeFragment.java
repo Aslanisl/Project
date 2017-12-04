@@ -1,7 +1,7 @@
 package com.livetyping.moydom.ui.fragment.mainScreen;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,14 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MyHomeFragment extends BaseFragment {
     public static final String TAG = MyHomeFragment.class.getSimpleName();
+
+    private static final int SETTINGS_REQUEST_CODE = 2;
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
 
@@ -52,10 +57,19 @@ public class MyHomeFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                //TODO go to settings;
+                Intent intent = new Intent(getContext(), SettingsActivity.class);
+                startActivityForResult(intent, SETTINGS_REQUEST_CODE);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
+            //TODO apply new settings
         }
     }
 

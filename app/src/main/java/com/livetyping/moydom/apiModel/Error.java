@@ -1,4 +1,4 @@
-package com.livetyping.moydom.model;
+package com.livetyping.moydom.apiModel;
 
 import org.simpleframework.xml.ElementMap;
 import org.simpleframework.xml.Root;

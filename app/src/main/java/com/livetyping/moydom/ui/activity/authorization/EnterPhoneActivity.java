@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
-import com.livetyping.moydom.model.BaseModel;
+import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.utils.NetworkUtil;
@@ -19,7 +19,6 @@ import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 

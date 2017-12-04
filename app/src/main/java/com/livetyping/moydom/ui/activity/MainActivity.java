@@ -6,11 +6,9 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.CamerasFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment;

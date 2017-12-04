@@ -31,9 +31,22 @@
     <string name="resources">Ресурсы</string>
     <string name="cameras">Видеокамеры</string>
     <string name="other">Другое</string>
-    
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="see_all">Посмотреть все</string>
     <string name="electric_energy">Электроэнергия</string>
+    
+    <string-array name="cameras_names">
+        <item>Задний двор</item>
+        <item>Подъезд</item>
+        <item>Гостиная</item>
+    </string-array>
+
+    <string-array name="electric_energy_names">
+        <item>Статистика за месяц</item>
+        <item>Статистика за неделю</item>
+        <item>Статистика за день</item>
+        <item>В текущий момент</item>
+    </string-array>
 
 </resources>
