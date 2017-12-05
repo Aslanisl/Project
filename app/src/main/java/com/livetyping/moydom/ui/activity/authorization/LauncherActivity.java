@@ -7,7 +7,7 @@ import android.text.TextUtils;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
-import com.livetyping.moydom.ui.utils.Prefs;
+import com.livetyping.moydom.data.Prefs;
 
 public class LauncherActivity extends BaseActivity {
 

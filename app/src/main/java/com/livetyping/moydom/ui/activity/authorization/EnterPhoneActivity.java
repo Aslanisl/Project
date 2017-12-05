@@ -14,23 +14,27 @@ import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
+import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.utils.NetworkUtil;
+import com.livetyping.moydom.api.ServerCallback;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener,
-        NoInternetDialogFragment.OnInternetDialogListener{
+        NoInternetDialogFragment.OnInternetDialogListener, ServerCallback{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
 
     private boolean mEnableDoneButton = false;
     private String mPhone;
-    private Call<BaseModel> mSendPhoneCall;
+
+    private Disposable mSendPhoneDisposable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,16 +100,20 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
 
     private void sendPhone(){
         showProgress();
-        mSendPhoneCall = Api.getApiService().sendPhone(ApiUrlService.getCallbackPhoneUrl(mPhone));
-        mSendPhoneCall.enqueue(this);
+        mSendPhoneDisposable = Api.getApiService().sendPhone(ApiUrlService.getCallbackPhoneUrl(mPhone))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CallbackWrapper<BaseModel>(this) {
+                    @Override
+                    protected void onSuccess(BaseModel baseModel) {
+                        handlingResult(baseModel);
+                    }
+                });
     }
 
-    @Override
-    protected void onServerResponse(Call call, Response response) {
-        super.onServerResponse(call, response);
-        if (response.isSuccessful() && response.body() != null){
-            BaseModel model = (BaseModel) response.body();
-            if (model.containsErrors()){
+    private void handlingResult(BaseModel model){
+        if (model != null) {
+            if (model.containsErrors()) {
                 showToast(model.getErrorMessage());
             } else {
                 Intent intent = new Intent(this, QrScannerActivity.class);
@@ -117,11 +125,24 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     }
 
     @Override
-    protected void onServerFailure(Call call, Throwable t) {
-        super.onServerFailure(call, t);
-        if (NetworkUtil.isConnected(this)){
-            onServerFailure(call, t);
-        } else {
+    public void onUnknownError(String error) {
+        removeProgress();
+        showToast(error);
+    }
+
+    @Override
+    public void onTimeout() {
+        handlingError();
+    }
+
+    @Override
+    public void onNetworkError() {
+        handlingError();
+    }
+
+    private void handlingError(){
+        removeProgress();
+        if (!NetworkUtil.isConnected(this)) {
             NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
             fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
         }
@@ -129,15 +150,12 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
 
     @Override
     public void tryInternetCallAgain() {
-        if (mSendPhoneCall != null){
-            showProgress();
-            mSendPhoneCall.clone().enqueue(this);
-        }
+        sendPhone();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mSendPhoneCall != null) mSendPhoneCall.cancel();
+    protected void onPause() {
+        super.onPause();
+        if (mSendPhoneDisposable != null && !mSendPhoneDisposable.isDisposed()) mSendPhoneDisposable.dispose();
     }
 }

@@ -15,11 +15,9 @@ import retrofit2.Response;
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity implements Callback{
+public class BaseActivity extends AppCompatActivity{
 
     protected ProgressDialog mProgressDialog;
-
-
 
     protected void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -44,20 +42,4 @@ public class BaseActivity extends AppCompatActivity implements Callback{
             mProgressDialog.dismiss();
         }
     }
-
-    @Override
-    public void onResponse(Call call, Response response) {
-        removeProgress();
-        onServerResponse(call, response);
-    }
-
-    @Override
-    public void onFailure(Call call, Throwable t) {
-        removeProgress();
-        onServerFailure(call, t);
-    }
-
-    protected void onServerResponse(Call call, Response response){}
-
-    protected void onServerFailure(Call call, Throwable t){}
 }

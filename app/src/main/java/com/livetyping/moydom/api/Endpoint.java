@@ -2,7 +2,7 @@ package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
 
-import retrofit2.Call;
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
 
@@ -13,8 +13,8 @@ import retrofit2.http.Url;
 public interface Endpoint {
 
     @GET
-    Call<BaseModel> authorizationUser(@Url String url);
+    Observable<BaseModel> authorizationUser(@Url String url);
 
     @GET
-    Call<BaseModel> sendPhone(@Url String url);
+    Observable<BaseModel> sendPhone(@Url String url);
 }

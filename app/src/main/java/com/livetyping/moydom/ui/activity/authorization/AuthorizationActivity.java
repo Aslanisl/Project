@@ -8,15 +8,19 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
-import com.livetyping.moydom.ui.utils.Prefs;
+import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
+import com.livetyping.moydom.api.ServerCallback;
 
-import retrofit2.Call;
-import retrofit2.Response;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class AuthorizationActivity extends BaseActivity implements NoInternetDialogFragment.OnInternetDialogListener{
-    private Call<BaseModel> mAuthorizationCall;
+public class AuthorizationActivity extends BaseActivity implements NoInternetDialogFragment.OnInternetDialogListener,
+        ServerCallback{
+    private Disposable mAuthorizationDisposable;
 
     private String mUUID;
     private String mPassword;
@@ -34,16 +38,27 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
         if (password != null) {
             mUUID = uuid;
             mPassword = password;
-            mAuthorizationCall = Api.getApiService().authorizationUser(ApiUrlService.getAuthorizationUrl(uuid, password));
-            mAuthorizationCall.enqueue(this);
+            authorizationUser();
         }
     }
 
-    @Override
-    protected void onServerResponse(Call call, Response response) {
-        if (response.body() instanceof BaseModel && response.body() != null){
-            BaseModel model = (BaseModel) response.body();
-            if (model.containsErrors()){
+    private void authorizationUser(){
+        showProgress();
+        mAuthorizationDisposable = Api.getApiService().authorizationUser(ApiUrlService.getAuthorizationUrl(mUUID, mPassword))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CallbackWrapper<BaseModel>(this){
+                    @Override
+                    protected void onSuccess(BaseModel baseModel) {
+                        handlingResult(baseModel);
+                    }
+                });
+    }
+
+    private void handlingResult(BaseModel baseModel){
+        removeProgress();
+        if (baseModel != null){
+            if (baseModel.containsErrors()){
                 unsuccessAuthorization();
             } else {
                 Prefs prefs = Prefs.getInstance();
@@ -55,11 +70,24 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
     }
 
     @Override
-    protected void onServerFailure(Call call, Throwable t) {
-        super.onServerFailure(call, t);
-        if (NetworkUtil.isConnected(this)){
-            showToast(t.getMessage());
-        } else {
+    public void onUnknownError(String error) {
+        removeProgress();
+        showToast(error);
+    }
+
+    @Override
+    public void onTimeout() {
+        handlingError();
+    }
+
+    @Override
+    public void onNetworkError() {
+        handlingError();
+    }
+
+    private void handlingError(){
+        removeProgress();
+        if (!NetworkUtil.isConnected(this)){
             NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
             fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
         }
@@ -67,10 +95,7 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
 
     @Override
     public void tryInternetCallAgain() {
-        if (mAuthorizationCall != null){
-            showProgress();
-            mAuthorizationCall.clone().enqueue(this);
-        }
+        authorizationUser();
     }
 
     private void successAuthorization(){
@@ -85,8 +110,9 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mAuthorizationCall != null) mAuthorizationCall.cancel();
+    protected void onPause() {
+        super.onPause();
+        if (mAuthorizationDisposable != null && !mAuthorizationDisposable.isDisposed())
+            mAuthorizationDisposable.dispose();
     }
 }
