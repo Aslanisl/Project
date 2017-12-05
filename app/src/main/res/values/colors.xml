@@ -17,4 +17,8 @@
 
     <color name="bottom_navigation_view_background">#f8f8f9</color>
 
+    <color name="internet_not_connected_color">#ef1c0b</color>
+    <color name="internet_connecting_color">#a1a1a1</color>
+    <color name="internet_connected_color">#189f4f</color>
+
 </resources>

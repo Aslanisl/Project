@@ -49,4 +49,8 @@
         <item>В текущий момент</item>
     </string-array>
 
+    <string name="no_connection_with_internet">Нет соединения с интернетом</string>
+    <string name="connecting_with_internet">Подключаемся</string>
+    <string name="connected_with_internet">Подключено</string>
+
 </resources>

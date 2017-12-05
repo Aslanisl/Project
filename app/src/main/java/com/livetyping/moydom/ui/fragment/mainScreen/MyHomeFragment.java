@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.transition.ChangeBounds;
+import android.support.transition.TransitionManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,12 +18,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
+import com.livetyping.moydom.utils.ViewUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +41,30 @@ public class MyHomeFragment extends BaseFragment {
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
 
+    private enum NetworkState{
+        DISCONNECTED,
+        CONNECTING,
+        CONNECTED
+    }
+
+    private NetworkState mNetworkState;
+
+    private static final int EXPANDED_ANIMATION_DURATION = 700;
+    private static final int CONNECTED_ANIMATION_DELAYED = 1000;
+    private Handler mAnimationHandler;
+    private Runnable mInternetDisconnected;
+    private Runnable mInternetConnected;
+    @BindView(R.id.fragment_my_home_internet_container) RelativeLayout mNoInternetContainer;
+    @BindView(R.id.fragment_my_home_internet_text) TextView mNoInternetTitle;
+
     private Unbinder mUnbinder;
 
     private BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             boolean isConnected = NetworkUtil.isConnected(getContext());
-            Log.d("MY_TAG", String.valueOf(isConnected));
-            //TODO change view state
+            mNetworkState = isConnected ? NetworkState.CONNECTED : NetworkState.DISCONNECTED;
+            changeNoInternetViews();
         }
     };
 
@@ -54,6 +77,17 @@ public class MyHomeFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mAnimationHandler = new Handler();
+        mInternetConnected = () -> {
+            if (mNoInternetContainer != null) {
+                ViewUtils.collapse(mNoInternetContainer);
+            }
+        };
+        mInternetDisconnected = () -> {
+            if (mNoInternetContainer != null) {
+                ViewUtils.expand(mNoInternetContainer);
+            }
+        };
     }
 
     @Override
@@ -83,6 +117,21 @@ public class MyHomeFragment extends BaseFragment {
         }
     }
 
+    private void changeNoInternetViews(){
+        switch (mNetworkState){
+            case CONNECTED:
+                mNoInternetTitle.setText(R.string.connected_with_internet);
+                mNoInternetContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_connected_color));
+                mAnimationHandler.postDelayed(mInternetConnected, CONNECTED_ANIMATION_DELAYED);
+                break;
+            case DISCONNECTED:
+                mNoInternetTitle.setText(R.string.no_connection_with_internet);
+                mNoInternetContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_not_connected_color));
+                mAnimationHandler.postDelayed(mInternetDisconnected, 0);
+                break;
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -94,6 +143,10 @@ public class MyHomeFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (mAnimationHandler != null) {
+            mAnimationHandler.removeCallbacks(mInternetDisconnected);
+            mAnimationHandler.removeCallbacks(mInternetConnected);
+        }
         mUnbinder.unbind();
         getContext().unregisterReceiver(mConnectedReceiver);
     }

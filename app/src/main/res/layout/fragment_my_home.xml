@@ -7,17 +7,6 @@
     tools:context="com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/no_internet_view_height">
-
-        <TextView
-            android:id="@+id/fragment_my_home_internet_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/fragment_my_home_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,6 +68,30 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/fragment_my_home_energy_all"
             android:text="@string/electric_energy"/>
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/fragment_my_home_internet_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fragment_my_home_internet_text"
+            style="@style/White16CenteredRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:layout_marginBottom="@dimen/spacing_tiny"
+            android:layout_centerInParent="true"/>
+
+        <ProgressBar
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/spacing_normal"/>
 
     </RelativeLayout>
 
