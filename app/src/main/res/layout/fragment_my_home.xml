@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,18 @@
     tools:context="com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment">
 
     <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/no_internet_view_height">
+
+        <TextView
+            android:id="@+id/fragment_my_home_internet_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_my_home_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal">
@@ -35,16 +47,18 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_my_home_cameras_recycler"
         android:layout_width="match_parent"
-        android:paddingStart="@dimen/padding_normal"
-        android:paddingEnd="@dimen/padding_normal"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_my_home_container"
         android:clipToPadding="true"
-        android:layout_height="wrap_content">
+        android:paddingEnd="@dimen/padding_normal"
+        android:paddingStart="@dimen/padding_normal">
 
     </android.support.v7.widget.RecyclerView>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_my_home_cameras_recycler"
         android:layout_margin="@dimen/spacing_normal">
 
         <TextView
@@ -68,4 +82,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

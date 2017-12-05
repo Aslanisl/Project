@@ -1,8 +1,13 @@
 package com.livetyping.moydom.ui.fragment.mainScreen;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +18,8 @@ import android.view.ViewGroup;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
+import com.livetyping.moydom.utils.HelpUtils;
+import com.livetyping.moydom.utils.NetworkUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +36,15 @@ public class MyHomeFragment extends BaseFragment {
 
     private Unbinder mUnbinder;
 
+    private BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean isConnected = NetworkUtil.isConnected(getContext());
+            Log.d("MY_TAG", String.valueOf(isConnected));
+            //TODO change view state
+        }
+    };
+
     public static MyHomeFragment newInstance() {
         MyHomeFragment fragment = new MyHomeFragment();
         return fragment;
@@ -44,6 +60,8 @@ public class MyHomeFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_home, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
     }
 
@@ -77,5 +95,6 @@ public class MyHomeFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         mUnbinder.unbind();
+        getContext().unregisterReceiver(mConnectedReceiver);
     }
 }
