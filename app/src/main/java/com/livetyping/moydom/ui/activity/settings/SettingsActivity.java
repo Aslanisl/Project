@@ -113,6 +113,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void saveFilters(){
+        showProgress();
         mCompositeDisposable.add(Completable.create(e -> {
             mPrefs.saveFilters(mCamerasAdapter.getSettingsList(), Prefs.KEY_CAMERAS_FILTER);
             mPrefs.saveFilters(mEnergyAdapter.getSettingsList(), Prefs.KEY_ENERGY_FILTER);
@@ -120,9 +121,11 @@ public class SettingsActivity extends BaseActivity {
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> {
+                    removeProgress();
                     setResult(RESULT_OK);
                     finish();
                 }, throwable -> {
+                    removeProgress();
                     setResult(RESULT_CANCELED);
                     finish();
                 })
