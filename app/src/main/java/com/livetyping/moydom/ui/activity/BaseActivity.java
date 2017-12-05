@@ -38,8 +38,14 @@ public class BaseActivity extends AppCompatActivity{
         mProgressDialog.show();
     }
     protected void removeProgress() {
-        if (mProgressDialog != null) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeProgress();
     }
 }
