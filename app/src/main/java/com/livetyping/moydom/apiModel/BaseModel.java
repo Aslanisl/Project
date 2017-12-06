@@ -13,31 +13,40 @@ import java.util.Map;
 @Root(name = "table", strict = false)
 public class BaseModel {
     @ElementList(name = "records")
-    private List<Error> records;
+    private List<Record> records;
 
-    public List<Error> getErrorRecords() {
+    public List<Record> getRecords() {
         return records;
     }
 
     public boolean containsErrors() {
         boolean containErrors = false;
         if (records != null && !records.isEmpty()) {
-            Map<String, String> errors = records.get(0).getErrors();
+            Map<String, String> errors = records.get(0).getRecords();
             if (errors != null) {
-                containErrors = errors.containsKey(Error.ERROR_CODE);
+                containErrors = errors.containsKey(Record.ERROR_CODE);
             }
         }
         return containErrors;
     }
 
     public String getErrorMessage(){
-        String message = null;
+        String message = "";
         if (records != null && !records.isEmpty()) {
-            Map<String, String> errors = records.get(0).getErrors();
+            Map<String, String> errors = records.get(0).getRecords();
             if (errors != null) {
-                message = errors.get(Error.ERROR_USER_MESSAGE);
+                message = errors.get(Record.ERROR_USER_MESSAGE);
             }
         }
         return message;
+    }
+
+    protected String getValue(String key){
+        if (records == null || records.isEmpty()) return "";
+        Map<String, String> recordsValue = records.get(0).getRecords();
+        String value = null;
+        if (recordsValue != null) value = recordsValue.get(key);
+        if (value != null) return value;
+        return "";
     }
 }

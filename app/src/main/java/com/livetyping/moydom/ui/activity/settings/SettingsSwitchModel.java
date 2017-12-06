@@ -8,9 +8,9 @@ import android.text.TextUtils;
 
 public class SettingsSwitchModel {
 
-    private String title;
-    private boolean checked;
-    private int position;
+    protected String title;
+    protected boolean checked;
+    protected int position;
 
     public SettingsSwitchModel() {
     }

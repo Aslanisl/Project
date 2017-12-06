@@ -5,6 +5,7 @@ import android.content.Intent;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.Record;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
@@ -32,13 +33,16 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
         String passwordInput = uuid + timeStamp;
         String md5 = HelpUtils.md5(passwordInput);
         String password = null;
-        if (md5.length() > 16){
-            password = md5.substring(0, 16);
-        }
-        if (password != null) {
-            mUUID = uuid;
-            mPassword = password;
-            authorizationUser();
+        if (md5 != null) {
+            if (md5.length() > 16) {
+                password = md5.substring(0, 16);
+                password = password.toLowerCase();
+            }
+            if (password != null) {
+                mUUID = uuid;
+                mPassword = password;
+                authorizationUser();
+            }
         }
     }
 

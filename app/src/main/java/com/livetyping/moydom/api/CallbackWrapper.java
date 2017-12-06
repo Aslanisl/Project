@@ -1,6 +1,7 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.Record;
 
 import org.json.JSONObject;
 

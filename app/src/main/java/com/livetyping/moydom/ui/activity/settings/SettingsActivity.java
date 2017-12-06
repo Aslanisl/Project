@@ -36,8 +36,6 @@ public class SettingsActivity extends BaseActivity {
     private SettingsRecyclerAdapter mEnergyAdapter;
     private Prefs mPrefs;
 
-    private CompositeDisposable mCompositeDisposable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +43,6 @@ public class SettingsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mPrefs = Prefs.getInstance();
-        mCompositeDisposable = new CompositeDisposable();
 
         mToolbar.setNavigationIcon(R.drawable.close);
         mToolbar.setTitle(R.string.settings);
@@ -53,9 +50,7 @@ public class SettingsActivity extends BaseActivity {
         mToolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         initCameras();
-        initDataForCameras();
         initEnergy();
-        initDataForEnergy();
     }
 
     @Override
@@ -82,6 +77,7 @@ public class SettingsActivity extends BaseActivity {
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(this));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
         mCamerasAdapter.setOnDragListener(camerasItemTouchHelper::startDrag);
+        mCamerasAdapter.addSettings(mPrefs.getFilters(Prefs.KEY_CAMERAS_FILTER));
     }
 
     private void initEnergy(){
@@ -92,51 +88,18 @@ public class SettingsActivity extends BaseActivity {
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(this));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyAdapter.setOnDragListener(energyItemTouchHelper::startDrag);
-    }
-
-    private void initDataForCameras(){
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<SettingsSwitchModel>>) e -> {
-            e.onNext(mPrefs.getFilters(Prefs.KEY_CAMERAS_FILTER));
-            e.onComplete();
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mCamerasAdapter::addSettings, throwable -> showToast(throwable.getMessage())));
-    }
-
-    private void initDataForEnergy(){
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<SettingsSwitchModel>>) e -> {
-            e.onNext(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
-            e.onComplete();
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mEnergyAdapter::addSettings, throwable -> showToast(throwable.getMessage())));
+        mEnergyAdapter.addSettings(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
     }
 
     private void saveFilters(){
-        showProgress();
-        mCompositeDisposable.add(Completable.create(e -> {
-            mPrefs.saveFilters(mCamerasAdapter.getSettingsList(), Prefs.KEY_CAMERAS_FILTER);
-            mPrefs.saveFilters(mEnergyAdapter.getSettingsList(), Prefs.KEY_ENERGY_FILTER);
-            e.onComplete();
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    removeProgress();
-                    setResult(RESULT_OK);
-                    finish();
-                }, throwable -> {
-                    removeProgress();
-                    setResult(RESULT_CANCELED);
-                    finish();
-                })
-        );
+        mPrefs.saveFilters(mCamerasAdapter.getSettingsList(), Prefs.KEY_CAMERAS_FILTER);
+        mPrefs.saveFilters(mEnergyAdapter.getSettingsList(), Prefs.KEY_ENERGY_FILTER);
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()){
-            mCompositeDisposable.dispose();
-        }
     }
 }

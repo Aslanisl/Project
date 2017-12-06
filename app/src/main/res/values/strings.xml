@@ -46,11 +46,20 @@
         <item>Статистика за месяц</item>
         <item>Статистика за неделю</item>
         <item>Статистика за день</item>
-        <item>В текущий момент</item>
+        <item>Статистика за год</item>
     </string-array>
+
+    <string name="electric_energy_this_month">Статистика за месяц</string>
+    <string name="electric_energy_this_week">Статистика за неделю</string>
+    <string name="electric_energy_this_day">Статистика за день</string>
+    <string name="electric_energy_this_year">Статистика за год</string>
 
     <string name="no_connection_with_internet">Нет соединения с интернетом</string>
     <string name="connecting_with_internet">Подключаемся</string>
     <string name="connected_with_internet">Подключено</string>
+
+    <string name="rub">&#8381;</string>
+
+    <string name="energy_measure">%d кВт•ч</string>
 
 </resources>

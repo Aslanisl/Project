@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,24 +23,40 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.apiModel.energy.CurrentEnergy;
+import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.data.repository.EnergyRepository;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
+import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
+import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
 import com.livetyping.moydom.utils.ViewUtils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MyHomeFragment extends BaseFragment {
+public class MyHomeFragment extends BaseFragment implements EnergyRepository.EnergyCallback{
     public static final String TAG = MyHomeFragment.class.getSimpleName();
 
     private static final int SETTINGS_REQUEST_CODE = 2;
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
+
+    @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
+    private EnergyMyHomeAdapter mEnergyAdapter;
 
     private enum NetworkState{
         DISCONNECTED,
@@ -56,6 +73,11 @@ public class MyHomeFragment extends BaseFragment {
     private Runnable mInternetConnected;
     @BindView(R.id.fragment_my_home_internet_container) RelativeLayout mNoInternetContainer;
     @BindView(R.id.fragment_my_home_internet_text) TextView mNoInternetTitle;
+
+    private EnergyRepository mEnergyRepository;
+
+    private CompositeDisposable mCompositeDisposable;
+    private Prefs mPrefs;
 
     private Unbinder mUnbinder;
 
@@ -88,12 +110,20 @@ public class MyHomeFragment extends BaseFragment {
                 ViewUtils.expand(mNoInternetContainer);
             }
         };
+        mPrefs = Prefs.getInstance();
+        mCompositeDisposable = new CompositeDisposable();
+        mEnergyRepository = EnergyRepository.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_home, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mEnergyRepository.setEnergyCallback(this);
+        mEnergyRepository.getEnergy();
+
+        initEnergyView();
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
@@ -115,6 +145,31 @@ public class MyHomeFragment extends BaseFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void initEnergyView(){
+        mEnergyAdapter = new EnergyMyHomeAdapter(getContext());
+        mEnergyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mEnergyRecycler.setAdapter(mEnergyAdapter);
+        mEnergyRecycler.setNestedScrollingEnabled(false);
+        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
+            e.onNext(mPrefs.getEnergyModels());
+            e.onComplete();
+        }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(mEnergyAdapter::addEnergyModels,
+                        throwable -> showToast(throwable.getMessage()))
+        );
+    }
+
+    @Override
+    public void onCurrentEnergyResponse(CurrentEnergy energy) {
+        showToast(energy.getTariffId());
+    }
+
+    @Override
+    public void onError(String message) {
+
     }
 
     private void changeNoInternetViews(){
@@ -141,12 +196,19 @@ public class MyHomeFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (mAnimationHandler != null) {
             mAnimationHandler.removeCallbacks(mInternetDisconnected);
             mAnimationHandler.removeCallbacks(mInternetConnected);
         }
+        mEnergyRepository.removeEnergyCallback();
         mUnbinder.unbind();
         getContext().unregisterReceiver(mConnectedReceiver);
     }

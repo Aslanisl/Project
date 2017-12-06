@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_energy_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ProgressBar
+        android:id="@+id/item_energy_progress_bar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/spacing_normal"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/item_energy_wave"
+        android:layout_width="276dp"
+        android:layout_height="74dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="52dp"/>
+
+    <TextView
+        android:id="@+id/item_energy_current_period"
+        style="@style/White16LeftBld"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_toStartOf="@+id/item_energy_price"/>
+
+    <TextView
+        android:id="@+id/item_energy_current_date"
+        style="@style/White14LeftMd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/item_energy_current_period"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_toStartOf="@+id/item_energy_price"/>
+
+    <TextView
+        android:id="@+id/item_energy_unit"
+        style="@style/White14RightBld"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"/>
+
+    <TextView
+        android:id="@+id/item_energy_measure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_energy_unit"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="@dimen/spacing_normal"/>
+
+    <TextView
+        android:id="@+id/item_energy_price"
+        style="@style/White52RightRg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_energy_unit"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_toStartOf="@id/item_energy_measure"/>
+
+</RelativeLayout>
