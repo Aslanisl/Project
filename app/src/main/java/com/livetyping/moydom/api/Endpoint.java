@@ -1,8 +1,9 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
-import com.livetyping.moydom.apiModel.Record;
-import com.livetyping.moydom.apiModel.energy.CurrentEnergy;
+import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
+import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
+import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -21,5 +22,11 @@ public interface Endpoint {
     Observable<BaseModel> sendPhone(@Url String url);
 
     @GET
-    Observable<CurrentEnergy> getCurrentEnergy(@Url String url);
+    Observable<CurrentEnergyResponse> getCurrentEnergy(@Url String url);
+
+    @GET
+    Observable<WeekEnergyResponse> getTodayWeekEnergy(@Url String url);
+
+    @GET
+    Observable<MonthEnergyResponse> getMonthEnergy(@Url String url);
 }

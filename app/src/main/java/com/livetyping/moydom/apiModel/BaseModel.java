@@ -13,7 +13,7 @@ import java.util.Map;
 @Root(name = "table", strict = false)
 public class BaseModel {
     @ElementList(name = "records")
-    private List<Record> records;
+    protected List<Record> records;
 
     public List<Record> getRecords() {
         return records;
@@ -40,7 +40,7 @@ public class BaseModel {
         }
         return message;
     }
-
+    //Get value from first record
     protected String getValue(String key){
         if (records == null || records.isEmpty()) return "";
         Map<String, String> recordsValue = records.get(0).getRecords();
@@ -48,5 +48,25 @@ public class BaseModel {
         if (recordsValue != null) value = recordsValue.get(key);
         if (value != null) return value;
         return "";
+    }
+
+    protected int getIntegerFromString(String text){
+        int number = 0;
+        try {
+            number = Integer.valueOf(text);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return number;
+    }
+
+    protected float getFloatFromString(String text){
+        float number = 0;
+        try {
+            number = Float.valueOf(text);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        return number;
     }
 }

@@ -1,6 +1,7 @@
-package com.livetyping.moydom.apiModel.energy;
+package com.livetyping.moydom.apiModel.energy.response;
 
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 
 import org.simpleframework.xml.Root;
 
@@ -8,7 +9,7 @@ import org.simpleframework.xml.Root;
  * Created by Ivan on 06.12.2017.
  */
 @Root(name = "table", strict = false)
-public class CurrentEnergy extends BaseModel {
+public class CurrentEnergyResponse extends BaseModel {
     // текущее значение потребляемой электрической мощности в кВт
     public static final String POWER_NOW = "power_now";
     // статус текущего значения потребляемой электрической мощности в кВт (0 - не проверяется, 1 - мало, 2 - как обычно, 3 - много)
@@ -54,5 +55,18 @@ public class CurrentEnergy extends BaseModel {
 
     public String getTariffValue(){
         return getValue(TARIFF_VALUE);
+    }
+
+    public CurrentEnergyModel getCurrentEnergyModel(){
+        CurrentEnergyModel model = new CurrentEnergyModel();
+        model.setPowerNow(getFloatFromString(getPowerNow()));
+        model.setPowerNowStatus(getIntegerFromString(getPowerNowStatus()));
+        model.setCostNow(getFloatFromString(getCostNow()));
+        model.setCostNowStatus(getIntegerFromString(getCostNowStatus()));
+        model.setTariffId(getIntegerFromString(getTariffId()));
+        model.setTariffTypeId(getIntegerFromString(getTariffTypeId()));
+        model.setTariffName(getTariffName());
+        model.setTariffValue(getFloatFromString(getTariffValue()));
+        return model;
     }
 }

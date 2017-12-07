@@ -19,11 +19,11 @@ public class BaseActivity extends AppCompatActivity{
 
     protected ProgressDialog mProgressDialog;
 
-    protected void showToast(String message){
+    public void showToast(String message){
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    protected void showToast(@StringRes int resId){
+    public void showToast(@StringRes int resId){
         Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
     }
 

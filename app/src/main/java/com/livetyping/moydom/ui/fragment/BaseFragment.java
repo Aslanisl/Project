@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 
 /**
  * Created by Ivan on 02.12.2017.
@@ -16,11 +17,15 @@ public class BaseFragment extends Fragment {
     protected ProgressDialog mProgressDialog;
 
     protected void showToast(String message){
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof BaseActivity){
+            ((BaseActivity) getActivity()).showToast(message);
+        }
     }
 
     protected void showToast(@StringRes int resId){
-        Toast.makeText(getContext(), resId, Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof BaseActivity){
+            ((BaseActivity) getActivity()).showToast(resId);
+        }
     }
 
     protected void showProgress() {

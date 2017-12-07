@@ -108,14 +108,15 @@ public class Prefs {
                     EnergySwitchModel model = new EnergySwitchModel();
                     model.setTitle(title);
                     model.setChecked(true);
+                    //TODO change to current periods
                     if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
-                        model.setType(EnergySwitchModel.TYPE_TODAY);
+                        model.setType(EnergySwitchModel.TYPE_CURRENT);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_week))) {
-                        model.setType(EnergySwitchModel.TYPE_THIS_WEEK);
+                        model.setType(EnergySwitchModel.TYPE_TODAY);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))) {
-                        model.setType(EnergySwitchModel.TYPE_THIS_MONTH);
+                        model.setType(EnergySwitchModel.TYPE_WEEK);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_year))){
-                        model.setType(EnergySwitchModel.TYPE_THIS_YEAR);
+                        model.setType(EnergySwitchModel.TYPE_THIS_MONTH);
                     }
                     energyModel.add(model);
                 }

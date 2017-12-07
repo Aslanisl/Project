@@ -1,6 +1,10 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.utils.CalendarUtils;
+import com.livetyping.moydom.utils.HelpUtils;
+
+import java.util.Calendar;
 
 /**
  * Created by Ivan on 29.11.2017.
@@ -18,11 +22,12 @@ public class ApiUrlService {
     public static final String FUNCTION_SET_PASSWORD = "set_pass";
     public static final String FUNCTION_SEND_PHONE = "ins_uuid_phones";
     public static final String FUNCTION_CURRENT_ENERGY = "get_electric_now";
+    public static final String FUNCTION_WEEK_ON_DAY_ENERGY = "get_electric_grafs_week";
+    public static final String FUNCTION_MONTH_ENERGY = "get_electric_month";
 
     public static String getAuthorizationUrl(String uuid, String password){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
-        url.append("p_context=").append(API_CONTEXT).append("&");
         url.append("p_function=").append(FUNCTION_SET_PASSWORD).append("&");
         url.append(uuid).append("&");
         url.append(password);
@@ -32,7 +37,6 @@ public class ApiUrlService {
     public static String getCallbackPhoneUrl(String phone){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
-        url.append("p_context=").append(API_CONTEXT).append("&");
         url.append("p_function=").append(FUNCTION_SEND_PHONE).append("&&&");
         url.append(phone);
         return url.toString();
@@ -41,11 +45,33 @@ public class ApiUrlService {
     public static String getCurrentEnergyUrl(){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
-        url.append("p_context=").append(API_CONTEXT).append("&");
         url.append("p_function=").append(FUNCTION_CURRENT_ENERGY).append("&");
         Prefs prefs = Prefs.getInstance();
         url.append(prefs.getUUID()).append("&");
         url.append(prefs.getPassword());
+        return url.toString();
+    }
+
+    public static String getTodayWeekEnergyUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_WEEK_ON_DAY_ENERGY).append("&");
+        Prefs prefs = Prefs.getInstance();
+        url.append(prefs.getUUID()).append("&");
+        url.append(prefs.getPassword()).append("&");
+        url.append(CalendarUtils.getCurrentDate());
+        return url.toString();
+    }
+
+    public static String getMonthEnergyUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_MONTH_ENERGY).append("&");
+        Prefs prefs = Prefs.getInstance();
+        url.append(prefs.getUUID()).append("&");
+        url.append(prefs.getPassword()).append("&");
+        url.append(CalendarUtils.getCurrentMonth()).append("&");
+        url.append(CalendarUtils.getCurrentYear());
         return url.toString();
     }
 
@@ -55,6 +81,7 @@ public class ApiUrlService {
         url.append("p_operation=").append(OPERATION_CALL).append("&");
         url.append("p_username=").append(USERNAME).append("&");
         url.append("p_password=").append(PASSWORD).append("&");
+        url.append("p_context=").append(API_CONTEXT).append("&");
         return url.toString();
     }
 }

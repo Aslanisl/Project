@@ -60,6 +60,6 @@
 
     <string name="rub">&#8381;</string>
 
-    <string name="energy_measure">%d кВт•ч</string>
+    <string name="energy_measure">%.1f кВт•ч</string>
 
 </resources>

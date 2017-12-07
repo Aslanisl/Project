@@ -17,7 +17,7 @@ import retrofit2.HttpException;
  * Created by Ivan on 05.12.2017.
  */
 
-public abstract class CallbackWrapper <T extends BaseModel> extends DisposableObserver<T> {
+public abstract class CallbackWrapper <T> extends DisposableObserver<T> {
 
     private WeakReference<ServerCallback> weakReference;
 

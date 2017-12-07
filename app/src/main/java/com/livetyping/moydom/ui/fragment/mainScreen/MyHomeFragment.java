@@ -7,12 +7,9 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.transition.ChangeBounds;
-import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,15 +20,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.apiModel.energy.CurrentEnergy;
+import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
+import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
+import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
+import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.EnergyRepository;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
-import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
-import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
 import com.livetyping.moydom.utils.ViewUtils;
 
@@ -120,10 +118,10 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         View rootView = inflater.inflate(R.layout.fragment_my_home, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
+        initEnergyView();
+
         mEnergyRepository.setEnergyCallback(this);
         mEnergyRepository.getEnergy();
-
-        initEnergyView();
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
@@ -163,13 +161,28 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     @Override
-    public void onCurrentEnergyResponse(CurrentEnergy energy) {
-        showToast(energy.getTariffId());
+    public void onCurrentEnergyResponse(CurrentEnergyModel energy) {
+        mEnergyAdapter.addCurrentEnergy(energy);
+    }
+
+    @Override
+    public void onTodayEnergyResponse(TodayEnergyModel energy) {
+        mEnergyAdapter.addTodayEnergy(energy);
+    }
+
+    @Override
+    public void onWeekEnergyResponse(WeekEnergyModel weekEnergy) {
+        mEnergyAdapter.addWeekEnergy(weekEnergy);
+    }
+
+    @Override
+    public void onMonthEnergyResponse(MonthEnergyModel monthEnergy) {
+        mEnergyAdapter.addMonthEnergy(monthEnergy);
     }
 
     @Override
     public void onError(String message) {
-
+        showToast(message);
     }
 
     private void changeNoInternetViews(){
@@ -196,20 +209,15 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
-    }
-
-    @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (mAnimationHandler != null) {
             mAnimationHandler.removeCallbacks(mInternetDisconnected);
             mAnimationHandler.removeCallbacks(mInternetConnected);
         }
         mEnergyRepository.removeEnergyCallback();
         mUnbinder.unbind();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
         getContext().unregisterReceiver(mConnectedReceiver);
+        super.onDestroyView();
     }
 }

@@ -7,10 +7,10 @@ import android.text.TextUtils;
  */
 
 public class EnergySwitchModel extends SettingsSwitchModel {
-    public static final int TYPE_TODAY = 0;
-    public static final int TYPE_THIS_WEEK = 1;
-    public static final int TYPE_THIS_MONTH = 2;
-    public static final int TYPE_THIS_YEAR = 3;
+    public static final int TYPE_CURRENT = 0;
+    public static final int TYPE_TODAY = 1;
+    public static final int TYPE_WEEK = 2;
+    public static final int TYPE_THIS_MONTH = 3;
 
     private int type;
 
