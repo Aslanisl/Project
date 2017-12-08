@@ -26,8 +26,8 @@ import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.EnergyRepository;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
+import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.utils.NetworkUtil;
@@ -58,7 +58,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     private enum NetworkState{
         DISCONNECTED,
-        CONNECTING,
         CONNECTED
     }
 
@@ -89,8 +88,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     };
 
     public static MyHomeFragment newInstance() {
-        MyHomeFragment fragment = new MyHomeFragment();
-        return fragment;
+        return new MyHomeFragment();
     }
 
     @Override
@@ -118,10 +116,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         View rootView = inflater.inflate(R.layout.fragment_my_home, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        initEnergyView();
-
         mEnergyRepository.setEnergyCallback(this);
-        mEnergyRepository.getEnergy();
+        initEnergyView();
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
@@ -150,13 +146,20 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyRecycler.setNestedScrollingEnabled(false);
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
-            e.onNext(mPrefs.getEnergyModels());
-            e.onComplete();
-        }).subscribeOn(Schedulers.io())
+        getEnergyFilters();
+    }
+
+    private void getEnergyFilters(){
+        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<SettingsSwitchModel>>) e -> {
+                    e.onNext(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
+                    e.onComplete();
+                }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(mEnergyAdapter::addEnergyModels,
-                        throwable -> showToast(throwable.getMessage()))
+                        .subscribe(settingsSwitchModels -> {
+                                    mEnergyAdapter.addEnergyModels(settingsSwitchModels);
+                                    mEnergyRepository.getEnergy();
+                                },
+                                throwable -> showToast(throwable.getMessage()))
         );
     }
 
@@ -204,7 +207,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
-            //TODO apply new settings
+            getEnergyFilters();
         }
     }
 

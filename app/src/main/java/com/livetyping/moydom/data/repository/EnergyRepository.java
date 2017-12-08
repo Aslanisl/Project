@@ -3,6 +3,7 @@ package com.livetyping.moydom.data.repository;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
+import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.api.ServerCallback;
 import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
@@ -25,13 +26,16 @@ import io.reactivex.schedulers.Schedulers;
 
 public class EnergyRepository implements ServerCallback{
 
+    private static final int API_RETRY_CALL_COUNT = 10;
+    private static final int API_RETRY_CALL_TIME = 5000;
+
     private volatile static EnergyRepository sInstance;
 
     private WeakReference<EnergyCallback> mCallbackWeakReference;
 
     private CurrentEnergyResponse mCurrentEnergy;
 
-    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    private CompositeDisposable mCompositeDisposable;
 
     public void setEnergyCallback(EnergyCallback callback){
         mCallbackWeakReference = new WeakReference<EnergyCallback>(callback);
@@ -39,6 +43,7 @@ public class EnergyRepository implements ServerCallback{
 
     public void removeEnergyCallback(){
         if (mCallbackWeakReference != null) mCallbackWeakReference = null;
+        if (mCompositeDisposable != null) mCompositeDisposable.dispose();
     }
 
     public static synchronized EnergyRepository getInstance() {
@@ -49,9 +54,11 @@ public class EnergyRepository implements ServerCallback{
     }
 
     public void getEnergy(){
+        mCompositeDisposable = new CompositeDisposable();
         Disposable getCurrentEnergy = Api.getApiService().getCurrentEnergy(ApiUrlService.getCurrentEnergyUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                 .subscribeWith(new CallbackWrapper<CurrentEnergyResponse>(this) {
                     @Override
                     protected void onSuccess(CurrentEnergyResponse energy) {
@@ -68,6 +75,7 @@ public class EnergyRepository implements ServerCallback{
         Disposable getTodayWeekEnergy = Api.getApiService().getTodayWeekEnergy(ApiUrlService.getTodayWeekEnergyUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                 .subscribeWith(new CallbackWrapper<WeekEnergyResponse>(this){
                     @Override
                     protected void onSuccess(WeekEnergyResponse weekEnergyResponse) {
@@ -87,6 +95,7 @@ public class EnergyRepository implements ServerCallback{
         Disposable getMonthEnergy = Api.getApiService().getMonthEnergy(ApiUrlService.getMonthEnergyUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                 .subscribeWith(new CallbackWrapper<MonthEnergyResponse>(this){
                     @Override
                     protected void onSuccess(MonthEnergyResponse monthEnergyResponse) {

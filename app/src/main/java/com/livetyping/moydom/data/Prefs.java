@@ -7,7 +7,6 @@ import com.ironz.binaryprefs.BinaryPreferencesBuilder;
 import com.ironz.binaryprefs.Preferences;
 import com.livetyping.moydom.App;
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
 
 import java.util.ArrayList;
@@ -84,20 +83,6 @@ public class Prefs {
         return models;
     }
 
-    public List<EnergySwitchModel> getEnergyModels(){
-        List<EnergySwitchModel> models = new ArrayList<>();
-        String listPacked = mPreferences.getString(KEY_ENERGY_FILTER, "");
-        if (TextUtils.isEmpty(listPacked)) {
-            createFilters(KEY_ENERGY_FILTER);
-            listPacked = mPreferences.getString(KEY_ENERGY_FILTER, "");
-        }
-        for (String s : listPacked.split(";")){
-            EnergySwitchModel model = new EnergySwitchModel(s);
-            models.add(model);
-        }
-        return models;
-    }
-
     private void createFilters(String key){
         Context appContext = App.getAppContext();
         switch (key){
@@ -105,18 +90,17 @@ public class Prefs {
                 List<SettingsSwitchModel> energyModel = new ArrayList<>();
                 String[] energyTitle = appContext.getResources().getStringArray(R.array.electric_energy_names);
                 for (String title : energyTitle){
-                    EnergySwitchModel model = new EnergySwitchModel();
+                    SettingsSwitchModel model = new SettingsSwitchModel();
                     model.setTitle(title);
                     model.setChecked(true);
-                    //TODO change to current periods
-                    if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
-                        model.setType(EnergySwitchModel.TYPE_CURRENT);
+                    if (title.contains(appContext.getString(R.string.electric_energy_current))) {
+                        model.setType(SettingsSwitchModel.ENERGY_TYPE_CURRENT);
+                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
+                        model.setType(SettingsSwitchModel.ENERGY_TYPE_TODAY);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_week))) {
-                        model.setType(EnergySwitchModel.TYPE_TODAY);
-                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))) {
-                        model.setType(EnergySwitchModel.TYPE_WEEK);
-                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_year))){
-                        model.setType(EnergySwitchModel.TYPE_THIS_MONTH);
+                        model.setType(SettingsSwitchModel.ENERGY_TYPE_WEEK);
+                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))){
+                        model.setType(SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH);
                     }
                     energyModel.add(model);
                 }

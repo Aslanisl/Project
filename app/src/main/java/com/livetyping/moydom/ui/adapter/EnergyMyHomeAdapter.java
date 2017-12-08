@@ -17,10 +17,12 @@ import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
+import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
+import com.livetyping.moydom.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapter.ViewHolder> {
 
-    private List<EnergySwitchModel> mEnergyModels = new ArrayList<>();
+    private List<SettingsSwitchModel> mEnergyModels = new ArrayList<>();
 
     private CurrentEnergyModel mCurrentEnergyModel;
     private TodayEnergyModel mTodayEnergyModel;
@@ -44,30 +46,35 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
         mContext = context;
     }
 
-    public void addEnergyModels(List<EnergySwitchModel> models){
+    public void addEnergyModels(List<SettingsSwitchModel> models){
         mEnergyModels.clear();
-        mEnergyModels.addAll(models);
+        if (models != null){
+            for (int i = 0; i < models.size(); i++){
+                SettingsSwitchModel model = models.get(i);
+                if (model.isChecked()) mEnergyModels.add(model);
+            }
+        }
         notifyDataSetChanged();
     }
 
     public void addCurrentEnergy(CurrentEnergyModel model){
         mCurrentEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.TYPE_CURRENT);
+        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_CURRENT);
     }
 
     public void addTodayEnergy(TodayEnergyModel model){
         mTodayEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.TYPE_TODAY);
+        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_TODAY);
     }
 
     public void addWeekEnergy(WeekEnergyModel model){
         mWeekEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.TYPE_WEEK);
+        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_WEEK);
     }
 
     public void addMonthEnergy(MonthEnergyModel model){
         mMonthEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.TYPE_THIS_MONTH);
+        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH);
     }
 
     private void updatePositionByType(int type){
@@ -88,18 +95,18 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        EnergySwitchModel model = mEnergyModels.get(position);
+        SettingsSwitchModel model = mEnergyModels.get(position);
         switch (model.getType()) {
-            case EnergySwitchModel.TYPE_CURRENT:
+            case SettingsSwitchModel.ENERGY_TYPE_CURRENT:
                 holder.bindCurrentEnergyHolder(mCurrentEnergyModel);
                 break;
-            case EnergySwitchModel.TYPE_TODAY:
+            case SettingsSwitchModel.ENERGY_TYPE_TODAY:
                 holder.bindTodayEnergyHolder(mTodayEnergyModel);
                 break;
-            case EnergySwitchModel.TYPE_WEEK:
+            case SettingsSwitchModel.ENERGY_TYPE_WEEK:
                 holder.bindWeekEnergyHolder(mWeekEnergyModel);
                 break;
-            case EnergySwitchModel.TYPE_THIS_MONTH:
+            case SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH:
                 holder.bindMonthEnergyHolder(mMonthEnergyModel);
                 break;
         }
@@ -137,9 +144,12 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
+                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
+                mWave.setImageResource(R.drawable.wave_yellow);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mPrice.setText(String.valueOf(model.getCostNow()));
                 mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerNow()));
+                mCurrentPeriod.setText(R.string.current_energy_power);
             }
         }
 
@@ -147,8 +157,12 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
+                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red));
+                mWave.setImageResource(R.drawable.wave_red);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mPrice.setText(String.valueOf(model.getPowerCost()));
+                mUnit.setText(mContext.getString(R.string.energy_measure, model.getPower()));
+                mCurrentPeriod.setText(R.string.today);
             }
         }
 
@@ -156,8 +170,13 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
+                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
+                mWave.setImageResource(R.drawable.wave_yellow);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getWeekPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mPrice.setText(String.valueOf(model.getWeekPowerCost()));
+                mUnit.setText(mContext.getString(R.string.energy_measure, model.getWeekPower()));
+                mCurrentPeriod.setText(R.string.this_week);
+                mCurrentDate.setText(model.getWeekDate());
             }
         }
 
@@ -165,8 +184,13 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
+                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+                mWave.setImageResource(R.drawable.wave_green);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostTotal()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mPrice.setText(String.valueOf(model.getCostTotal()));
+                mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));
+                mCurrentPeriod.setText(R.string.this_month);
+                mCurrentDate.setText(CalendarUtils.getCurrentMonthText());
             }
         }
     }

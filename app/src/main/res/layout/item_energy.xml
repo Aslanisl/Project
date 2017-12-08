@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_energy_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="100dp"
+    android:layout_marginBottom="@dimen/spacing_tiny">
 
     <ProgressBar
         android:id="@+id/item_energy_progress_bar"
@@ -18,7 +19,9 @@
         android:layout_height="74dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="52dp"/>
+        android:layout_marginBottom="-8dp"
+        android:layout_marginEnd="-14dp"
+        android:layout_marginTop="26dp"/>
 
     <TextView
         android:id="@+id/item_energy_current_period"
@@ -56,8 +59,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/item_energy_unit"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="2dp"
-        android:layout_marginEnd="@dimen/spacing_normal"/>
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_big"/>
 
     <TextView
         android:id="@+id/item_energy_price"
@@ -65,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@id/item_energy_unit"
-        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_larger"
         android:layout_toStartOf="@id/item_energy_measure"/>
 
 </RelativeLayout>

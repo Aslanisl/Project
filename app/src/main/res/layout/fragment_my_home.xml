@@ -105,13 +105,6 @@
                 android:layout_marginBottom="@dimen/spacing_tiny"
                 android:layout_marginTop="@dimen/spacing_tiny"/>
 
-            <ProgressBar
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/spacing_normal"/>
-
         </RelativeLayout>
 
     </RelativeLayout>
