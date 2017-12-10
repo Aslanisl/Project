@@ -17,7 +17,7 @@ import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
-import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 
 public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapter.ViewHolder> {
 
-    private List<SettingsSwitchModel> mEnergyModels = new ArrayList<>();
+    private List<EnergySwitchModel> mEnergyModels = new ArrayList<>();
 
     private CurrentEnergyModel mCurrentEnergyModel;
     private TodayEnergyModel mTodayEnergyModel;
@@ -46,11 +46,11 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
         mContext = context;
     }
 
-    public void addEnergyModels(List<SettingsSwitchModel> models){
+    public void addEnergyModels(List<EnergySwitchModel> models){
         mEnergyModels.clear();
         if (models != null){
             for (int i = 0; i < models.size(); i++){
-                SettingsSwitchModel model = models.get(i);
+                EnergySwitchModel model = models.get(i);
                 if (model.isChecked()) mEnergyModels.add(model);
             }
         }
@@ -59,22 +59,22 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
 
     public void addCurrentEnergy(CurrentEnergyModel model){
         mCurrentEnergyModel = model;
-        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_CURRENT);
+        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
     }
 
     public void addTodayEnergy(TodayEnergyModel model){
         mTodayEnergyModel = model;
-        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_TODAY);
+        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_TODAY);
     }
 
     public void addWeekEnergy(WeekEnergyModel model){
         mWeekEnergyModel = model;
-        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_WEEK);
+        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_WEEK);
     }
 
     public void addMonthEnergy(MonthEnergyModel model){
         mMonthEnergyModel = model;
-        updatePositionByType(SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH);
+        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
     }
 
     private void updatePositionByType(int type){
@@ -95,18 +95,18 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SettingsSwitchModel model = mEnergyModels.get(position);
+        EnergySwitchModel model = mEnergyModels.get(position);
         switch (model.getType()) {
-            case SettingsSwitchModel.ENERGY_TYPE_CURRENT:
+            case EnergySwitchModel.ENERGY_TYPE_CURRENT:
                 holder.bindCurrentEnergyHolder(mCurrentEnergyModel);
                 break;
-            case SettingsSwitchModel.ENERGY_TYPE_TODAY:
+            case EnergySwitchModel.ENERGY_TYPE_TODAY:
                 holder.bindTodayEnergyHolder(mTodayEnergyModel);
                 break;
-            case SettingsSwitchModel.ENERGY_TYPE_WEEK:
+            case EnergySwitchModel.ENERGY_TYPE_WEEK:
                 holder.bindWeekEnergyHolder(mWeekEnergyModel);
                 break;
-            case SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH:
+            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
                 holder.bindMonthEnergyHolder(mMonthEnergyModel);
                 break;
         }

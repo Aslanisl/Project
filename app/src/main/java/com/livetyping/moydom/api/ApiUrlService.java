@@ -2,9 +2,6 @@ package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.utils.CalendarUtils;
-import com.livetyping.moydom.utils.HelpUtils;
-
-import java.util.Calendar;
 
 /**
  * Created by Ivan on 29.11.2017.
@@ -24,6 +21,7 @@ public class ApiUrlService {
     public static final String FUNCTION_CURRENT_ENERGY = "get_electric_now";
     public static final String FUNCTION_WEEK_ON_DAY_ENERGY = "get_electric_grafs_week";
     public static final String FUNCTION_MONTH_ENERGY = "get_electric_month";
+    public static final String FUNCTION_CAMERAS = "get_cameras";
 
     public static String getAuthorizationUrl(String uuid, String password){
         StringBuilder url = new StringBuilder();
@@ -46,9 +44,15 @@ public class ApiUrlService {
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_CURRENT_ENERGY).append("&");
-        Prefs prefs = Prefs.getInstance();
-        url.append(prefs.getUUID()).append("&");
-        url.append(prefs.getPassword());
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getCamerasUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_CAMERAS).append("&");
+        url.append(getUuidPassword(false));
         return url.toString();
     }
 
@@ -56,9 +60,7 @@ public class ApiUrlService {
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_WEEK_ON_DAY_ENERGY).append("&");
-        Prefs prefs = Prefs.getInstance();
-        url.append(prefs.getUUID()).append("&");
-        url.append(prefs.getPassword()).append("&");
+        url.append(getUuidPassword(true));
         url.append(CalendarUtils.getCurrentDate());
         return url.toString();
     }
@@ -67,11 +69,18 @@ public class ApiUrlService {
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_MONTH_ENERGY).append("&");
-        Prefs prefs = Prefs.getInstance();
-        url.append(prefs.getUUID()).append("&");
-        url.append(prefs.getPassword()).append("&");
+        url.append(getUuidPassword(true));
         url.append(CalendarUtils.getCurrentMonth()).append("&");
         url.append(CalendarUtils.getCurrentYear());
+        return url.toString();
+    }
+
+    private static String getUuidPassword(boolean withQuery){
+        StringBuilder url = new StringBuilder();
+        Prefs prefs = Prefs.getInstance();
+        url.append(prefs.getUUID()).append("&");
+        url.append(prefs.getPassword());
+        if (withQuery) url.append("&");
         return url.toString();
     }
 

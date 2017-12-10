@@ -44,9 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_my_home_cameras_container"
-            android:clipToPadding="true"
+            android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingEnd="@dimen/padding_normal"
+            android:paddingEnd="@dimen/padding_tiny"
             android:paddingStart="@dimen/padding_normal">
 
         </android.support.v7.widget.RecyclerView>

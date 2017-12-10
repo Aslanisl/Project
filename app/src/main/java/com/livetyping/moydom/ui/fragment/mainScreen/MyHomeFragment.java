@@ -20,14 +20,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.data.repository.CamerasRepository;
 import com.livetyping.moydom.data.repository.EnergyRepository;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
-import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
+import com.livetyping.moydom.ui.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.utils.NetworkUtil;
@@ -46,13 +49,13 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MyHomeFragment extends BaseFragment implements EnergyRepository.EnergyCallback{
+public class MyHomeFragment extends BaseFragment implements EnergyRepository.EnergyCallback, CamerasRepository.CamerasCallback{
     public static final String TAG = MyHomeFragment.class.getSimpleName();
 
     private static final int SETTINGS_REQUEST_CODE = 2;
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
-
+    private CameraMyHomeAdapter mCamerasAdapter;
     @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
     private EnergyMyHomeAdapter mEnergyAdapter;
 
@@ -72,6 +75,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     @BindView(R.id.fragment_my_home_internet_text) TextView mNoInternetTitle;
 
     private EnergyRepository mEnergyRepository;
+
+    private CamerasRepository mCamerasRepository;
 
     private CompositeDisposable mCompositeDisposable;
     private Prefs mPrefs;
@@ -109,6 +114,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mPrefs = Prefs.getInstance();
         mCompositeDisposable = new CompositeDisposable();
         mEnergyRepository = EnergyRepository.getInstance();
+        mCamerasRepository = CamerasRepository.getInstance();
     }
 
     @Override
@@ -118,6 +124,10 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
         mEnergyRepository.setEnergyCallback(this);
         initEnergyView();
+
+        mCamerasRepository.setCamerasCallback(this);
+        initCameras();
+        mCamerasRepository.getCameras();
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
@@ -150,7 +160,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     private void getEnergyFilters(){
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<SettingsSwitchModel>>) e -> {
+        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
                     e.onNext(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
                     e.onComplete();
                 }).subscribeOn(Schedulers.io())
@@ -161,6 +171,13 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
                                 },
                                 throwable -> showToast(throwable.getMessage()))
         );
+    }
+
+    private void initCameras(){
+        mCamerasAdapter = new CameraMyHomeAdapter(getContext());
+        mCamerasRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mCamerasRecycler.setAdapter(mCamerasAdapter);
+
     }
 
     @Override
@@ -186,6 +203,16 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     @Override
     public void onError(String message) {
         showToast(message);
+    }
+
+    @Override
+    public void onCamerasResponse(List<CameraModel> cameras) {
+        mCamerasAdapter.addCameras(cameras);
+    }
+
+    @Override
+    public void onErrorResponse(String error) {
+        showToast(error);
     }
 
     private void changeNoInternetViews(){
@@ -218,6 +245,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
             mAnimationHandler.removeCallbacks(mInternetConnected);
         }
         mEnergyRepository.removeEnergyCallback();
+        mCamerasRepository.removeCamerasCallback();
         mUnbinder.unbind();
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
         getContext().unregisterReceiver(mConnectedReceiver);

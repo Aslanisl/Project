@@ -1,6 +1,7 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
@@ -29,4 +30,7 @@ public interface Endpoint {
 
     @GET
     Observable<MonthEnergyResponse> getMonthEnergy(@Url String url);
+
+    @GET
+    Observable<CamerasResponse> getCameras(@Url String url);
 }

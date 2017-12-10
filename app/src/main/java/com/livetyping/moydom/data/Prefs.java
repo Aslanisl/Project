@@ -7,7 +7,7 @@ import com.ironz.binaryprefs.BinaryPreferencesBuilder;
 import com.ironz.binaryprefs.Preferences;
 import com.livetyping.moydom.App;
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.activity.settings.SettingsSwitchModel;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,10 +56,10 @@ public class Prefs {
         return mPreferences.getString(KEY_PASSWORD, null);
     }
 
-    public void saveFilters(List<SettingsSwitchModel> filter, String key){
+    public void saveFilters(List<EnergySwitchModel> filter, String key){
         StringBuilder filterText = new StringBuilder();
         for (int i = 0; i < filter.size(); i++){
-            SettingsSwitchModel model = filter.get(i);
+            EnergySwitchModel model = filter.get(i);
             filterText.append(model.pack());
             //Don't add to last item
             if (i < filter.size() - 1){
@@ -69,15 +69,15 @@ public class Prefs {
         persistString(key, filterText.toString());
     }
 
-    public List<SettingsSwitchModel> getFilters(String key){
-        List<SettingsSwitchModel> models = new ArrayList<>();
+    public List<EnergySwitchModel> getFilters(String key){
+        List<EnergySwitchModel> models = new ArrayList<>();
         String listPacked = mPreferences.getString(key, "");
         if (TextUtils.isEmpty(listPacked)) {
             createFilters(key);
             listPacked = mPreferences.getString(key, "");
         }
         for (String s : listPacked.split(";")){
-            SettingsSwitchModel model = new SettingsSwitchModel(s);
+            EnergySwitchModel model = new EnergySwitchModel(s);
             models.add(model);
         }
         return models;
@@ -87,30 +87,30 @@ public class Prefs {
         Context appContext = App.getAppContext();
         switch (key){
             case KEY_ENERGY_FILTER:
-                List<SettingsSwitchModel> energyModel = new ArrayList<>();
+                List<EnergySwitchModel> energyModel = new ArrayList<>();
                 String[] energyTitle = appContext.getResources().getStringArray(R.array.electric_energy_names);
                 for (String title : energyTitle){
-                    SettingsSwitchModel model = new SettingsSwitchModel();
+                    EnergySwitchModel model = new EnergySwitchModel();
                     model.setTitle(title);
                     model.setChecked(true);
                     if (title.contains(appContext.getString(R.string.electric_energy_current))) {
-                        model.setType(SettingsSwitchModel.ENERGY_TYPE_CURRENT);
+                        model.setType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
-                        model.setType(SettingsSwitchModel.ENERGY_TYPE_TODAY);
+                        model.setType(EnergySwitchModel.ENERGY_TYPE_TODAY);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_week))) {
-                        model.setType(SettingsSwitchModel.ENERGY_TYPE_WEEK);
+                        model.setType(EnergySwitchModel.ENERGY_TYPE_WEEK);
                     } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))){
-                        model.setType(SettingsSwitchModel.ENERGY_TYPE_THIS_MONTH);
+                        model.setType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
                     }
                     energyModel.add(model);
                 }
                 saveFilters(energyModel, KEY_ENERGY_FILTER);
                 break;
             case KEY_CAMERAS_FILTER:
-                List<SettingsSwitchModel> camerasModel = new ArrayList<>();
+                List<EnergySwitchModel> camerasModel = new ArrayList<>();
                 String[] camerasTitle = appContext.getResources().getStringArray(R.array.cameras_names);
                 for (String title : camerasTitle){
-                    SettingsSwitchModel model = new SettingsSwitchModel();
+                    EnergySwitchModel model = new EnergySwitchModel();
                     model.setTitle(title);
                     model.setChecked(true);
                     camerasModel.add(model);

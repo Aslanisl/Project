@@ -67,4 +67,7 @@
 
     <string name="energy_measure">%.1f кВт•ч</string>
 
+    <string name="camera_online">В эфире</string>
+    <string name="camera_offline">Не в эфире</string>
+
 </resources>

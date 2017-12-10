@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.ViewHolder> implements ItemTouchMoveHelper {
 
-    private List<SettingsSwitchModel> mSettingsList;
+    private List<EnergySwitchModel> mSettingsList;
 
     private OnDragStartListener mDragStartListener;
 
@@ -37,7 +37,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
         mSettingsList = new ArrayList<>();
     }
 
-    public void addSettings(List<SettingsSwitchModel> models){
+    public void addSettings(List<EnergySwitchModel> models){
         mSettingsList.clear();
         mSettingsList.addAll(models);
         notifyDataSetChanged();
@@ -56,7 +56,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SettingsSwitchModel model = mSettingsList.get(position);
+        EnergySwitchModel model = mSettingsList.get(position);
         holder.bindView(model);
     }
 
@@ -73,7 +73,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
         return mSettingsList.size();
     }
 
-    public List<SettingsSwitchModel> getSettingsList() {
+    public List<EnergySwitchModel> getSettingsList() {
         return mSettingsList;
     }
 
@@ -88,7 +88,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
             ButterKnife.bind(this, itemView);
         }
 
-        private void bindView(SettingsSwitchModel model){
+        private void bindView(EnergySwitchModel model){
             mTitle.setText(model.getTitle());
             mSwitch.setChecked(model.isChecked());
             mDrag.setOnTouchListener((v, event) ->  {

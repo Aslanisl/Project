@@ -6,7 +6,7 @@ import android.text.TextUtils;
  * Created by Ivan on 04.12.2017.
  */
 
-public class SettingsSwitchModel {
+public class EnergySwitchModel {
 
     public static final int ENERGY_TYPE_CURRENT = 0;
     public static final int ENERGY_TYPE_TODAY = 1;
@@ -15,26 +15,24 @@ public class SettingsSwitchModel {
 
     protected String title;
     protected boolean checked;
-    protected int position;
     private int type;
 
-    public SettingsSwitchModel() {
+    public EnergySwitchModel() {
     }
 
-    public SettingsSwitchModel(String packed){
+    public EnergySwitchModel(String packed){
         String[] unpack = packed.split("_");
         this.title = unpack[0];
         try {
             this.checked = Boolean.valueOf(unpack[1]);
-            this.position = Integer.valueOf(unpack[2]);
-            this.type = Integer.valueOf(unpack[3]);
+            this.type = Integer.valueOf(unpack[2]);
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
     }
 
     public String pack(){
-        return TextUtils.join("_", new String[] {title, String.valueOf(checked), String.valueOf(position), String.valueOf(type)});
+        return TextUtils.join("_", new String[] {title, String.valueOf(checked), String.valueOf(type)});
     }
 
     public void setTitle(String title) {
@@ -45,20 +43,12 @@ public class SettingsSwitchModel {
         this.checked = checked;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public boolean isChecked() {
         return checked;
-    }
-
-    public int getPosition() {
-        return position;
     }
 
     public int getType() {

@@ -62,12 +62,12 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeWith(new CallbackWrapper<CurrentEnergyResponse>(this) {
                     @Override
                     protected void onSuccess(CurrentEnergyResponse energy) {
-                        if (energy.containsErrors()){
-                            if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                        if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                            if (energy.containsErrors()) {
                                 mCallbackWeakReference.get().onError(energy.getErrorMessage());
+                            } else {
+                                mCallbackWeakReference.get().onCurrentEnergyResponse(energy.getCurrentEnergyModel());
                             }
-                        } else if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
-                            mCallbackWeakReference.get().onCurrentEnergyResponse(energy.getCurrentEnergyModel());
                         }
                     }
                 });
@@ -79,12 +79,10 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeWith(new CallbackWrapper<WeekEnergyResponse>(this){
                     @Override
                     protected void onSuccess(WeekEnergyResponse weekEnergyResponse) {
-                        if (weekEnergyResponse.containsErrors()){
-                            if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                        if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                            if (weekEnergyResponse.containsErrors()) {
                                 mCallbackWeakReference.get().onError(weekEnergyResponse.getErrorMessage());
-                            }
-                        } else {
-                            if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                            } else {
                                 mCallbackWeakReference.get().onTodayEnergyResponse(weekEnergyResponse.getTodayEnergyModel());
                                 mCallbackWeakReference.get().onWeekEnergyResponse(weekEnergyResponse.getWeekEnergyModel());
                             }
@@ -99,12 +97,10 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeWith(new CallbackWrapper<MonthEnergyResponse>(this){
                     @Override
                     protected void onSuccess(MonthEnergyResponse monthEnergyResponse) {
-                        if (monthEnergyResponse.containsErrors()){
-                            if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                        if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                            if (monthEnergyResponse.containsErrors()) {
                                 mCallbackWeakReference.get().onError(monthEnergyResponse.getErrorMessage());
-                            }
-                        } else {
-                            if (mCallbackWeakReference != null && mCallbackWeakReference.get() != null) {
+                            } else {
                                 mCallbackWeakReference.get().onMonthEnergyResponse(monthEnergyResponse.getMonthEnergyModel());
                             }
                         }
