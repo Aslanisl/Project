@@ -7,6 +7,7 @@ import com.ironz.binaryprefs.BinaryPreferencesBuilder;
 import com.ironz.binaryprefs.Preferences;
 import com.livetyping.moydom.App;
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.settings.CamerasSwitchModel;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class Prefs {
     private static final String PREFERENCES_NAME = "user_preferences";
     private static final String KEY_UUID = "k1";
     private static final String KEY_PASSWORD = "k2";
-    public static final String KEY_CAMERAS_FILTER = "k3";
-    public static final String KEY_ENERGY_FILTER = "k4";
+    public static final String KEY_CAMERAS_FILTER = "k5";
+    public static final String KEY_ENERGY_FILTER = "k6";
 
     private Preferences mPreferences;
 
@@ -56,7 +57,7 @@ public class Prefs {
         return mPreferences.getString(KEY_PASSWORD, null);
     }
 
-    public void saveFilters(List<EnergySwitchModel> filter, String key){
+    public void saveEnergyFilters(List<EnergySwitchModel> filter){
         StringBuilder filterText = new StringBuilder();
         for (int i = 0; i < filter.size(); i++){
             EnergySwitchModel model = filter.get(i);
@@ -66,15 +67,15 @@ public class Prefs {
                 filterText.append(";");
             }
         }
-        persistString(key, filterText.toString());
+        persistString(KEY_ENERGY_FILTER, filterText.toString());
     }
 
-    public List<EnergySwitchModel> getFilters(String key){
+    public List<EnergySwitchModel> getEnergyFilters(){
         List<EnergySwitchModel> models = new ArrayList<>();
-        String listPacked = mPreferences.getString(key, "");
+        String listPacked = mPreferences.getString(KEY_ENERGY_FILTER, "");
         if (TextUtils.isEmpty(listPacked)) {
-            createFilters(key);
-            listPacked = mPreferences.getString(key, "");
+            createEnergyFilters();
+            listPacked = mPreferences.getString(KEY_ENERGY_FILTER, "");
         }
         for (String s : listPacked.split(";")){
             EnergySwitchModel model = new EnergySwitchModel(s);
@@ -83,41 +84,52 @@ public class Prefs {
         return models;
     }
 
-    private void createFilters(String key){
+    private void createEnergyFilters(){
         Context appContext = App.getAppContext();
-        switch (key){
-            case KEY_ENERGY_FILTER:
-                List<EnergySwitchModel> energyModel = new ArrayList<>();
-                String[] energyTitle = appContext.getResources().getStringArray(R.array.electric_energy_names);
-                for (String title : energyTitle){
-                    EnergySwitchModel model = new EnergySwitchModel();
-                    model.setTitle(title);
-                    model.setChecked(true);
-                    if (title.contains(appContext.getString(R.string.electric_energy_current))) {
-                        model.setType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
-                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
-                        model.setType(EnergySwitchModel.ENERGY_TYPE_TODAY);
-                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_week))) {
-                        model.setType(EnergySwitchModel.ENERGY_TYPE_WEEK);
-                    } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))){
-                        model.setType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
-                    }
-                    energyModel.add(model);
-                }
-                saveFilters(energyModel, KEY_ENERGY_FILTER);
-                break;
-            case KEY_CAMERAS_FILTER:
-                List<EnergySwitchModel> camerasModel = new ArrayList<>();
-                String[] camerasTitle = appContext.getResources().getStringArray(R.array.cameras_names);
-                for (String title : camerasTitle){
-                    EnergySwitchModel model = new EnergySwitchModel();
-                    model.setTitle(title);
-                    model.setChecked(true);
-                    camerasModel.add(model);
-                }
-                saveFilters(camerasModel, KEY_CAMERAS_FILTER);
-                break;
+        List<EnergySwitchModel> energyModel = new ArrayList<>();
+        String[] energyTitle = appContext.getResources().getStringArray(R.array.electric_energy_names);
+        for (String title : energyTitle) {
+            EnergySwitchModel model = new EnergySwitchModel();
+            model.setTitle(title);
+            model.setChecked(true);
+            if (title.contains(appContext.getString(R.string.electric_energy_current))) {
+                model.setType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
+            } else if (title.contains(appContext.getString(R.string.electric_energy_this_day))) {
+                model.setType(EnergySwitchModel.ENERGY_TYPE_TODAY);
+            } else if (title.contains(appContext.getString(R.string.electric_energy_this_week))) {
+                model.setType(EnergySwitchModel.ENERGY_TYPE_WEEK);
+            } else if (title.contains(appContext.getString(R.string.electric_energy_this_month))) {
+                model.setType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
+            }
+            energyModel.add(model);
         }
+        saveEnergyFilters(energyModel);
+    }
+
+    public void saveCamerasFilters(List<CamerasSwitchModel> filter){
+        StringBuilder filterText = new StringBuilder();
+        for (int i = 0; i < filter.size(); i++){
+            CamerasSwitchModel model = filter.get(i);
+            filterText.append(model.pack());
+            //Don't add to last item
+            if (i < filter.size() - 1){
+                filterText.append(";");
+            }
+        }
+        persistString(KEY_CAMERAS_FILTER, filterText.toString());
+    }
+
+    public List<CamerasSwitchModel> getCamerasFilters(){
+        List<CamerasSwitchModel> models = new ArrayList<>();
+        String listPacked = mPreferences.getString(KEY_CAMERAS_FILTER, "");
+        if (TextUtils.isEmpty(listPacked)) {
+            return models;
+        }
+        for (String s : listPacked.split(";")){
+            CamerasSwitchModel model = new CamerasSwitchModel(s);
+            models.add(model);
+        }
+        return models;
     }
 
     private void persistBoolean(final String key, final boolean value) {

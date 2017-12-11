@@ -25,7 +25,8 @@ import butterknife.ButterKnife;
 
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.ViewHolder> implements ItemTouchMoveHelper {
 
-    private List<EnergySwitchModel> mSettingsList;
+    private List<EnergySwitchModel> mEnergyList;
+    private List<CamerasSwitchModel> mCamerasList;
 
     private OnDragStartListener mDragStartListener;
 
@@ -34,12 +35,19 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
     }
 
     public SettingsRecyclerAdapter() {
-        mSettingsList = new ArrayList<>();
+        mEnergyList = new ArrayList<>();
+        mCamerasList = new ArrayList<>();
     }
 
-    public void addSettings(List<EnergySwitchModel> models){
-        mSettingsList.clear();
-        mSettingsList.addAll(models);
+    public void addEnergySettings(List<EnergySwitchModel> models){
+        mEnergyList.clear();
+        mEnergyList.addAll(models);
+        notifyDataSetChanged();
+    }
+
+    public void addCamerasSettings(List<CamerasSwitchModel> models){
+        mCamerasList.clear();
+        mCamerasList.addAll(models);
         notifyDataSetChanged();
     }
 
@@ -56,25 +64,42 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        EnergySwitchModel model = mSettingsList.get(position);
-        holder.bindView(model);
+        if (!mEnergyList.isEmpty() && position < mEnergyList.size()) {
+            EnergySwitchModel model = mEnergyList.get(position);
+            holder.bindView(model);
+        } else if(!mCamerasList.isEmpty() && position < mCamerasList.size()) {
+            CamerasSwitchModel model = mCamerasList.get(position);
+            holder.bindCamerasView(model);
+        }
     }
 
     @Override
     public void onItemMove(RecyclerView.ViewHolder fromHolder, RecyclerView.ViewHolder toHolder) {
         int fromPosition = fromHolder.getAdapterPosition();
         int toPosition = toHolder.getAdapterPosition();
-        Collections.swap(mSettingsList, fromPosition, toPosition);
+        if (!mEnergyList.isEmpty() && fromPosition < mEnergyList.size() && toPosition < mEnergyList.size()) {
+            Collections.swap(mEnergyList, fromPosition, toPosition);
+        } else if (!mCamerasList.isEmpty() && fromPosition < mCamerasList.size() && toPosition < mCamerasList.size()){
+            Collections.swap(mCamerasList, fromPosition, toPosition);
+        }
         notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public int getItemCount() {
-        return mSettingsList.size();
+        if (!mEnergyList.isEmpty()){
+            return mEnergyList.size();
+        } else if (!mCamerasList.isEmpty()){
+            return mCamerasList.size();
+        } else return 0;
     }
 
-    public List<EnergySwitchModel> getSettingsList() {
-        return mSettingsList;
+    public List<EnergySwitchModel> getEnergyList() {
+        return mEnergyList;
+    }
+
+    public List<CamerasSwitchModel> getCamerasList() {
+        return mCamerasList;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -100,6 +125,20 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                     return false;
             });
             mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> model.setChecked(isChecked));
+        }
+
+        private void bindCamerasView(CamerasSwitchModel model){
+            mTitle.setText(model.getCameraTitle());
+            mSwitch.setChecked(model.isCameraChecked());
+            mDrag.setOnTouchListener((v, event) ->  {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (mDragStartListener != null) {
+                        mDragStartListener.onDragStarted(ViewHolder.this);
+                    }
+                }
+                return false;
+            });
+            mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> model.setCameraChecked(isChecked));
         }
     }
 }

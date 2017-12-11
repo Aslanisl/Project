@@ -12,7 +12,6 @@ public class CameraModel {
     private String cameraName;
     private String cameraUrl;
     private int cameraStatus;
-    private boolean checked = true;
 
     public int getCameraId() {
         return cameraId;
@@ -44,13 +43,5 @@ public class CameraModel {
 
     public void setCameraStatus(int cameraStatus) {
         this.cameraStatus = cameraStatus;
-    }
-
-    public boolean isChecked() {
-        return checked;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
     }
 }

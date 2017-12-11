@@ -9,25 +9,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.data.repository.CamerasRepository;
 import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.utils.ItemTouchMoveHelperCallback;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Completable;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
-public class SettingsActivity extends BaseActivity {
+public class SettingsActivity extends BaseActivity implements CamerasRepository.CamerasCallback{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_settings_cameras_recycler) RecyclerView mCamerasRecycler;
@@ -36,6 +31,8 @@ public class SettingsActivity extends BaseActivity {
     private SettingsRecyclerAdapter mEnergyAdapter;
     private Prefs mPrefs;
 
+    private CamerasRepository mCamerasRepository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,13 +40,15 @@ public class SettingsActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         mPrefs = Prefs.getInstance();
+        mCamerasRepository = CamerasRepository.getInstance();
+        mCamerasRepository.setCamerasCallback(this);
+        mCamerasRepository.getCameras(false);
 
         mToolbar.setNavigationIcon(R.drawable.close);
         mToolbar.setTitle(R.string.settings);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        initCameras();
         initEnergy();
     }
 
@@ -69,7 +68,19 @@ public class SettingsActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initCameras(){
+    @Override
+    public void onCamerasResponse(List<CameraModel> cameras) {
+        mCamerasRepository.removeCamerasCallback();
+        initCameras(cameras);
+    }
+
+    @Override
+    public void onErrorResponse(String error) {
+        mCamerasRepository.removeCamerasCallback();
+        showToast(error);
+    }
+
+    private void initCameras(List<CameraModel> cameras){
         mCamerasAdapter = new SettingsRecyclerAdapter();
         ItemTouchMoveHelperCallback camerasCallback = new ItemTouchMoveHelperCallback(mCamerasAdapter);
         final ItemTouchHelper camerasItemTouchHelper = new ItemTouchHelper(camerasCallback);
@@ -77,7 +88,45 @@ public class SettingsActivity extends BaseActivity {
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(this));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
         mCamerasAdapter.setOnDragListener(camerasItemTouchHelper::startDrag);
-        mCamerasAdapter.addSettings(mPrefs.getFilters(Prefs.KEY_CAMERAS_FILTER));
+
+        //Remove cameras if they not in server response now
+        List<CamerasSwitchModel> camerasSwitchModels = mPrefs.getCamerasFilters();
+        Iterator<CamerasSwitchModel> models = camerasSwitchModels.iterator();
+        List<Integer> includedItems = new ArrayList<>();
+        while (models.hasNext()){
+            CamerasSwitchModel model = models.next();
+            boolean contains = false;
+            //Hold if camera title is changed
+            String newTitle = null;
+            for (int i = 0; i < cameras.size(); i++){
+                CameraModel cameraModel = cameras.get(i);
+                if (model.getCameraId() == cameraModel.getCameraId()){
+                    contains = true;
+                    newTitle = cameraModel.getCameraName();
+                    includedItems.add(i);
+                }
+            }
+            if (newTitle != null){
+                model.setCameraTitle(newTitle);
+            }
+            if (!contains){
+                models.remove();
+            }
+        }
+        //Add new cameras if they not included in filters before
+        if (includedItems.size() < cameras.size()){
+            for (int i = 0; i < cameras.size(); i++){
+                CameraModel cameraModel = cameras.get(i);
+                if (!includedItems.contains((Integer) i)){
+                    CamerasSwitchModel model = new CamerasSwitchModel();
+                    model.setCameraId(cameraModel.getCameraId());
+                    model.setCameraTitle(cameraModel.getCameraName());
+                    model.setCameraChecked(true);
+                    camerasSwitchModels.add(model);
+                }
+            }
+        }
+        mCamerasAdapter.addCamerasSettings(camerasSwitchModels);
     }
 
     private void initEnergy(){
@@ -88,18 +137,13 @@ public class SettingsActivity extends BaseActivity {
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(this));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyAdapter.setOnDragListener(energyItemTouchHelper::startDrag);
-        mEnergyAdapter.addSettings(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
+        mEnergyAdapter.addEnergySettings(mPrefs.getEnergyFilters());
     }
 
     private void saveFilters(){
-        mPrefs.saveFilters(mCamerasAdapter.getSettingsList(), Prefs.KEY_CAMERAS_FILTER);
-        mPrefs.saveFilters(mEnergyAdapter.getSettingsList(), Prefs.KEY_ENERGY_FILTER);
+        mPrefs.saveCamerasFilters(mCamerasAdapter.getCamerasList());
+        mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
         setResult(RESULT_OK);
         finish();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 }

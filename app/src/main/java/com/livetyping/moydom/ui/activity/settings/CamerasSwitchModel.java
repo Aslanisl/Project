@@ -12,6 +12,9 @@ public class CamerasSwitchModel {
     private String cameraTitle;
     private boolean cameraChecked;
 
+    public CamerasSwitchModel() {
+    }
+
     public CamerasSwitchModel(String packed){
         String[] unpack = packed.split("_");
         try {

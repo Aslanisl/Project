@@ -127,7 +127,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
         mCamerasRepository.setCamerasCallback(this);
         initCameras();
-        mCamerasRepository.getCameras();
+        mCamerasRepository.getCameras(true);
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
@@ -161,7 +161,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     private void getEnergyFilters(){
         mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
-                    e.onNext(mPrefs.getFilters(Prefs.KEY_ENERGY_FILTER));
+                    e.onNext(mPrefs.getEnergyFilters());
                     e.onComplete();
                 }).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -177,7 +177,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mCamerasAdapter = new CameraMyHomeAdapter(getContext());
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
-
     }
 
     @Override
@@ -235,6 +234,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
             getEnergyFilters();
+            mCamerasRepository.setCamerasCallback(this);
+            mCamerasRepository.getCameras(true);
         }
     }
 
