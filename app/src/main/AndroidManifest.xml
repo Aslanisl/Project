@@ -51,6 +51,10 @@
             android:name=".ui.activity.settings.SettingsActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".ui.activity.appeal.AppealActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
