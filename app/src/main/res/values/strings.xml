@@ -35,7 +35,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="see_all">Посмотреть все</string>
     <string name="electric_energy">Электроэнергия</string>
-    
+
     <string-array name="cameras_names">
         <item>Задний двор</item>
         <item>Подъезд</item>
@@ -69,5 +69,8 @@
 
     <string name="camera_online">В эфире</string>
     <string name="camera_offline">Не в эфире</string>
+
+    <string name="appeal">Обращение</string>
+    <string name="send">Отправить</string>
 
 </resources>

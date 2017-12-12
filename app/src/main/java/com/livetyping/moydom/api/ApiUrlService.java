@@ -22,6 +22,7 @@ public class ApiUrlService {
     public static final String FUNCTION_WEEK_ON_DAY_ENERGY = "get_electric_grafs_week";
     public static final String FUNCTION_MONTH_ENERGY = "get_electric_month";
     public static final String FUNCTION_CAMERAS = "get_cameras";
+    public static final String FUNCTION_ADDRESSES = "get_addressee";
 
     public static String getAuthorizationUrl(String uuid, String password){
         StringBuilder url = new StringBuilder();
@@ -72,6 +73,14 @@ public class ApiUrlService {
         url.append(getUuidPassword(true));
         url.append(CalendarUtils.getCurrentMonth()).append("&");
         url.append(CalendarUtils.getCurrentYear());
+        return url.toString();
+    }
+
+    public static String getAddressesUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_ADDRESSES).append("&");
+        url.append(getUuidPassword(false));
         return url.toString();
     }
 

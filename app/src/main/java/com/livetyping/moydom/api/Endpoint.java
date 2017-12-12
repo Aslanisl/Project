@@ -33,4 +33,7 @@ public interface Endpoint {
 
     @GET
     Observable<CamerasResponse> getCameras(@Url String url);
+
+    @GET
+    Observable<BaseModel> getAddresses(@Url String url);
 }
