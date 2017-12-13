@@ -11,6 +11,7 @@ import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.api.ServerCallback;
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 
 import butterknife.BindView;
@@ -45,10 +46,10 @@ public class AppealActivity extends BaseActivity implements ServerCallback{
         mCompositeDisposable.add(Api.getApiService().getAddresses(ApiUrlService.getAddressesUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CallbackWrapper<BaseModel>(this){
+                .subscribeWith(new CallbackWrapper<AppealResponse>(this){
                     @Override
-                    protected void onSuccess(BaseModel baseModel) {
-
+                    protected void onSuccess(AppealResponse appealResponse) {
+                        
                     }
                 }));
     }

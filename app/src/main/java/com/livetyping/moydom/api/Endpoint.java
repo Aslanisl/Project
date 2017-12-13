@@ -1,6 +1,7 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
@@ -35,5 +36,5 @@ public interface Endpoint {
     Observable<CamerasResponse> getCameras(@Url String url);
 
     @GET
-    Observable<BaseModel> getAddresses(@Url String url);
+    Observable<AppealResponse> getAddresses(@Url String url);
 }
