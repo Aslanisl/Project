@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
@@ -29,8 +30,10 @@ public class AppealActivity extends BaseActivity {
     private static final int REQUEST_CODE_SELECT_CATEGORY = 1;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.activity_appeal_categories) TextView mCategoryName;
     private CompositeDisposable mCompositeDisposable;
     private ArrayList<AppealModel> mCategories = new ArrayList<>();
+    private AppealModel mSelectedModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,17 @@ public class AppealActivity extends BaseActivity {
             Intent intent = new Intent(this, AppealCategoryActivity.class);
             intent.putExtra("categories", mCategories);
             startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_SELECT_CATEGORY){
+            mSelectedModel = data.getParcelableExtra("category");
+            if (mSelectedModel != null){
+                mCategoryName.setText(mSelectedModel.getName());
+            }
         }
     }
 

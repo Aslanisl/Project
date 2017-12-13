@@ -75,6 +75,7 @@
 
     <string name="category">Категория</string>
     <string name="chose_category">Выберите категорию</string>
+    <string name="chose_reason">Выберите причину</string>
 
     <string name="cancel">Отмена</string>
 
