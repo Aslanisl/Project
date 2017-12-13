@@ -42,6 +42,10 @@ public class BaseActivity extends AppCompatActivity{
             mProgressDialog.dismiss();
         }
     }
+    //Show dialog or something with not internet interface
+    public void problemWithInternet(){
+        //TODO implementation
+    }
 
     @Override
     protected void onDestroy() {

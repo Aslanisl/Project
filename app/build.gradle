@@ -13,7 +13,7 @@ allprojects {
 }
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.livetyping.moydom"
         minSdkVersion 19

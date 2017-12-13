@@ -9,7 +9,9 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.settings.CamerasSwitchModel;
+import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -35,11 +37,23 @@ public class CamerasRepository implements ServerCallback{
     private CompositeDisposable mCompositeDisposable;
 
     private WeakReference<CamerasCallback> mCallbackWeakReference;
+    private WeakReference<BaseFragment> mBaseFragmentWeakReference;
+    private WeakReference<BaseActivity> mBaseActivityWeakReference;
 
     private List<CameraModel> mCameraModels = new ArrayList<>();
 
-    public void setCamerasCallback(CamerasCallback camerasCallback){
-        mCallbackWeakReference = new WeakReference<CamerasCallback>(camerasCallback);
+    public void setCamerasCallback(BaseFragment fragment){
+        mBaseFragmentWeakReference = new WeakReference<BaseFragment>(fragment);
+        if (fragment instanceof CamerasCallback) {
+            mCallbackWeakReference = new WeakReference<CamerasCallback>((CamerasCallback) fragment);
+        }
+    }
+
+    public void setCamerasCallback(BaseActivity activity){
+        mBaseActivityWeakReference = new WeakReference<BaseActivity>(activity);
+        if (activity instanceof CamerasCallback){
+            mCallbackWeakReference = new WeakReference<CamerasCallback>((CamerasCallback) activity);
+        }
     }
 
     public void removeCamerasCallback(){
@@ -118,12 +132,21 @@ public class CamerasRepository implements ServerCallback{
 
     @Override
     public void onTimeout() {
-        //TODO timeout
+        handlingInternetProblem();
     }
 
     @Override
     public void onNetworkError() {
-        //TODO network error
+        handlingInternetProblem();
+    }
+
+    private void handlingInternetProblem(){
+        if (mBaseActivityWeakReference != null && mBaseActivityWeakReference.get() != null){
+            mBaseActivityWeakReference.get().problemWithInternet();
+        }
+        if (mBaseFragmentWeakReference != null && mBaseFragmentWeakReference.get() != null){
+            mBaseFragmentWeakReference.get().problemWithInternet();
+        }
     }
 
     public interface CamerasCallback{
