@@ -1,9 +1,9 @@
 package com.livetyping.moydom.ui.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.BaseActivity;
@@ -41,6 +41,13 @@ public class BaseFragment extends Fragment {
     protected void removeProgress() {
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
+        }
+    }
+
+    public void problemWithInternet(){
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            ((BaseActivity)activity).problemWithInternet();
         }
     }
 

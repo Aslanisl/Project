@@ -12,6 +12,8 @@ import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
+import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
 
@@ -32,16 +34,30 @@ public class EnergyRepository implements ServerCallback{
     private volatile static EnergyRepository sInstance;
 
     private WeakReference<EnergyCallback> mCallbackWeakReference;
+    private WeakReference<BaseFragment> mBaseFragmentWeakReference;
+    private WeakReference<BaseActivity> mBaseActivityWeakReference;
 
     private CurrentEnergyResponse mCurrentEnergy;
 
     private CompositeDisposable mCompositeDisposable;
 
-    public void setEnergyCallback(EnergyCallback callback){
-        mCallbackWeakReference = new WeakReference<EnergyCallback>(callback);
+    public void setEnergyCallback(BaseFragment fragment){
+        mBaseFragmentWeakReference = new WeakReference<BaseFragment>(fragment);
+        if (fragment instanceof EnergyCallback){
+            mCallbackWeakReference = new WeakReference<EnergyCallback>((EnergyCallback) fragment);
+        }
+    }
+
+    public void setEnergyCallback(BaseActivity activity){
+        mBaseActivityWeakReference = new WeakReference<BaseActivity>(activity);
+        if (activity instanceof EnergyCallback){
+            mCallbackWeakReference = new WeakReference<EnergyCallback>((EnergyCallback) activity);
+        }
     }
 
     public void removeEnergyCallback(){
+        if (mBaseActivityWeakReference != null) mBaseActivityWeakReference = null;
+        if (mBaseFragmentWeakReference != null) mBaseFragmentWeakReference = null;
         if (mCallbackWeakReference != null) mCallbackWeakReference = null;
         if (mCompositeDisposable != null) mCompositeDisposable.dispose();
     }
@@ -118,12 +134,21 @@ public class EnergyRepository implements ServerCallback{
 
     @Override
     public void onTimeout() {
-        //TODO timeout
+        handlingInternetProblem();
     }
 
     @Override
     public void onNetworkError() {
-        //TODO network error
+        handlingInternetProblem();
+    }
+
+    private void handlingInternetProblem(){
+        if (mBaseActivityWeakReference != null && mBaseActivityWeakReference.get() != null){
+            mBaseActivityWeakReference.get().problemWithInternet();
+        }
+        if (mBaseFragmentWeakReference != null && mBaseFragmentWeakReference.get() != null){
+            mBaseFragmentWeakReference.get().problemWithInternet();
+        }
     }
 
     public interface EnergyCallback {
