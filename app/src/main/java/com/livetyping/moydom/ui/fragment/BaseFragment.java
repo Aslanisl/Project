@@ -6,13 +6,14 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.api.ServerCallback;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 
 /**
  * Created by Ivan on 02.12.2017.
  */
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends Fragment implements ServerCallback{
 
     protected ProgressDialog mProgressDialog;
 
@@ -48,6 +49,30 @@ public class BaseFragment extends Fragment {
         Activity activity = getActivity();
         if (activity instanceof BaseActivity){
             ((BaseActivity)activity).problemWithInternet();
+        }
+    }
+
+    @Override
+    public void onUnknownError(String error) {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            ((BaseActivity)activity).onUnknownError(error);
+        }
+    }
+
+    @Override
+    public void onTimeout() {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            ((BaseActivity)activity).onTimeout();
+        }
+    }
+
+    @Override
+    public void onNetworkError() {
+        Activity activity = getActivity();
+        if (activity instanceof BaseActivity){
+            ((BaseActivity)activity).onNetworkError();
         }
     }
 

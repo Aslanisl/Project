@@ -26,7 +26,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class EnterPhoneActivity extends BaseActivity implements MaskedTextChangedListener.ValueListener,
-        NoInternetDialogFragment.OnInternetDialogListener, ServerCallback{
+        NoInternetDialogFragment.OnInternetDialogListener {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
@@ -94,6 +94,9 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
         if (maskFilled){
             mEnableDoneButton = true;
             mPhone = extractedValue;
+            invalidateOptionsMenu();
+        } else if (mEnableDoneButton){
+            mEnableDoneButton = false;
             invalidateOptionsMenu();
         }
     }
