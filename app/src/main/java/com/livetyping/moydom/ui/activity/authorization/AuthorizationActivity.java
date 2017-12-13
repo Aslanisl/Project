@@ -19,8 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class AuthorizationActivity extends BaseActivity implements NoInternetDialogFragment.OnInternetDialogListener,
-        ServerCallback{
+public class AuthorizationActivity extends BaseActivity implements NoInternetDialogFragment.OnInternetDialogListener {
     private Disposable mAuthorizationDisposable;
 
     private String mUUID;

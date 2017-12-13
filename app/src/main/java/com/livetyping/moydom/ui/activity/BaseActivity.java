@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.api.ServerCallback;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -15,7 +16,7 @@ import retrofit2.Response;
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity{
+public class BaseActivity extends AppCompatActivity implements ServerCallback{
 
     protected ProgressDialog mProgressDialog;
 
@@ -41,6 +42,20 @@ public class BaseActivity extends AppCompatActivity{
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
+    }
+    @Override
+    public void onUnknownError(String error) {
+        //TODO implementation
+    }
+
+    @Override
+    public void onTimeout() {
+        //TODO implementation
+    }
+
+    @Override
+    public void onNetworkError() {
+        //TODO implementation
     }
     //Show dialog or something with not internet interface
     public void problemWithInternet(){
