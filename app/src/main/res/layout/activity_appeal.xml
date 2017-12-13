@@ -1,14 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
     tools:context="com.livetyping.moydom.ui.activity.appeal.AppealActivity">
 
     <include layout="@layout/toolbar"/>
 
+    <TextView
+        android:id="@+id/activity_appeal_categories_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:text="@string/category"/>
 
+    <TextView
+        android:id="@+id/activity_appeal_categories"
+        style="@style/Widget.AppCompat.Spinner.Underlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_appeal_categories_title"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:fontFamily="sans-serif"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_small"
+        android:textStyle="normal"/>
 
-</LinearLayout>
+    <EditText
+        android:id="@+id/activity_appeal_body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/activity_appeal_add_photo"
+        android:layout_below="@id/activity_appeal_categories"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:background="@android:color/transparent"
+        android:gravity="start|top"
+        android:hint="@string/what_the_problem_you_have"/>
+
+    <TextView
+        android:id="@+id/activity_appeal_add_photo"
+        style="@style/Blue14CenteredUpMd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:drawablePadding="@dimen/padding_normal"
+        android:drawableStart="@drawable/add_photo"
+        android:gravity="center_vertical"
+        android:padding="@dimen/padding_normal"
+        android:text="@string/attach_photo"
+        android:textAllCaps="true"/>
+
+</RelativeLayout>

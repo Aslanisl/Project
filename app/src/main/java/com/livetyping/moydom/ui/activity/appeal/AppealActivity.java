@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.activity.appeal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -9,21 +10,27 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
-import com.livetyping.moydom.api.ServerCallback;
-import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class AppealActivity extends BaseActivity implements ServerCallback{
+public class AppealActivity extends BaseActivity {
+
+    private static final int REQUEST_CODE_SELECT_CATEGORY = 1;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     private CompositeDisposable mCompositeDisposable;
+    private ArrayList<AppealModel> mCategories = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,24 +56,13 @@ public class AppealActivity extends BaseActivity implements ServerCallback{
                 .subscribeWith(new CallbackWrapper<AppealResponse>(this){
                     @Override
                     protected void onSuccess(AppealResponse appealResponse) {
-                        
+                        if (appealResponse.containsErrors()){
+                            appealResponse.getErrorMessage();
+                        } else {
+                            initAddresses(appealResponse.getAppealModels());
+                        }
                     }
                 }));
-    }
-
-    @Override
-    public void onUnknownError(String error) {
-
-    }
-
-    @Override
-    public void onTimeout() {
-
-    }
-
-    @Override
-    public void onNetworkError() {
-
     }
 
     @Override
@@ -83,6 +79,19 @@ public class AppealActivity extends BaseActivity implements ServerCallback{
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void initAddresses(List<AppealModel> models){
+        mCategories.addAll(models);
+    }
+
+    @OnClick(R.id.activity_appeal_categories)
+    void showCategories(){
+        if (!mCategories.isEmpty()){
+            Intent intent = new Intent(this, AppealCategoryActivity.class);
+            intent.putExtra("categories", mCategories);
+            startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
+        }
     }
 
     @Override

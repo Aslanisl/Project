@@ -46,6 +46,7 @@ public class BaseActivity extends AppCompatActivity implements ServerCallback{
     @Override
     public void onUnknownError(String error) {
         //TODO implementation
+        showToast(error);
     }
 
     @Override

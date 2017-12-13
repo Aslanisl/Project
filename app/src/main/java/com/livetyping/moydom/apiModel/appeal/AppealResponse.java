@@ -3,6 +3,8 @@ package com.livetyping.moydom.apiModel.appeal;
 import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.Record;
 
+import org.simpleframework.xml.Root;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Ivan on 13.12.2017.
  */
-
+@Root(name = "table", strict = false)
 public class AppealResponse extends BaseModel {
     // ID адресата
     public static final String ADDRESSES_ID = "addressee_id";

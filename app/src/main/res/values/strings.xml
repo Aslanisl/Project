@@ -73,4 +73,12 @@
     <string name="appeal">Обращение</string>
     <string name="send">Отправить</string>
 
+    <string name="category">Категория</string>
+    <string name="chose_category">Выберите категорию</string>
+
+    <string name="cancel">Отмена</string>
+
+    <string name="attach_photo">Прикрепить фото</string>
+    <string name="what_the_problem_you_have">Какая проблема у вас возникла?</string>
+
 </resources>

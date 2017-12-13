@@ -53,6 +53,11 @@
         </activity>
         <activity
             android:name=".ui.activity.appeal.AppealActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".ui.activity.appeal.AppealCategoryActivity"
             android:screenOrientation="portrait">
         </activity>
     </application>
