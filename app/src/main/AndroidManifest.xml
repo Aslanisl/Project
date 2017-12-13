@@ -63,6 +63,10 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="ce2a0f98edaf0ce615ae2f127e3ee80aff9ade97" />
+        <activity
+            android:name=".ui.activity.appeal.AppealSelectCategoryActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
