@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/fragment_dialog_photo_check_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground"
+        android:drawablePadding="@dimen/padding_two_normal"
+        android:drawableStart="@drawable/photo_file"
+        android:padding="@dimen/padding_small"
+        android:text="@string/select_file"
+        android:textColor="@color/close_black"
+        android:textSize="@dimen/font_large"
+        android:textStyle="normal"/>
+
+    <TextView
+        android:id="@+id/fragment_dialog_photo_check_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground"
+        android:drawablePadding="@dimen/padding_two_normal"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:drawableStart="@drawable/make_photo"
+        android:padding="@dimen/padding_small"
+        android:text="@string/select_photo"
+        android:textColor="@color/close_black"
+        android:textSize="@dimen/font_large"
+        android:textStyle="normal"/>
+
+</LinearLayout>

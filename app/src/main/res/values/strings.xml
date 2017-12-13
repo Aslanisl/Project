@@ -82,4 +82,9 @@
     <string name="attach_photo">Прикрепить фото</string>
     <string name="what_the_problem_you_have">Какая проблема у вас возникла?</string>
 
+    <string name="select_file">Выбрать файл</string>
+    <string name="select_photo">Сделать фото</string>
+
+    <string name="no_camera">На Вашем устройстве отсутствует камера</string>
+
 </resources>
