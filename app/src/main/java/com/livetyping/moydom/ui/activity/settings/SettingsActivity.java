@@ -141,8 +141,10 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
     }
 
     private void saveFilters(){
-        mPrefs.saveCamerasFilters(mCamerasAdapter.getCamerasList());
-        mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
+        if (mCamerasAdapter != null && mEnergyAdapter != null) {
+            mPrefs.saveCamerasFilters(mCamerasAdapter.getCamerasList());
+            mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
+        }
         setResult(RESULT_OK);
         finish();
     }
