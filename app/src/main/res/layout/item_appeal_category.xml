@@ -13,4 +13,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal"/>
 
+    <ImageView
+        android:id="@+id/item_appeal_category_forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:src="@drawable/forward_icon"/>
+
+    <ImageView
+        android:id="@+id/item_appeal_category_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="4dp"
+        android:layout_toStartOf="@id/item_appeal_category_forward"
+        android:src="@drawable/circle_cat"/>
+
 </RelativeLayout>

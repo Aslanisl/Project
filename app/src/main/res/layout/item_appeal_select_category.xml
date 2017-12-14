@@ -11,6 +11,18 @@
         style="@style/Gray16LeftRg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_normal"/>
+        android:layout_alignParentStart="true"
+        android:layout_margin="@dimen/spacing_normal"
+        android:layout_toStartOf="@+id/item_appeal_select_category_selected"/>
+
+    <ImageView
+        android:id="@+id/item_appeal_select_category_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/spacing_huge"
+        android:src="@drawable/chrckmark"
+        android:visibility="gone"/>
 
 </RelativeLayout>

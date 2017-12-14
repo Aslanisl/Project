@@ -35,6 +35,7 @@ public class AppealSelectCategoryActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null){
             mCategories = intent.getParcelableArrayListExtra("categories");
+            mSelectedModel = intent.getParcelableExtra("selected");
             if (mCategories != null){
                 initModels();
             }
@@ -79,10 +80,14 @@ public class AppealSelectCategoryActivity extends BaseActivity {
     }
 
     private void initModels(){
-        mAdapter = new AppealSelectCategoryRecyclerAdapter(mCategories);
+        mAdapter = new AppealSelectCategoryRecyclerAdapter(mCategories, mSelectedModel);
         mAdapter.setAppealCategoryListener(this::appealModelSelected);
         mSelectCategoryRecycler.setLayoutManager(new LinearLayoutManager(this));
         mSelectCategoryRecycler.setAdapter(mAdapter);
+        if (mSelectedModel != null){
+            mEnableDoneButton = true;
+            invalidateOptionsMenu();
+        }
     }
 
     private void appealModelSelected(AppealModel model){
