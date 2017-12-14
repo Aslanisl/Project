@@ -25,18 +25,13 @@ import butterknife.ButterKnife;
 
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.ViewHolder> implements ItemTouchMoveHelper {
 
-    private List<EnergySwitchModel> mEnergyList;
-    private List<CamerasSwitchModel> mCamerasList;
+    private List<EnergySwitchModel> mEnergyList = new ArrayList<>();
+    private List<CamerasSwitchModel> mCamerasList = new ArrayList<>();
 
     private OnDragStartListener mDragStartListener;
 
     public interface OnDragStartListener {
         void onDragStarted(RecyclerView.ViewHolder viewHolder);
-    }
-
-    public SettingsRecyclerAdapter() {
-        mEnergyList = new ArrayList<>();
-        mCamerasList = new ArrayList<>();
     }
 
     public void addEnergySettings(List<EnergySwitchModel> models){
