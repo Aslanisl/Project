@@ -144,6 +144,8 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
         if (mCamerasAdapter != null && mEnergyAdapter != null) {
             mPrefs.saveCamerasFilters(mCamerasAdapter.getCamerasList());
             mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
+        } else {
+            mCamerasRepository.removeCamerasCallback();
         }
         setResult(RESULT_OK);
         finish();
