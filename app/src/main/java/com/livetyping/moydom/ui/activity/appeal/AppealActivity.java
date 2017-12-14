@@ -1,20 +1,31 @@
 package com.livetyping.moydom.ui.activity.appeal;
 
-import android.content.Context;
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.livetyping.moydom.App;
 import com.livetyping.moydom.BuildConfig;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
@@ -23,7 +34,6 @@ import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.utils.HelpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,17 +42,27 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Completable;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
 
 public class AppealActivity extends BaseActivity implements AppealPhotoSelectorFragment.AppealPhotoSelectorListener{
 
     private static final int REQUEST_CODE_SELECT_CATEGORY = 1;
     private static final int REQUEST_CODE_AVATAR_FROM_CAMERA = 2;
+    private static final int REQUEST_CODE_AVATAR_FROM_GALLERY = 3;
+    private static final int REQUEST_PERMISSION_READ_IMAGES = 4;
+    private static final int REQUEST_PERMISSION_READ_IMAGES_ACTIVITY = 5;
 
+    @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_appeal_categories) TextView mCategoryName;
+    @BindView(R.id.activity_appeal_photos_recycler) RecyclerView mPhotosRecycler;
+    private AppealPhotoRecyclerAdapter mPhotoAdapter;
     private CompositeDisposable mCompositeDisposable;
     private ArrayList<AppealModel> mCategories = new ArrayList<>();
     private AppealModel mSelectedModel;
@@ -54,7 +74,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appeal);
         ButterKnife.bind(this);
-        initToolBar();
+        initViews();
         initCategories();
     }
 
@@ -65,7 +85,15 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         mToolbar.setNavigationOnClickListener(view -> onBackPressed());
     }
 
+    private void initViews(){
+        initToolBar();
+        mPhotoAdapter = new AppealPhotoRecyclerAdapter();
+        mPhotosRecycler.setAdapter(mPhotoAdapter);
+        mPhotosRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+    }
+
     private void initCategories(){
+        showProgress();
         mCompositeDisposable = new CompositeDisposable();
         mCompositeDisposable.add(Api.getApiService().getAddresses(ApiUrlService.getAddressesUrl())
                 .subscribeOn(Schedulers.io())
@@ -73,6 +101,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                 .subscribeWith(new CallbackWrapper<AppealResponse>(this){
                     @Override
                     protected void onSuccess(AppealResponse appealResponse) {
+                        removeProgress();
                         if (appealResponse.containsErrors()){
                             appealResponse.getErrorMessage();
                         } else {
@@ -80,6 +109,16 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                         }
                     }
                 }));
+
+//        Disposable observable = Observable.create(e -> {
+//            for (int i = 0; i < mPhotoFiles.size(); i++){
+//                Bitmap bitmap = getBitmapFromFile(mPhotoFiles.get(i));
+//                e.onNext(bitmap);
+//            }
+//            e.onComplete();
+//        }).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe();
     }
 
     @Override
@@ -107,6 +146,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         if (!mCategories.isEmpty()){
             Intent intent = new Intent(this, AppealCategoryActivity.class);
             intent.putExtra("categories", mCategories);
+            intent.putExtra("selected", mSelectedModel);
             startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
         }
     }
@@ -119,7 +159,58 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
 
     @Override
     public void fromFile() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
 
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            }
+            // No explanation needed, we can request the permission.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION_READ_IMAGES);
+        } else {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_PICK);
+            startActivityForResult(Intent.createChooser(intent, getString(R.string.chose_picture)), REQUEST_CODE_AVATAR_FROM_GALLERY);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_READ_IMAGES){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fromFile();
+            } else {
+                showNoStoragePermissionSnackbar();
+            }
+        }
+    }
+
+    public void showNoStoragePermissionSnackbar() {
+        Snackbar.make(mContainer, getString(R.string.gallery_permission), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.settings), v -> {
+                    openApplicationSettings();
+                    Toast.makeText(App.getAppContext(),
+                            getString(R.string.gallery_permission_request),
+                            Toast.LENGTH_SHORT)
+                            .show();
+                })
+                .show();
+    }
+
+    public void openApplicationSettings() {
+        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:" + getPackageName()));
+        startActivityForResult(appSettingsIntent, REQUEST_PERMISSION_READ_IMAGES_ACTIVITY);
     }
 
     @Override
@@ -155,11 +246,39 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                 mCategoryName.setText(mSelectedModel.getName());
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AVATAR_FROM_CAMERA){
+            File file = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    "photo_" + mPhotoFiles.size() + ".png"
+            );
+            addFile(file);
+        } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AVATAR_FROM_GALLERY){
             Uri imageUri = data.getData();
             if (imageUri != null) {
-                mPhotoFiles.add(new File(imageUri.getPath()));
+                String path = getPath(imageUri);
+                if (path != null) {
+                    File file = new File(path);
+                    addFile(file);
+                }
             }
+        } else if (requestCode == REQUEST_PERMISSION_READ_IMAGES_ACTIVITY){
+            fromFile();
         }
+    }
+
+    private String getPath(Uri uri) {
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        if (cursor == null) return null;
+        cursor.moveToFirst();
+        int columnIndexData = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+        String filePath = cursor.getString(columnIndexData);
+        cursor.close();
+        return filePath;
+    }
+
+    private void addFile(File file){
+        mPhotoFiles.add(file);
+        mPhotoAdapter.addFile(file);
     }
 
     @Override

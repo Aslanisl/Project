@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,10 +29,12 @@ public class AppealCategoryRecyclerAdapter extends RecyclerView.Adapter<AppealCa
 
     private AppealCategorySelectListener mListener;
     private List<String> mCategories;
+    private String mSelectedName;
 
-    public AppealCategoryRecyclerAdapter(Set<String> categories) {
+    public AppealCategoryRecyclerAdapter(Set<String> categories, String selectedName) {
         mCategories = new ArrayList<>();
         mCategories.addAll(categories);
+        mSelectedName = selectedName;
     }
 
     public void setAppealCategoryListener(AppealCategorySelectListener listener){
@@ -62,6 +65,7 @@ public class AppealCategoryRecyclerAdapter extends RecyclerView.Adapter<AppealCa
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_appeal_category_container) RelativeLayout mContainer;
         @BindView(R.id.item_appeal_category_name) TextView mCategoryName;
+        @BindView(R.id.item_appeal_category_selected) ImageView mSelectedCategory;
         private String mString;
 
         public ViewHolder(View itemView) {
@@ -82,6 +86,11 @@ public class AppealCategoryRecyclerAdapter extends RecyclerView.Adapter<AppealCa
         public void bindHolder(String name){
             mCategoryName.setText(name);
             mString = name;
+            mSelectedCategory.setVisibility(
+                    mSelectedName != null && mSelectedName.equals(name)
+                    ? View.VISIBLE
+                    : View.GONE
+            );
         }
     }
 }

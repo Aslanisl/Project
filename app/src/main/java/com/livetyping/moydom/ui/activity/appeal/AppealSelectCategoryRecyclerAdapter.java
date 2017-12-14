@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,9 +29,11 @@ public class AppealSelectCategoryRecyclerAdapter extends RecyclerView.Adapter<Ap
     private AppealCategorySelected mListener;
 
     private List<AppealModel> mModelList;
+    private AppealModel mSelectedModel;
 
-    public AppealSelectCategoryRecyclerAdapter(List<AppealModel> modelList) {
+    public AppealSelectCategoryRecyclerAdapter(List<AppealModel> modelList, AppealModel selectedModel) {
         mModelList = modelList;
+        mSelectedModel = selectedModel;
     }
 
     public void setAppealCategoryListener(AppealCategorySelected listener){
@@ -57,6 +60,7 @@ public class AppealSelectCategoryRecyclerAdapter extends RecyclerView.Adapter<Ap
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_appeal_select_category_container) RelativeLayout mContainer;
         @BindView(R.id.item_appeal_select_category_name) TextView mCategoryName;
+        @BindView(R.id.item_appeal_select_category_selected) ImageView mCategorySelected;
         private AppealModel mModel;
 
         public ViewHolder(View itemView) {
@@ -68,6 +72,8 @@ public class AppealSelectCategoryRecyclerAdapter extends RecyclerView.Adapter<Ap
         private void bindHolder(){
             mContainer.setOnClickListener(view -> {
                 if (mListener != null && mModel != null){
+                    mSelectedModel = mModel;
+                    notifyDataSetChanged();
                     mListener.categorySelected(mModel);
                 }
             });
@@ -75,6 +81,7 @@ public class AppealSelectCategoryRecyclerAdapter extends RecyclerView.Adapter<Ap
 
         public void bindHolder(AppealModel model){
             mModel = model;
+            mCategorySelected.setVisibility(mModel.equals(mSelectedModel) ? View.VISIBLE : View.GONE);
             mCategoryName.setText(model.getName());
         }
     }

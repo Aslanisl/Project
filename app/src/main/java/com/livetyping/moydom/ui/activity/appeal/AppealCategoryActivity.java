@@ -26,6 +26,7 @@ public class AppealCategoryActivity extends BaseActivity {
     private AppealCategoryRecyclerAdapter mCategoryRecyclerAdapter;
 
     private Map<String, List<AppealModel>> mCategoriesMap;
+    private AppealModel mSelectedModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class AppealCategoryActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null){
             ArrayList<AppealModel> models = intent.getParcelableArrayListExtra("categories");
+            mSelectedModel = intent.getParcelableExtra("selected");
             if (models != null) {
                 initCategoriesMap(models);
             }
@@ -62,7 +64,11 @@ public class AppealCategoryActivity extends BaseActivity {
                 mCategoriesMap.put(model.getTypeName(), appealModels);
             }
         }
-        mCategoryRecyclerAdapter = new AppealCategoryRecyclerAdapter(mCategoriesMap.keySet());
+        String selectedName = null;
+        if (mSelectedModel != null){
+            selectedName = mSelectedModel.getTypeName();
+        }
+        mCategoryRecyclerAdapter = new AppealCategoryRecyclerAdapter(mCategoriesMap.keySet(), selectedName);
         mCategoryRecyclerAdapter.setAppealCategoryListener(this::categorySelected);
         mCategoryRecycler.setAdapter(mCategoryRecyclerAdapter);
         mCategoryRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -75,6 +81,7 @@ public class AppealCategoryActivity extends BaseActivity {
             ArrayList<AppealModel> models = new ArrayList<>();
             models.addAll(selectedModels);
             intent.putExtra("categories", models);
+            intent.putExtra("selected", mSelectedModel);
             startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
         }
     }

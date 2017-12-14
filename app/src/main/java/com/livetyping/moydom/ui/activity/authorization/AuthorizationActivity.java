@@ -89,10 +89,8 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
 
     private void handlingError(){
         removeProgress();
-        if (!NetworkUtil.isConnected(this)){
-            NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
-            fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
-        }
+        NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
+        fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);
     }
 
     @Override
