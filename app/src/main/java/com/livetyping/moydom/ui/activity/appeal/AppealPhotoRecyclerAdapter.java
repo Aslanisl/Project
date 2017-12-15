@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.utils.GlideApp;
 
@@ -48,6 +52,13 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
         }
     }
 
+    public void removeFile(int position){
+        if (position < mPhotoFiles.size()){
+            mPhotoFiles.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
     public List<File> getPhotoFiles() {
         return mPhotoFiles;
     }
@@ -71,15 +82,29 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
 
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_appeal_photo) ImageView mPhoto;
+        @BindView(R.id.item_appeal_delete) ImageView mDelete;
         private Context mContext;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
+            bindHolder();
+        }
+
+        private void bindHolder(){
+            mDelete.setOnClickListener(view -> removeFile(getAdapterPosition()));
         }
 
         public void bindHolder(File file){
-            GlideApp.with(mContext).load(file).into(mPhoto);
+            GlideApp.with(mContext)
+                    .load(file)
+                    .apply(RequestOptions.bitmapTransform(
+                            new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(16)
+                            )
+                    ))
+                    .into(mPhoto);
         }
     }
 }

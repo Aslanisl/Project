@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -34,6 +35,7 @@ import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.utils.HelpUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,7 +91,10 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         initToolBar();
         mPhotoAdapter = new AppealPhotoRecyclerAdapter();
         mPhotosRecycler.setAdapter(mPhotoAdapter);
-        mPhotosRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        //width photo view
+        int width = 100;
+        mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
+
     }
 
     private void initCategories(){
@@ -109,16 +114,6 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                         }
                     }
                 }));
-
-//        Disposable observable = Observable.create(e -> {
-//            for (int i = 0; i < mPhotoFiles.size(); i++){
-//                Bitmap bitmap = getBitmapFromFile(mPhotoFiles.get(i));
-//                e.onNext(bitmap);
-//            }
-//            e.onComplete();
-//        }).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe();
     }
 
     @Override
