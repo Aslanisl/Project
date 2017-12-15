@@ -2,11 +2,23 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_tiny"
+    android:layout_marginEnd="@dimen/spacing_tiny">
 
     <ImageView
         android:id="@+id/item_appeal_photo"
         android:layout_width="100dp"
-        android:layout_height="100dp"/>
+        android:layout_height="100dp"
+        android:foreground="@drawable/background_appeal_photo"/>
+
+    <ImageView
+        android:id="@+id/item_appeal_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/item_appeal_photo"
+        android:layout_alignTop="@id/item_appeal_photo"
+        android:layout_margin="4dp"
+        android:src="@drawable/ic_close_circle_white_24dp"/>
 
 </RelativeLayout>
