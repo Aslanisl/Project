@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.fragment.mainScreen;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -7,9 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.appeal.AppealActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class OtherFragment extends BaseFragment {
@@ -35,6 +39,12 @@ public class OtherFragment extends BaseFragment {
         mUnbinder = ButterKnife.bind(this, rootView);
 
         return rootView;
+    }
+
+    @OnClick(R.id.fragment_other_appeal)
+    void appealClick(){
+        Intent intent = new Intent(getContext(), AppealActivity.class);
+        startActivity(intent);
     }
 
     @Override

@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.livetyping.moydom.ui.fragment.mainScreen.OtherFragment">
 
-</FrameLayout>
+    <com.livetyping.moydom.ui.custom.SelectListView
+        android:id="@+id/fragment_other_appeal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:selectText="@string/apply_to_support">
+
+    </com.livetyping.moydom.ui.custom.SelectListView>
+
+</LinearLayout>

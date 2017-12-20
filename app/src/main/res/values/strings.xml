@@ -90,5 +90,7 @@
     <string name="chose_picture">Выберите фото</string>
     <string name="gallery_permission">Для просмотра фотографий из галереи, небходимо разрешение.</string>
     <string name="gallery_permission_request">Откройте разрешения и добавьте разрешение на доступ к памяти.</string>
+    
+    <string name="apply_to_support">Обратиться в поддержку</string>
 
 </resources>
