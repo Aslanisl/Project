@@ -26,8 +26,7 @@ public class LauncherActivity extends BaseActivity {
             startActivity(intent);
             finish();
         } else {
-            //TODO change back to MainActivity
-            Intent intent = new Intent(this, AppealActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }
