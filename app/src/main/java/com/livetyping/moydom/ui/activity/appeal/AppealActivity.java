@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -16,12 +15,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +32,7 @@ import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.utils.AlertDialogUtils;
 import com.livetyping.moydom.utils.HelpUtils;
 
 import java.io.File;
@@ -44,13 +42,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
 
 public class AppealActivity extends BaseActivity implements AppealPhotoSelectorFragment.AppealPhotoSelectorListener{
 
@@ -59,6 +53,9 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     private static final int REQUEST_CODE_AVATAR_FROM_GALLERY = 3;
     private static final int REQUEST_PERMISSION_READ_IMAGES = 4;
     private static final int REQUEST_PERMISSION_READ_IMAGES_ACTIVITY = 5;
+
+    private boolean mEnableSendMenu = false;
+    private MenuItem mSendItem;
 
     @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -91,8 +88,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         initToolBar();
         mPhotoAdapter = new AppealPhotoRecyclerAdapter();
         mPhotosRecycler.setAdapter(mPhotoAdapter);
-        //width photo view
-        int width = 100;
+        //width photo view in dp
+        int width = (int)(getResources().getDimension(R.dimen.appeal_photo_width_height) / getResources().getDisplayMetrics().density);
         mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
 
     }
@@ -127,6 +124,11 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         switch (item.getItemId()){
             case R.id.action_send:
                 //TODO send appeal
+                if (mSelectedModel == null){
+                    showToast(R.string.chose_category);
+                } else {
+                    AlertDialogUtils.showAlertDone(this);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

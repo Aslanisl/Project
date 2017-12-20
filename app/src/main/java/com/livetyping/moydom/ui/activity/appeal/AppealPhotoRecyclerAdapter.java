@@ -101,7 +101,7 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
                     .apply(RequestOptions.bitmapTransform(
                             new MultiTransformation<>(
                                     new CenterCrop(),
-                                    new RoundedCorners(16)
+                                    new RoundedCorners(6)
                             )
                     ))
                     .into(mPhoto);
