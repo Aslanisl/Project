@@ -5,4 +5,8 @@
         <attr name="selectText" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="CustomButtonView">
+        <attr name="buttonText" format="string"/>
+    </declare-styleable>
+
 </resources>

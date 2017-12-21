@@ -1,0 +1,13 @@
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custom_button_view"
+    style="@style/White14CenteredUpMd"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_azur_corners"
+    android:foreground="?attr/selectableItemBackground"
+    android:paddingBottom="@dimen/padding_little"
+    android:paddingEnd="@dimen/padding_huge"
+    android:paddingStart="@dimen/padding_huge"
+    android:paddingTop="@dimen/padding_little"
+    android:textAllCaps="true"/>

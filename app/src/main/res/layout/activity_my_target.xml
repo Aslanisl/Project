@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_gray"
+    android:orientation="vertical"
+    tools:context="com.livetyping.moydom.ui.activity.otherSettings.MyTargetActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <include
+        layout="@layout/item_my_target"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginTop="@dimen/spacing_huge"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"/>
+
+    <com.livetyping.moydom.ui.custom.CustomButtonView
+        android:id="@+id/activity_my_target_target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/spacing_two_normal"
+        app:buttonText="@string/change_target">
+
+    </com.livetyping.moydom.ui.custom.CustomButtonView>
+
+</RelativeLayout>

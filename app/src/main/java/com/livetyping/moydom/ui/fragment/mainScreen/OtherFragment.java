@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.appeal.AppealActivity;
+import com.livetyping.moydom.ui.activity.otherSettings.OtherSettingsActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import butterknife.BindView;
@@ -41,8 +42,14 @@ public class OtherFragment extends BaseFragment {
         return rootView;
     }
 
+    @OnClick(R.id.fragment_other_settings)
+    void settingsClicked(){
+        Intent intent = new Intent(getContext(), OtherSettingsActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.fragment_other_appeal)
-    void appealClick(){
+    void appealClicked(){
         Intent intent = new Intent(getContext(), AppealActivity.class);
         startActivity(intent);
     }

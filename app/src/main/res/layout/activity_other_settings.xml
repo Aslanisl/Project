@@ -6,21 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.livetyping.moydom.ui.fragment.mainScreen.OtherFragment">
+    tools:context="com.livetyping.moydom.ui.activity.otherSettings.OtherSettingsActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <com.livetyping.moydom.ui.custom.SelectListView
-        android:id="@+id/fragment_other_settings"
+        android:id="@+id/activity_other_settings_intercom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:selectText="@string/settings">
+        app:selectText="@string/intercom">
 
     </com.livetyping.moydom.ui.custom.SelectListView>
 
     <com.livetyping.moydom.ui.custom.SelectListView
-        android:id="@+id/fragment_other_appeal"
+        android:id="@+id/activity_other_settings_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:selectText="@string/apply_to_support">
+        app:selectText="@string/notifications">
+
+    </com.livetyping.moydom.ui.custom.SelectListView>
+
+    <com.livetyping.moydom.ui.custom.SelectListView
+        android:id="@+id/activity_other_settings_my_target"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:selectText="@string/my_target">
 
     </com.livetyping.moydom.ui.custom.SelectListView>
 

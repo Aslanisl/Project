@@ -23,6 +23,7 @@ public class ApiUrlService {
     public static final String FUNCTION_MONTH_ENERGY = "get_electric_month";
     public static final String FUNCTION_CAMERAS = "get_cameras";
     public static final String FUNCTION_ADDRESSES = "get_addressee";
+    public static final String FUNCTION_AVERAGE_COST = "get_avg_cost";
 
     public static String getAuthorizationUrl(String uuid, String password){
         StringBuilder url = new StringBuilder();
@@ -80,6 +81,14 @@ public class ApiUrlService {
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_ADDRESSES).append("&");
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getAverageEnergyCost(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_AVERAGE_COST).append("&");
         url.append(getUuidPassword(false));
         return url.toString();
     }

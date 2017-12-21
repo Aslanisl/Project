@@ -1,13 +1,10 @@
 package com.livetyping.moydom.ui.custom;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
@@ -16,7 +13,7 @@ import com.livetyping.moydom.R;
  * Created by Ivan on 20.12.2017.
  */
 
-public class SelectListView extends RelativeLayout {
+public class SelectListView extends LinearLayout {
 
     protected String mText;
 

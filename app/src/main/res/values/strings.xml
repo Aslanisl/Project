@@ -90,7 +90,19 @@
     <string name="chose_picture">Выберите фото</string>
     <string name="gallery_permission">Для просмотра фотографий из галереи, небходимо разрешение.</string>
     <string name="gallery_permission_request">Откройте разрешения и добавьте разрешение на доступ к памяти.</string>
-    
+
     <string name="apply_to_support">Обратиться в поддержку</string>
+
+    <string name="intercom">Домофон</string>
+    <string name="notifications">Уведомления</string>
+    <string name="my_target">Моя цель</string>
+
+    <string name="change_target">Изменить цель</string>
+    <string name="new_target">Новая цель</string>
+
+    <string name="how_many_you_want_to_pay_for_energy">Сколько вы бы хотели тратить на электроэнергию ежемесячно?</string>
+
+    <string name="energy_less_percent">На %d%% меньше чем сейчас</string>
+    <string name="about_cost_of_your">≈ %d&#8381; от ваших текущих затрат</string>
 
 </resources>

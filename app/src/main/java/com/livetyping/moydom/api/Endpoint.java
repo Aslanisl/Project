@@ -6,6 +6,7 @@ import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
+import com.livetyping.moydom.apiModel.myTarget.AverageEnergyCostResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
@@ -37,4 +38,7 @@ public interface Endpoint {
 
     @GET
     Observable<AppealResponse> getAddresses(@Url String url);
+
+    @GET
+    Observable<AverageEnergyCostResponse> getAverageEnergyCost(@Url String url);
 }
