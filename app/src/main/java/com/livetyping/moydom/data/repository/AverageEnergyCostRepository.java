@@ -3,14 +3,13 @@ package com.livetyping.moydom.data.repository;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
+import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.api.ServerCallback;
-import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.apiModel.myTarget.AverageEnergyCostResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -21,6 +20,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class AverageEnergyCostRepository implements ServerCallback {
+
+    private static final int API_RETRY_CALL_COUNT = 10;
+    private static final int API_RETRY_CALL_TIME = 5000;
 
     private volatile static AverageEnergyCostRepository sInstance;
 
@@ -64,6 +66,7 @@ public class AverageEnergyCostRepository implements ServerCallback {
             mCompositeDisposable.add(Api.getApiService()
                     .getAverageEnergyCost(ApiUrlService.getAverageEnergyCost())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                     .subscribeOn(Schedulers.io())
                     .subscribeWith(new CallbackWrapper<AverageEnergyCostResponse>(this) {
                         @Override
