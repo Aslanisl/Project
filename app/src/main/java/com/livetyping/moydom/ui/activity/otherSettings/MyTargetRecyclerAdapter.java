@@ -24,18 +24,48 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
     private static final int POSITION_PERCENT_NORMAL = 1;
     private static final int POSITION_PERCENT_LOW = 2;
 
+    private static final int TYPE_MY_TARGET = 0;
+    private static final int TYPE_TARGETS = 1;
+
+    private static final int TARGET_MY_COUNT = 1;
     private static final int TARGETS_COUNT = 3;
+
+    private int mType;
 
     private float mCurrentCost;
 
     private int mSelectedPosition = -1;
+    private float mPercentSelected = 0;
 
-    public MyTargetRecyclerAdapter(float currentCost) {
+    public interface PercentSelectingListener{
+        void percentSelected(float percent);
+    }
+
+    private PercentSelectingListener mListener;
+
+    public MyTargetRecyclerAdapter(float currentCost, float percentSelected) {
         mCurrentCost = currentCost;
+        mPercentSelected = percentSelected;
+        mType = TYPE_TARGETS;
+    }
+
+    public MyTargetRecyclerAdapter(float currentCost, float percentSelected, boolean myTarget){
+        mCurrentCost = currentCost;
+        mPercentSelected = percentSelected;
+        mType = TYPE_MY_TARGET;
+    }
+
+    public void setPercentListener(PercentSelectingListener listener){
+        mListener = listener;
     }
 
     public void setCurrentCost(float currentCost){
         mCurrentCost = currentCost;
+        notifyDataSetChanged();
+    }
+
+    public void setCurrentPercent(float percentSelected){
+        mPercentSelected = percentSelected;
         notifyDataSetChanged();
     }
 
@@ -47,22 +77,29 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        switch (position){
-            case POSITION_PERCENT_HIGH:
-                holder.bindHolder(MyTargetModel.PERCENT_HIGH, mCurrentCost);
-                break;
-            case POSITION_PERCENT_NORMAL:
-                holder.bindHolder(MyTargetModel.PERCENT_NORMAL, mCurrentCost);
-                break;
-            case POSITION_PERCENT_LOW:
-                holder.bindHolder(MyTargetModel.PERCENT_LOW, mCurrentCost);
-                break;
+        if (mType == TYPE_TARGETS) {
+            switch (position) {
+                case POSITION_PERCENT_HIGH:
+                    holder.bindHolder(MyTargetModel.PERCENT_HIGH, mCurrentCost);
+                    break;
+                case POSITION_PERCENT_NORMAL:
+                    holder.bindHolder(MyTargetModel.PERCENT_NORMAL, mCurrentCost);
+                    break;
+                case POSITION_PERCENT_LOW:
+                    holder.bindHolder(MyTargetModel.PERCENT_LOW, mCurrentCost);
+                    break;
+            }
+        } else {
+            holder.bindHolder(mPercentSelected, mCurrentCost);
         }
     }
 
     @Override
     public int getItemCount() {
-        return TARGETS_COUNT;
+        if (mType == TYPE_TARGETS) {
+            return TARGETS_COUNT;
+        }
+        return TARGET_MY_COUNT;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -70,12 +107,15 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
         @BindView(R.id.item_my_target_title) TextView mTitle;
         @BindView(R.id.item_my_target_description) TextView mDescription;
         private Context mContext;
+        private float mPercent;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             mContext = itemView.getContext();
-            bindHolder();
+            if (mType == TYPE_TARGETS) {
+                bindHolder();
+            }
         }
 
         private void bindHolder(){
@@ -86,6 +126,10 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
                 mDescription.setTextColor(ContextCompat.getColor(mContext, R.color.white_gray));
                 int lastPosition = mSelectedPosition;
                 mSelectedPosition = getAdapterPosition();
+                mPercentSelected = mPercent;
+                if (mListener != null){
+                    mListener.percentSelected(mPercent);
+                }
                 if (lastPosition != -1) {
                     notifyItemChanged(lastPosition);
                 }
@@ -93,6 +137,15 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
         }
 
         public void bindHolder(float percent, float value){
+            if (mType == TYPE_TARGETS) {
+                if (Math.round(mPercentSelected * 100) == Math.round(percent * 100)) {
+                    mSelectedPosition = getAdapterPosition();
+                    if (mListener != null) {
+                        mListener.percentSelected(mPercent);
+                    }
+                }
+            }
+            mPercent = percent;
             int percentAbs = (int)(percent * 100);
             mTitle.setText(mContext.getString(R.string.energy_less_percent, percentAbs));
             int valueAbs = Math.round(value * percent);

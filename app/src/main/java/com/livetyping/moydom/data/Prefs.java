@@ -23,8 +23,9 @@ public class Prefs {
     private static final String PREFERENCES_NAME = "user_preferences";
     private static final String KEY_UUID = "k1";
     private static final String KEY_PASSWORD = "k2";
-    public static final String KEY_CAMERAS_FILTER = "k5";
-    public static final String KEY_ENERGY_FILTER = "k6";
+    private static final String KEY_CAMERAS_FILTER = "k5";
+    private static final String KEY_ENERGY_FILTER = "k6";
+    private static final String KEY_TARGET_PERCENT = "k7";
 
     private Preferences mPreferences;
 
@@ -130,6 +131,14 @@ public class Prefs {
             models.add(model);
         }
         return models;
+    }
+
+    public float getTargetPercent(){
+        return mPreferences.getFloat(KEY_TARGET_PERCENT, 0);
+    }
+
+    public void saveTargetPercent(float percent){
+        persistFloat(KEY_TARGET_PERCENT, percent);
     }
 
     private void persistBoolean(final String key, final boolean value) {

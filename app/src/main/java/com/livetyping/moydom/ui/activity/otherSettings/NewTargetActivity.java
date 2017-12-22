@@ -8,23 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.api.Api;
-import com.livetyping.moydom.api.ApiUrlService;
-import com.livetyping.moydom.api.CallbackWrapper;
-import com.livetyping.moydom.apiModel.myTarget.AverageEnergyCostResponse;
+import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.data.repository.AverageEnergyCostRepository;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.custom.CustomButtonView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
-public class NewTargetActivity extends BaseActivity {
+public class NewTargetActivity extends BaseActivity implements AverageEnergyCostRepository.AverageCostCallback {
     public static final String EDIT = "edit";
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -32,18 +25,19 @@ public class NewTargetActivity extends BaseActivity {
     @BindView(R.id.activity_new_target) CustomButtonView mNewTargetButton;
     @BindView(R.id.activity_new_target_targets) RecyclerView mTargetsRecycler;
     private MyTargetRecyclerAdapter mTargetsAdapter;
-
-    private CompositeDisposable mCompositeDisposable;
+    private float mPercentSelected;
 
     private boolean mEdit;
+
+    private AverageEnergyCostRepository mCostRepository;
+
+    private Prefs mPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_target);
         ButterKnife.bind(this);
-
-        mCompositeDisposable = new CompositeDisposable();
 
         Intent intent = getIntent();
         if (intent != null){
@@ -61,40 +55,49 @@ public class NewTargetActivity extends BaseActivity {
 
         mNewTargetButton.setEnabled(false);
 
-        mCompositeDisposable.add(Api.getApiService()
-                .getAverageEnergyCost(ApiUrlService.getAverageEnergyCost())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribeWith(new CallbackWrapper<AverageEnergyCostResponse>(this){
-                    @Override
-                    protected void onSuccess(AverageEnergyCostResponse averageEnergyCostResponse) {
-                        if (averageEnergyCostResponse.containsErrors()){
-                            //TODO send error
-                        } else {
-                            initTargets(averageEnergyCostResponse.getAverageCost());
-                        }
-                    }
-                }));
+        mPrefs = Prefs.getInstance();
+        initViews();
+
+        mCostRepository = AverageEnergyCostRepository.getInstance();
     }
 
-    private void initTargets(float averageCost){
-        if (mTargetsAdapter == null){
-            mTargetsAdapter = new MyTargetRecyclerAdapter(averageCost);
-            mTargetsRecycler.setAdapter(mTargetsAdapter);
-            mTargetsRecycler.setLayoutManager(new LinearLayoutManager(this));
-        } else {
-            mTargetsAdapter.setCurrentCost(averageCost);
-        }
+    private void initViews(){
+        mTargetsAdapter = new MyTargetRecyclerAdapter(0, mPrefs.getTargetPercent());
+        mTargetsRecycler.setAdapter(mTargetsAdapter);
+        mTargetsRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mTargetsAdapter.setPercentListener(percent -> {
+            mPercentSelected = percent;
+            if (!mNewTargetButton.isEnabled()) mNewTargetButton.setEnabled(true);
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCostRepository.setAverageCostCallback(this);
+        mCostRepository.getAverageCost();
+    }
+
+    @Override
+    public void onAverageCostResponse(float averageCost) {
+        mTargetsAdapter.setCurrentCost(averageCost);
+    }
+
+    @Override
+    public void onErrorResponse(String error) {
+        showToast(error);
     }
 
     @OnClick(R.id.activity_new_target)
     void addNewTarget(CustomButtonView view){
-        view.setEnabled(true);
+        mPrefs.saveTargetPercent(mPercentSelected);
+        setResult(RESULT_OK);
+        finish();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mCompositeDisposable.dispose();
+    protected void onPause() {
+        super.onPause();
+        mCostRepository.removeAverageCostCallback();
     }
 }

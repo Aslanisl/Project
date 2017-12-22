@@ -11,14 +11,18 @@
 
     <include layout="@layout/toolbar"/>
 
-    <include
-        layout="@layout/item_my_target"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/activity_my_target_targets"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/activity_my_target_target"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="@dimen/spacing_huge"
+        android:layout_marginBottom="@dimen/spacing_huge"
+        android:layout_marginEnd="@dimen/spacing_normal"
         android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginEnd="@dimen/spacing_normal"/>
+        android:layout_marginTop="@dimen/spacing_huge">
+
+    </android.support.v7.widget.RecyclerView>
 
     <com.livetyping.moydom.ui.custom.CustomButtonView
         android:id="@+id/activity_my_target_target"
