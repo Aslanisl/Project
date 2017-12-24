@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,6 +18,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
@@ -55,7 +59,6 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     private static final int REQUEST_PERMISSION_READ_IMAGES_ACTIVITY = 5;
 
     private boolean mEnableSendMenu = false;
-    private MenuItem mSendItem;
 
     @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
@@ -75,6 +78,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         ButterKnife.bind(this);
         initViews();
         initCategories();
+        invalidateOptionsMenu();
     }
 
     private void initToolBar(){
@@ -119,6 +123,23 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         return super.onCreateOptionsMenu(menu);
     }
 
+//    @Override
+//    public boolean onPrepareOptionsMenu(Menu menu) {
+//        MenuItem item = menu.findItem(R.id.action_send);
+//        if (mEnableSendMenu){
+//            item.setEnabled(true);
+//            SpannableString s = new SpannableString(getString(R.string.send));
+//            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
+//            item.setTitle(s);
+//        } else {
+//            item.setEnabled(false);
+//            SpannableString s = new SpannableString(getString(R.string.send));
+//            s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.blue_gray)), 0, s.length(), 0);
+//            item.setTitle(s);
+//        }
+//        return super.onPrepareOptionsMenu(menu);
+//    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -127,6 +148,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                 if (mSelectedModel == null){
                     showToast(R.string.chose_category);
                 } else {
+                    sendAppeal();
                     AlertDialogUtils.showAlertDone(this);
                 }
                 return true;
@@ -241,6 +263,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             mSelectedModel = data.getParcelableExtra("category");
             if (mSelectedModel != null){
                 mCategoryName.setText(mSelectedModel.getName());
+                mEnableSendMenu = true;
+                invalidateOptionsMenu();
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AVATAR_FROM_CAMERA){
             File file = new File(
@@ -276,6 +300,22 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     private void addFile(File file){
         mPhotoFiles.add(file);
         mPhotoAdapter.addFile(file);
+    }
+
+    private void sendAppeal(){
+        Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_EMAIL, "");
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Theme");
+        intent.putExtra(Intent.EXTRA_TEXT, "Text");
+        ArrayList<Uri> uris = new ArrayList<>();
+        for (File file : mPhotoFiles){
+            Uri uri = Uri.fromFile(file);
+            uris.add(uri);
+        }
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+
+        startActivity(Intent.createChooser(intent, "Send appeal"));
     }
 
     @Override
