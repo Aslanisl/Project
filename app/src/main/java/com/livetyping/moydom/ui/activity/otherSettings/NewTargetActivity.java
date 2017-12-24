@@ -11,6 +11,7 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.AverageEnergyCostRepository;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.custom.CustomButtonView;
 
 import butterknife.BindView;
@@ -91,8 +92,14 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
     @OnClick(R.id.activity_new_target)
     void addNewTarget(CustomButtonView view){
         mPrefs.saveTargetPercent(mPercentSelected);
-        setResult(RESULT_OK);
-        finish();
+        if (mEdit) {
+            setResult(RESULT_OK);
+            finish();
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     @Override

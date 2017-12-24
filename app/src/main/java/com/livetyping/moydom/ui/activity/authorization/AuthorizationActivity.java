@@ -8,6 +8,7 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.Record;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
+import com.livetyping.moydom.ui.activity.otherSettings.NewTargetActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.api.CallbackWrapper;
@@ -99,7 +100,8 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
     }
 
     private void successAuthorization(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, NewTargetActivity.class);
+        intent.putExtra(NewTargetActivity.EDIT, false);
         startActivity(intent);
         finish();
     }
