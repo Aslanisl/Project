@@ -15,14 +15,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_COUNT;
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
+
 /**
  * Created by Ivan on 22.12.2017.
  */
 
 public class AverageEnergyCostRepository implements ServerCallback {
-
-    private static final int API_RETRY_CALL_COUNT = 10;
-    private static final int API_RETRY_CALL_TIME = 5000;
 
     private volatile static AverageEnergyCostRepository sInstance;
 
@@ -64,7 +64,7 @@ public class AverageEnergyCostRepository implements ServerCallback {
         if (mAverageCost == 0) {
             mCompositeDisposable = new CompositeDisposable();
             mCompositeDisposable.add(Api.getApiService()
-                    .getAverageEnergyCost(ApiUrlService.getAverageEnergyCost())
+                    .getAverageEnergyCost(ApiUrlService.getAverageEnergyCostUrl())
                     .observeOn(AndroidSchedulers.mainThread())
                     .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                     .subscribeOn(Schedulers.io())

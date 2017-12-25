@@ -12,7 +12,7 @@ import java.util.Map;
 
 @Root(name = "table", strict = false)
 public class BaseModel {
-    @ElementList(name = "records")
+    @ElementList(name = "records", required=false)
     protected List<Record> records;
 
     public List<Record> getRecords() {

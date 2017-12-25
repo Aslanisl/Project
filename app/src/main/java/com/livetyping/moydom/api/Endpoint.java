@@ -1,6 +1,7 @@
 package com.livetyping.moydom.api;
 
 import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.advice.AdviceResponse;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
@@ -41,4 +42,10 @@ public interface Endpoint {
 
     @GET
     Observable<AverageEnergyCostResponse> getAverageEnergyCost(@Url String url);
+
+    @GET
+    Observable<AdviceResponse> getAdvice(@Url String url);
+
+    @GET
+    Observable<BaseModel> changeAdviceStatus(@Url String url);
 }

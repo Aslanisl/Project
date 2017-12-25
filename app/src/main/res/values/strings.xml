@@ -104,5 +104,6 @@
 
     <string name="energy_less_percent">На %d%% меньше чем сейчас</string>
     <string name="about_cost_of_your">≈ %d&#8381; от ваших текущих затрат</string>
+    <string name="prediction">Прогноз</string>
 
 </resources>

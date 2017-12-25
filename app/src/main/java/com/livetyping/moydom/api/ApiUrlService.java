@@ -24,6 +24,8 @@ public class ApiUrlService {
     public static final String FUNCTION_CAMERAS = "get_cameras";
     public static final String FUNCTION_ADDRESSES = "get_addressee";
     public static final String FUNCTION_AVERAGE_COST = "get_avg_cost";
+    public static final String FUNCTION_ADVICE = "get_advices";
+    public static final String FUNCTION_CHANGE_ADVICE_STATUS = "set_advice_status";
 
     public static String getAuthorizationUrl(String uuid, String password){
         StringBuilder url = new StringBuilder();
@@ -85,11 +87,29 @@ public class ApiUrlService {
         return url.toString();
     }
 
-    public static String getAverageEnergyCost(){
+    public static String getAverageEnergyCostUrl(){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_AVERAGE_COST).append("&");
         url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getAdviceUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_ADVICE).append("&");
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getChangeAdviceUrl(int adviceId, int status){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_CHANGE_ADVICE_STATUS).append("&");
+        url.append(getUuidPassword(true));
+        url.append(String.valueOf(adviceId)).append("&");
+        url.append(String.valueOf(status));
         return url.toString();
     }
 

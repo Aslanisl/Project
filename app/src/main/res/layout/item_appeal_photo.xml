@@ -19,6 +19,6 @@
         android:layout_alignEnd="@id/item_appeal_photo"
         android:layout_alignTop="@id/item_appeal_photo"
         android:layout_margin="@dimen/spacing_tiny"
-        android:src="@drawable/ic_close_circle_white_24dp"/>
+        android:src="@drawable/close_photo"/>
 
 </RelativeLayout>

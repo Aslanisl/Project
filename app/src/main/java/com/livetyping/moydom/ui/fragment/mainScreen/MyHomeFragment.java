@@ -152,7 +152,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     private void initEnergyView(){
-        mEnergyAdapter = new EnergyMyHomeAdapter(getContext());
+        mEnergyAdapter = new EnergyMyHomeAdapter(getContext(), false);
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyRecycler.setNestedScrollingEnabled(false);

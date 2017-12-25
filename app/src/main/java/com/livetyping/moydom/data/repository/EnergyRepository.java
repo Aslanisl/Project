@@ -22,14 +22,14 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_COUNT;
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
+
 /**
  * Created by Ivan on 06.12.2017.
  */
 
 public class EnergyRepository implements ServerCallback{
-
-    private static final int API_RETRY_CALL_COUNT = 10;
-    private static final int API_RETRY_CALL_TIME = 5000;
 
     private volatile static EnergyRepository sInstance;
 
