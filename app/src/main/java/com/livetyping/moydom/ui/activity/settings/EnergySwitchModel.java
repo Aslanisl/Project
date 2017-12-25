@@ -12,6 +12,7 @@ public class EnergySwitchModel {
     public static final int ENERGY_TYPE_TODAY = 1;
     public static final int ENERGY_TYPE_WEEK = 2;
     public static final int ENERGY_TYPE_THIS_MONTH = 3;
+    public static final int ENERGY_TYPE_YEAR = 4;
 
     protected String title;
     protected boolean checked;
@@ -35,20 +36,20 @@ public class EnergySwitchModel {
         return TextUtils.join("_", new String[] {title, String.valueOf(checked), String.valueOf(type)});
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setChecked(boolean checked) {
-        this.checked = checked;
-    }
-
     public String getTitle() {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public boolean isChecked() {
         return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public int getType() {

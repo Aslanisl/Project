@@ -1,6 +1,7 @@
 package com.livetyping.moydom.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
+import com.livetyping.moydom.ui.activity.ResourcesActivity;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 
@@ -41,6 +43,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
     private MonthEnergyModel mMonthEnergyModel;
 
     private Context mContext;
+    private boolean mClickable = false;
 
     public EnergyMyHomeAdapter(Context context) {
         mContext = context;
@@ -62,6 +65,16 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
         updatePositionByType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
     }
 
+    private void updatePositionByType(int type){
+        int position = - 1;
+        for (int i = 0; i < mEnergyModels.size(); i++){
+            if (mEnergyModels.get(i).getType() == type) position = i;
+        }
+        if (position != -1){
+            notifyItemChanged(position);
+        }
+    }
+
     public void addTodayEnergy(TodayEnergyModel model){
         mTodayEnergyModel = model;
         updatePositionByType(EnergySwitchModel.ENERGY_TYPE_TODAY);
@@ -77,14 +90,12 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
         updatePositionByType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
     }
 
-    private void updatePositionByType(int type){
-        int position = - 1;
-        for (int i = 0; i < mEnergyModels.size(); i++){
-            if (mEnergyModels.get(i).getType() == type) position = i;
-        }
-        if (position != -1){
-            notifyItemChanged(position);
-        }
+    /**
+     * Sets whether children should be clickable
+     * @param clickable
+     */
+    public void setIsItemClickable(boolean clickable){
+        this.mClickable = clickable;
     }
 
     @Override
@@ -110,6 +121,14 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
                 holder.bindMonthEnergyHolder(mMonthEnergyModel);
                 break;
         }
+
+        if (mClickable){
+            holder.itemView.setOnClickListener((v) -> {
+                Intent intent = new Intent(mContext, ResourcesActivity.class);
+                intent.putExtra(ResourcesActivity.EXTRA_TYPE, model.getType());
+                mContext.startActivity(intent);
+            });
+        }
     }
 
     @Override
@@ -132,14 +151,6 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
             ButterKnife.bind(this, itemView);
         }
 
-        public void bindHolderEmpty(){
-            mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_loading_gray));
-            mWave.setImageResource(R.drawable.wave_gray);
-            mProgress.setVisibility(View.VISIBLE);
-            mProgress.getIndeterminateDrawable()
-                    .setColorFilter(ContextCompat.getColor(mContext, R.color.gray), PorterDuff.Mode.SRC_IN );
-        }
-
         public void bindCurrentEnergyHolder(CurrentEnergyModel model){
             bindHolderEmpty();
             if (model != null) {
@@ -151,6 +162,14 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<EnergyMyHomeAdapte
                 mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerNow()));
                 mCurrentPeriod.setText(R.string.current_energy_power);
             }
+        }
+
+        public void bindHolderEmpty(){
+            mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_loading_gray));
+            mWave.setImageResource(R.drawable.wave_gray);
+            mProgress.setVisibility(View.VISIBLE);
+            mProgress.getIndeterminateDrawable()
+                    .setColorFilter(ContextCompat.getColor(mContext, R.color.gray), PorterDuff.Mode.SRC_IN );
         }
 
         public void bindTodayEnergyHolder(TodayEnergyModel model){

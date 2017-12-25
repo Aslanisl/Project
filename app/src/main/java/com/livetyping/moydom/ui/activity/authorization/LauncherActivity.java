@@ -5,10 +5,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
-import com.livetyping.moydom.data.Prefs;
-import com.livetyping.moydom.ui.activity.appeal.AppealActivity;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -27,7 +26,7 @@ public class LauncherActivity extends BaseActivity {
             finish();
         } else {
             //TODO change back to MainActivity
-            Intent intent = new Intent(this, AppealActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
         }

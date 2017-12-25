@@ -60,6 +60,8 @@
             android:name=".ui.activity.appeal.AppealCategoryActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activity.ResourcesActivity">
+        </activity>
     </application>
 
 </manifest>

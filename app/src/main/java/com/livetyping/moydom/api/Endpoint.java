@@ -4,6 +4,7 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
+import com.livetyping.moydom.apiModel.energy.response.GraphEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
 
@@ -37,4 +38,17 @@ public interface Endpoint {
 
     @GET
     Observable<AppealResponse> getAddresses(@Url String url);
+
+
+    @GET
+    Observable<GraphEnergyResponse> getDayGraphEnergy(@Url String url);
+
+    @GET
+    Observable<GraphEnergyResponse> getWeekGraphEnergy(@Url String url);
+
+    @GET
+    Observable<GraphEnergyResponse> getMonthGraphEnergy(@Url String url);
+
+    @GET
+    Observable<GraphEnergyResponse> getYearGraphEnergy(@Url String url);
 }
