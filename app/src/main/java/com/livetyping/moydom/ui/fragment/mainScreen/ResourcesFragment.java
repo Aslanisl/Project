@@ -135,6 +135,8 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
                     protected void onSuccess(BaseModel baseModel) {
                         if (baseModel.containsErrors()){
                             showToast(baseModel.getErrorMessage());
+                        } else {
+                            initAdvice();
                         }
                     }
                 }));
