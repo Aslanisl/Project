@@ -52,15 +52,18 @@ public class BaseActivity extends AppCompatActivity implements ServerCallback{
     @Override
     public void onTimeout() {
         //TODO implementation
+        removeProgress();
     }
 
     @Override
     public void onNetworkError() {
         //TODO implementation
+        removeProgress();
     }
     //Show dialog or something with not internet interface
     public void problemWithInternet(){
         //TODO implementation
+        removeProgress();
     }
 
     @Override

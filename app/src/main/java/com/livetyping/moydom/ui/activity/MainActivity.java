@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -54,28 +55,38 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
         String tag = null;
+
+        String toolBarTitle = null;
         switch (item.getItemId()) {
             case R.id.action_my_home:
                 fragment = MyHomeFragment.newInstance();
                 tag = MyHomeFragment.TAG;
+                toolBarTitle = getString(R.string.my_home);
                 break;
             case R.id.action_resources:
                 fragment = ResourcesFragment.newInstance();
                 tag = ResourcesFragment.TAG;
+                toolBarTitle = getString(R.string.resources);
                 break;
             case R.id.action_cameras:
                 fragment = CamerasFragment.newInstance();
                 tag = CamerasFragment.TAG;
+                toolBarTitle = getString(R.string.cameras);
                 break;
             case R.id.action_other:
                 fragment = OtherFragment.newInstance();
                 tag = OtherFragment.TAG;
+                toolBarTitle = getString(R.string.other);
                 break;
             default:
                 break;
         }
         fragmentTransaction.replace(R.id.main_activity_fragment_container, fragment, tag);
         fragmentTransaction.commit();
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && toolBarTitle != null){
+            actionBar.setTitle(toolBarTitle);
+        }
         return true;
     }
 }

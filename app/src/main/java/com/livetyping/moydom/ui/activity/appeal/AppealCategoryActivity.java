@@ -2,6 +2,7 @@ package com.livetyping.moydom.ui.activity.appeal;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
@@ -18,12 +19,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AppealCategoryActivity extends BaseActivity {
+    private static final int REQUEST_CODE_SELECT_CATEGORY = 3;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_appeal_category_recycler) RecyclerView mCategoryRecycler;
     private AppealCategoryRecyclerAdapter mCategoryRecyclerAdapter;
 
     private Map<String, List<AppealModel>> mCategoriesMap;
+    private AppealModel mSelectedModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +37,7 @@ public class AppealCategoryActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null){
             ArrayList<AppealModel> models = intent.getParcelableArrayListExtra("categories");
+            mSelectedModel = intent.getParcelableExtra("selected");
             if (models != null) {
                 initCategoriesMap(models);
             }
@@ -59,6 +63,35 @@ public class AppealCategoryActivity extends BaseActivity {
                 appealModels.add(model);
                 mCategoriesMap.put(model.getTypeName(), appealModels);
             }
+        }
+        String selectedName = null;
+        if (mSelectedModel != null){
+            selectedName = mSelectedModel.getTypeName();
+        }
+        mCategoryRecyclerAdapter = new AppealCategoryRecyclerAdapter(mCategoriesMap.keySet(), selectedName);
+        mCategoryRecyclerAdapter.setAppealCategoryListener(this::categorySelected);
+        mCategoryRecycler.setAdapter(mCategoryRecyclerAdapter);
+        mCategoryRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void categorySelected(String name){
+        List<AppealModel> selectedModels = mCategoriesMap.get(name);
+        if (selectedModels != null) {
+            Intent intent = new Intent(this, AppealSelectCategoryActivity.class);
+            ArrayList<AppealModel> models = new ArrayList<>();
+            models.addAll(selectedModels);
+            intent.putExtra("categories", models);
+            intent.putExtra("selected", mSelectedModel);
+            startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_SELECT_CATEGORY && resultCode == RESULT_OK){
+            setResult(RESULT_OK, data);
+            finish();
         }
     }
 }

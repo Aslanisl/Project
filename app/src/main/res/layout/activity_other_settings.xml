@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.livetyping.moydom.ui.activity.otherSettings.OtherSettingsActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <com.livetyping.moydom.ui.custom.SelectListView
+        android:id="@+id/activity_other_settings_intercom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:selectText="@string/intercom">
+
+    </com.livetyping.moydom.ui.custom.SelectListView>
+
+    <com.livetyping.moydom.ui.custom.SelectListView
+        android:id="@+id/activity_other_settings_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:selectText="@string/notifications">
+
+    </com.livetyping.moydom.ui.custom.SelectListView>
+
+    <com.livetyping.moydom.ui.custom.SelectListView
+        android:id="@+id/activity_other_settings_my_target"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:selectText="@string/my_target">
+
+    </com.livetyping.moydom.ui.custom.SelectListView>
+
+</LinearLayout>

@@ -2,8 +2,7 @@ package com.livetyping.moydom.ui.fragment.mainScreen;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,37 +10,47 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.api.Api;
+import com.livetyping.moydom.api.ApiUrlService;
+import com.livetyping.moydom.api.CallbackWrapper;
+import com.livetyping.moydom.api.RetryApiCallWithDelay;
+import com.livetyping.moydom.apiModel.BaseModel;
+import com.livetyping.moydom.apiModel.advice.AdviceModel;
+import com.livetyping.moydom.apiModel.advice.AdviceResponse;
 import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
-import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.EnergyRepository;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
+import com.livetyping.moydom.utils.HelpUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import io.reactivex.Observable;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.livetyping.moydom.apiModel.advice.AdviceModel.STATUS_READED;
+
 public class ResourcesFragment extends BaseFragment implements EnergyRepository.EnergyCallback{
     public static final String TAG = ResourcesFragment.class.getSimpleName();
-    @BindView(R.id.fragment_resources_energy_recycler) RecyclerView mRecycler;
-    private Unbinder mUnbinder;
+
+    private static final int API_RETRY_CALL_COUNT = 10;
+    private static final int API_RETRY_CALL_TIME = 5000;
+
+    @BindView(R.id.fragment_resources_recycler) RecyclerView mResourcesRecycler;
     private EnergyMyHomeAdapter mAdapter;
+    private CompositeDisposable mCompositeDisposable;
 
     private EnergyRepository mEnergyRepository;
-
-    private CompositeDisposable mCompositeDisposable;
-    private Prefs mPrefs;
+    private Unbinder mUnbinder;
 
     public static ResourcesFragment newInstance() {
         return new ResourcesFragment();
@@ -51,58 +60,52 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEnergyRepository = EnergyRepository.getInstance();
-
-        mPrefs = Prefs.getInstance();
         mCompositeDisposable = new CompositeDisposable();
-
-        if (getActivity() != null
-                && getActivity() instanceof AppCompatActivity
-                && ((AppCompatActivity) getActivity()).getSupportActionBar() != null)
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.resources);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_resourses, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
+
+        mAdapter = new EnergyMyHomeAdapter(getContext(), true);
+        mResourcesRecycler.setAdapter(mAdapter);
+        mResourcesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        mResourcesRecycler.setNestedScrollingEnabled(false);
+        mAdapter.setAdviceListener(this::closeAdvice);
+
         mEnergyRepository.setEnergyCallback(this);
         mEnergyRepository.getEnergy();
-        initEnergyView();
+
+        initAdvice();
         return rootView;
     }
 
-    private void initEnergyView() {
-        mAdapter = new EnergyMyHomeAdapter(getContext());
-        mAdapter.setIsItemClickable(true);
-        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecycler.setAdapter(mAdapter);
-        mRecycler.setNestedScrollingEnabled(false);
-        getEnergyFilters();
-    }
-
-    private void getEnergyFilters(){
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
-                    e.onNext(mPrefs.getEnergyFilters());
-                    e.onComplete();
-                }).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(settingsSwitchModels -> {
-                                    mAdapter.addEnergyModels(settingsSwitchModels);
-                                    mEnergyRepository.getEnergy();
-                                },
-                                throwable -> showToast(throwable.getMessage()))
-        );
+    private void initAdvice(){
+        mCompositeDisposable.add(Api.getApiService().getAdvice(ApiUrlService.getAdviceUrl())
+                .subscribeOn(Schedulers.io())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CallbackWrapper<AdviceResponse>(this){
+                    @Override
+                    protected void onSuccess(AdviceResponse adviceResponse) {
+                        if (adviceResponse.containsErrors()){
+                            showToast(adviceResponse.getErrorMessage());
+                        } else {
+                            initAdvices(adviceResponse.getAdviceModels());
+                        }
+                    }
+                }));
     }
 
     @Override
-    public void onCurrentEnergyResponse(CurrentEnergyModel energy) {
-        mAdapter.addCurrentEnergy(energy);
+    public void onCurrentEnergyResponse(CurrentEnergyModel currentEnergy) {
+        mAdapter.addCurrentEnergy(currentEnergy);
     }
 
     @Override
-    public void onTodayEnergyResponse(TodayEnergyModel energy) {
-        mAdapter.addTodayEnergy(energy);
-
+    public void onTodayEnergyResponse(TodayEnergyModel todayEnergy) {
+        mAdapter.addTodayEnergy(todayEnergy);
     }
 
     @Override
@@ -115,17 +118,39 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
         mAdapter.addMonthEnergy(monthEnergy);
     }
 
-    @Override
-    public void onError(String message) {
-        showToast(message);
+    private void initAdvices(List<AdviceModel> models){
+        if (!models.isEmpty()){
+            // Get first advice
+            mAdapter.setAdviceModel(models.get(0));
+        }
     }
 
+    private void closeAdvice(int adviceId){
+        mCompositeDisposable.add(
+                Api.getApiService().changeAdviceStatus(ApiUrlService.getChangeAdviceUrl(adviceId, STATUS_READED))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CallbackWrapper<BaseModel>(this){
+                    @Override
+                    protected void onSuccess(BaseModel baseModel) {
+                        if (baseModel.containsErrors()){
+                            showToast(baseModel.getErrorMessage());
+                        } else {
+                            initAdvice();
+                        }
+                    }
+                }));
+    }
+
+    @Override
+    public void onError(String message) {
+
+    }
 
     @Override
     public void onDestroyView() {
-        mEnergyRepository.removeEnergyCallback();
-        mUnbinder.unbind();
         super.onDestroyView();
+        mUnbinder.unbind();
+        if (mCompositeDisposable != null) mCompositeDisposable.dispose();
     }
-
 }

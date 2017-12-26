@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SelectListView">
+        <attr name="selectText" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="CustomButtonView">
+        <attr name="buttonText" format="string"/>
+    </declare-styleable>
+
+</resources>

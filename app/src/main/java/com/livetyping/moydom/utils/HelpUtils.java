@@ -1,5 +1,8 @@
 package com.livetyping.moydom.utils;
 
+import android.content.Context;
+import android.util.DisplayMetrics;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -30,5 +33,11 @@ public class HelpUtils {
             floatArray[i++] = (f != null ? f : Float.NaN); // Or whatever default you want.
         }
         return floatArray;
+    }
+
+    public static int calculateNoOfColumns(Context context, int width) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return (int) (dpWidth / width);
     }
 }

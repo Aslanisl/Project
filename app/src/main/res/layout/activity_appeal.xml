@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_appeal_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
@@ -10,42 +10,63 @@
 
     <include layout="@layout/toolbar"/>
 
-    <TextView
-        android:id="@+id/activity_appeal_categories_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_normal"
-        android:text="@string/category"/>
-
-    <TextView
-        android:id="@+id/activity_appeal_categories"
-        style="@style/Widget.AppCompat.Spinner.Underlined"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_appeal_categories_title"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:layout_marginTop="@dimen/spacing_tiny"
-        android:fontFamily="sans-serif"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_small"
-        android:textStyle="normal"/>
-
-    <EditText
-        android:id="@+id/activity_appeal_body"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_above="@+id/activity_appeal_add_photo"
-        android:layout_below="@id/activity_appeal_categories"
-        android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_huge"
-        android:background="@android:color/transparent"
-        android:gravity="start|top"
-        android:hint="@string/what_the_problem_you_have"/>
+        android:layout_below="@+id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/activity_appeal_categories_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@string/category"/>
+
+            <TextView
+                android:id="@+id/activity_appeal_categories"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_appeal_categories_title"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginTop="@dimen/spacing_tiny"
+                android:textColor="@color/close_black"
+                android:textSize="@dimen/font_large"/>
+
+            <EditText
+                android:id="@+id/activity_appeal_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_appeal_categories"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_huge"
+                android:background="@android:color/transparent"
+                android:gravity="start|top"
+                android:hint="@string/what_the_problem_you_have"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/activity_appeal_photos_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/activity_appeal_body"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_tiny"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
     <TextView
         android:id="@+id/activity_appeal_add_photo"

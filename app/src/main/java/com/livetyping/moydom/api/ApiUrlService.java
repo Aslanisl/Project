@@ -9,6 +9,7 @@ import com.livetyping.moydom.utils.CalendarUtils;
 
 public class ApiUrlService {
 
+
     public static final String API_CONTEXT = "users.admin.models.mobiles";
     public static final String FUNCTION_SET_PASSWORD = "set_pass";
     public static final String FUNCTION_SEND_PHONE = "ins_uuid_phones";
@@ -17,6 +18,9 @@ public class ApiUrlService {
     public static final String FUNCTION_MONTH_ENERGY = "get_electric_month";
     public static final String FUNCTION_CAMERAS = "get_cameras";
     public static final String FUNCTION_ADDRESSES = "get_addressee";
+    public static final String FUNCTION_AVERAGE_COST = "get_avg_cost";
+    public static final String FUNCTION_ADVICE = "get_advices";
+    public static final String FUNCTION_CHANGE_ADVICE_STATUS = "set_advice_status";
     private static final String OPERATION_CALL = "call";
     private static final String USERNAME = "mobile";
     private static final String PASSWORD = "MoBiLe2017";
@@ -35,16 +39,6 @@ public class ApiUrlService {
         return url.toString();
     }
 
-    private static String getBaseOptions(){
-        StringBuilder url = new StringBuilder();
-        url.append(MAIN_METHOD);
-        url.append("p_operation=").append(OPERATION_CALL).append("&");
-        url.append("p_username=").append(USERNAME).append("&");
-        url.append("p_password=").append(PASSWORD).append("&");
-        url.append("p_context=").append(API_CONTEXT).append("&");
-        return url.toString();
-    }
-
     public static String getCallbackPhoneUrl(String phone){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
@@ -58,15 +52,6 @@ public class ApiUrlService {
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_CURRENT_ENERGY).append("&");
         url.append(getUuidPassword(false));
-        return url.toString();
-    }
-
-    private static String getUuidPassword(boolean withQuery){
-        StringBuilder url = new StringBuilder();
-        Prefs prefs = Prefs.getInstance();
-        url.append(prefs.getUUID()).append("&");
-        url.append(prefs.getPassword());
-        if (withQuery) url.append("&");
         return url.toString();
     }
 
@@ -94,6 +79,59 @@ public class ApiUrlService {
         url.append(getUuidPassword(true));
         url.append(CalendarUtils.getCurrentMonth()).append("&");
         url.append(CalendarUtils.getCurrentYear());
+        return url.toString();
+    }
+
+    public static String getAddressesUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_ADDRESSES).append("&");
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getAverageEnergyCostUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_AVERAGE_COST).append("&");
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getAdviceUrl(){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_ADVICE).append("&");
+        url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    public static String getChangeAdviceUrl(int adviceId, int status){
+        StringBuilder url = new StringBuilder();
+        url.append(getBaseOptions());
+        url.append("p_function=").append(FUNCTION_CHANGE_ADVICE_STATUS).append("&");
+        url.append(getUuidPassword(true));
+        url.append(String.valueOf(adviceId)).append("&");
+        url.append(String.valueOf(status));
+        return url.toString();
+    }
+
+    private static String getUuidPassword(boolean withQuery){
+        StringBuilder url = new StringBuilder();
+        Prefs prefs = Prefs.getInstance();
+        url.append(prefs.getUUID()).append("&");
+        url.append(prefs.getPassword());
+        if (withQuery) url.append("&");
+        return url.toString();
+    }
+
+    private static String getBaseOptions(){
+        StringBuilder url = new StringBuilder();
+        url.append(MAIN_METHOD);
+        url.append("p_operation=").append(OPERATION_CALL).append("&");
+        url.append("p_username=").append(USERNAME).append("&");
+        url.append("p_password=").append(PASSWORD).append("&");
+        url.append("p_context=").append(API_CONTEXT).append("&");
         return url.toString();
     }
 
@@ -134,11 +172,4 @@ public class ApiUrlService {
         return url.toString();
     }
 
-    public static String getAddressesUrl(){
-        StringBuilder url = new StringBuilder();
-        url.append(getBaseOptions());
-        url.append("p_function=").append(FUNCTION_ADDRESSES).append("&");
-        url.append(getUuidPassword(false));
-        return url.toString();
-    }
 }

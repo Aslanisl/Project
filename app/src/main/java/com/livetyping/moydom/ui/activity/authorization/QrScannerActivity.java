@@ -18,6 +18,7 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.utils.AlertDialogUtils;
 
 import java.util.List;
 
@@ -63,11 +64,7 @@ public class QrScannerActivity extends AuthorizationActivity implements BarcodeC
     }
 
     private void showAlertDialog(){
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.your_application_is_accepted)
-                .setMessage(R.string.we_will_contact_shortly)
-                .setPositiveButton(R.string.good, (dialog, which) -> dialog.dismiss())
-                .show();
+        AlertDialogUtils.showAlertDone(this);
     }
 
     @Override

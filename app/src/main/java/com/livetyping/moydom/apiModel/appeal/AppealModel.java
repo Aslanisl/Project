@@ -79,4 +79,17 @@ public class AppealModel implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(email);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof AppealModel){
+            if (id == ((AppealModel) obj).getId()
+                    && typeName.equals(((AppealModel) obj).getTypeName())
+                    && name.equals(((AppealModel) obj).getName())
+                    && email.equals(((AppealModel) obj).getEmail())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

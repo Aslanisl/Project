@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    android:overScrollMode="never"
     android:paddingBottom="@dimen/padding_huge"
     tools:context="com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment">
 
@@ -45,7 +44,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_my_home_cameras_container"
             android:clipToPadding="false"
-            android:overScrollMode="never"
             android:paddingEnd="@dimen/padding_tiny"
             android:paddingStart="@dimen/padding_normal">
 
@@ -84,7 +82,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_my_home_energy_container"
-            android:overScrollMode="never"
             android:paddingEnd="@dimen/padding_normal"
             android:paddingStart="@dimen/padding_normal">
 

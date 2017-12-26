@@ -20,7 +20,7 @@ public class Record {
     public static final String ERROR_USER_MESSAGE = "error_user_message";
     public static final String ERROR_INTERNAL_MESSAGE = "error_internal_message";
 
-    @ElementMap(entry="value", key="name", attribute=true, inline=true)
+    @ElementMap(entry="value", key="name", attribute=true, inline=true, required=false)
     protected Map<String, String> records;
 
     public Map<String, String> getRecords() {
