@@ -297,7 +297,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mProgress.setVisibility(View.GONE);
                     mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
                     mWave.setImageResource(R.drawable.wave_green);
-                    mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostTotal()));
+                    mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostMonth()));
                     mMeasure.setText(mContext.getString(R.string.rub));
                     mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));
                     mCurrentPeriod.setText(R.string.this_month);
@@ -307,14 +307,14 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mMonthContainer.setVisibility(View.VISIBLE);
                     mMonthContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
                     mMonthWave.setImageResource(R.drawable.wave_green);
-                    mMonthPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostTotal()));
+                    mMonthPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostMonth()));
                     mMonthMeasure.setText(mContext.getString(R.string.rub));
                     mMonthUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));
                     mMonthCurrentPeriod.setText(R.string.this_month);
                     mMonthCurrentDate.setText(CalendarUtils.getCurrentMonthText());
-                    mPredictionPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerTotal()));
+                    mPredictionPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostTotal()));
                     mPredictionMeasure.setText(mContext.getString(R.string.rub));
-                    mPredictionUnit.setText(mContext.getString(R.string.energy_measure, model.getCostTotal()));
+                    mPredictionUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerTotal()));
                 }
             }
         }

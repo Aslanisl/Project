@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,8 +30,8 @@ import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.CamerasRepository;
 import com.livetyping.moydom.data.repository.EnergyRepository;
-import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
+import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
@@ -177,6 +179,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mCamerasAdapter = new CameraMyHomeAdapter(getContext());
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
+        SnapHelper snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(mCamerasRecycler);
     }
 
     @Override
