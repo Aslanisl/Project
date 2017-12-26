@@ -16,6 +16,7 @@ import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,6 +33,8 @@ import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
 public class EnergyRepository implements ServerCallback{
 
     private volatile static EnergyRepository sInstance;
+
+    private static final int REFRESH_TIME = 30;
 
     private WeakReference<EnergyCallback> mCallbackWeakReference;
     private WeakReference<BaseFragment> mBaseFragmentWeakReference;
@@ -75,6 +78,7 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .repeatWhen(completed  -> completed.delay(REFRESH_TIME, TimeUnit.SECONDS))
                 .subscribeWith(new CallbackWrapper<CurrentEnergyResponse>(this) {
                     @Override
                     protected void onSuccess(CurrentEnergyResponse energy) {
@@ -92,6 +96,7 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .repeatWhen(completed  -> completed.delay(REFRESH_TIME, TimeUnit.SECONDS))
                 .subscribeWith(new CallbackWrapper<WeekEnergyResponse>(this){
                     @Override
                     protected void onSuccess(WeekEnergyResponse weekEnergyResponse) {
@@ -110,6 +115,7 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .repeatWhen(completed  -> completed.delay(REFRESH_TIME, TimeUnit.SECONDS))
                 .subscribeWith(new CallbackWrapper<MonthEnergyResponse>(this){
                     @Override
                     protected void onSuccess(MonthEnergyResponse monthEnergyResponse) {

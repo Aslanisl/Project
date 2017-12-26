@@ -16,6 +16,7 @@ import com.livetyping.moydom.ui.fragment.BaseFragment;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,6 +32,8 @@ import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
  */
 
 public class CamerasRepository implements ServerCallback{
+
+    private static final int REFRESH_TIME = 10;
 
     private volatile static CamerasRepository sInstance;
 
@@ -75,6 +78,7 @@ public class CamerasRepository implements ServerCallback{
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .repeatWhen(completed  -> completed.delay(REFRESH_TIME, TimeUnit.SECONDS))
                 .subscribeWith(new CallbackWrapper<CamerasResponse>(this) {
                     @Override
                     protected void onSuccess(CamerasResponse camerasResponse) {

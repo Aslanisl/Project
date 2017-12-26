@@ -3,7 +3,7 @@
     <string name="no_internet_connection">Нет интернет соединения</string>
     <string name="check_internet_settings">Проверьте настройки вашего интернета и попробуйте еще раз</string>
     <string name="check_again">Попробовать еще раз</string>
-    <string name="bring_list_with_code_qr">Поднесите лист с кодом полученый от управляющей компании</string>
+    <string name="bring_list_with_code_qr">Поднесите лист с кодом полученный от управляющей компании</string>
     <string name="enter_code_manually">Ввести код вручную</string>
     <string name="dont_have_permission_to_camera">Похоже, у нас нет доступа к вашей камере</string>
     <string name="please_need_request_to_camera_for_enter_app">Пожалуйста, разрешите доступ к вашей камере, это необходимо для входа в приложение</string>
@@ -19,7 +19,7 @@
     <string name="code_not_found">К сожалению, такой код не найден</string>
     <string name="leave_phone_number">Если вы уверены, что ваш код верный, обратитесь в управляющую компанию или оставьте ваш номер телефона и мы вам перезвоним</string>
     <string name="leave_phone_number_we_will_call">Оставьте номер телефона и мы свяжемся с вами</string>
-    <string name="enter_code_from_company">Введите код полученый от управляющей компании</string>
+    <string name="enter_code_from_company">Введите код полученный от управляющей компании</string>
     <string name="please_wait">Пожалуйста, подождите</string>
 
     <string name="your_application_is_accepted">Ваша заявка принята</string>

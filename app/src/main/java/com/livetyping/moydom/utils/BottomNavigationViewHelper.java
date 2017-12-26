@@ -4,6 +4,8 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.util.Log;
+import android.util.TypedValue;
+import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
@@ -24,6 +26,14 @@ public class BottomNavigationViewHelper {
             for (int i = 0; i < menuView.getChildCount(); i++) {
                 BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
                 item.setShiftingMode(false);
+
+                Field largeLabel = item.getClass().getDeclaredField("mLargeLabel");
+                largeLabel.setAccessible(true);
+                TextView largeLabelTextView = (TextView) largeLabel.get(item);
+                largeLabelTextView.setEllipsize(null);
+                largeLabelTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                largeLabel.setAccessible(false);
+
                 // set once again checked value, so view will be updated
                 item.setChecked(item.getItemData().isChecked());
             }
