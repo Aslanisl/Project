@@ -94,6 +94,8 @@
             android:name=".ui.activity.otherSettings.NewTargetActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.activity.authorization.OnboardingActivity">
+        </activity>
     </application>
 
 </manifest>

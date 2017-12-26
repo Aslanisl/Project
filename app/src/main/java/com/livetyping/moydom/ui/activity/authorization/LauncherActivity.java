@@ -21,7 +21,12 @@ public class LauncherActivity extends BaseActivity {
         Prefs prefs = Prefs.getInstance();
         String uuid = prefs.getUUID();
         String password = prefs.getPassword();
-        if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(password)) {
+        boolean firstLaunch = prefs.isFirstLaunch();
+        if (firstLaunch){
+            Intent intent = new Intent(this, OnboardingActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(password)) {
             Intent intent = new Intent(this, QrScannerActivity.class);
             startActivity(intent);
             finish();

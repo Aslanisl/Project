@@ -26,6 +26,7 @@ public class Prefs {
     private static final String KEY_CAMERAS_FILTER = "k5";
     private static final String KEY_ENERGY_FILTER = "k6";
     private static final String KEY_TARGET_PERCENT = "k7";
+    private static final String KEY_FIRST_LAUNCH = "k8";
 
     private Preferences mPreferences;
 
@@ -40,6 +41,14 @@ public class Prefs {
             sInstance = new Prefs();
         }
         return sInstance;
+    }
+
+    public boolean isFirstLaunch(){
+        return mPreferences.getBoolean(KEY_FIRST_LAUNCH, true);
+    }
+
+    public void setFirstLaunch(boolean showed){
+        persistBoolean(KEY_FIRST_LAUNCH, showed);
     }
 
     public void saveUUID(String uuid){

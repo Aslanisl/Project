@@ -106,4 +106,8 @@
     <string name="about_cost_of_your">≈ %d&#8381; от ваших текущих затрат</string>
     <string name="prediction">Прогноз</string>
 
+    <string name="next">Далее</string>
+    <string name="look_who_come_open_door">Смотри, кто к тебе пришел и открывай дверь, где бы ты ни был!</string>
+    <string name="videophone">Видеофон</string>
+
 </resources>
