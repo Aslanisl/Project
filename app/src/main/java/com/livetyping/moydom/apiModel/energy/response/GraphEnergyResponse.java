@@ -66,7 +66,7 @@ public class GraphEnergyResponse extends BaseModel{
 
     private GraphItemEnergyModel getItemEnergyModel(Map<String, String> values){
         GraphItemEnergyModel model = new GraphItemEnergyModel();
-        if (model.getDate() == null) model.setDate(values.get(DT));
+        if (model.getStringDate() == null) model.setDate(values.get(DT));
         model.addPower(getFloatFromString(values.get(POWER)));
         model.addPowerCost(getFloatFromString(values.get(POWER_COST)));
         model.setTariff(new GraphItemEnergyModel.Tariff(getIntegerFromString(values.get(TARIFF_ID)),

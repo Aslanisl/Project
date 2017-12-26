@@ -1,5 +1,10 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by XlebNick for MoyDom.
  */
@@ -10,12 +15,16 @@ public class GraphItemEnergyModel {
     private float powerCost;
     private Tariff tariff;
 
-    public String getDate() {
-        return date;
+    public Date getDate() throws ParseException {
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(date);
     }
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getStringDate() {
+        return date;
     }
 
     public float getPower() {
@@ -42,10 +51,13 @@ public class GraphItemEnergyModel {
         this.powerCost = this.powerCost + powerCost;
     }
 
+    public Tariff getTariff() {
+        return tariff;
+    }
+
     public void setTariff(Tariff tariff) {
         this.tariff = tariff;
     }
-
 
     public static class Tariff{
         private float tariffValue;

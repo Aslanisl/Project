@@ -36,9 +36,13 @@ public class EnergyRepository implements ServerCallback{
     private volatile static EnergyRepository sInstance;
 
     private WeakReference<EnergyCallback> mCallbackWeakReference;
-    private WeakReference<EnergyGraphCallback> mGraphCallbackWeakReference;
     private WeakReference<BaseFragment> mBaseFragmentWeakReference;
     private WeakReference<BaseActivity> mBaseActivityWeakReference;
+    
+    private WeakReference<EnergyGraphCallback> mDayEnergyGraphCallbackWeakReference;
+    private WeakReference<EnergyGraphCallback> mWeekEnergyGraphCallbackWeakReference;
+    private WeakReference<EnergyGraphCallback> mMonthEnergyGraphCallbackWeakReference;
+    private WeakReference<EnergyGraphCallback> mYearEnergyGraphCallbackWeakReference;
 
     private CurrentEnergyResponse mCurrentEnergy;
 
@@ -66,10 +70,6 @@ public class EnergyRepository implements ServerCallback{
         if (activity instanceof EnergyCallback){
             mCallbackWeakReference = new WeakReference<EnergyCallback>((EnergyCallback) activity);
         }
-    }
-
-    public void setGraphCallback(EnergyGraphCallback callback){
-        mGraphCallbackWeakReference = new WeakReference<EnergyGraphCallback>(callback);
     }
 
     public void removeEnergyCallback(){
@@ -161,45 +161,61 @@ public class EnergyRepository implements ServerCallback{
         }
     }
 
-    public void getDayGraphEnergy(DayEnergyGraphCallback callback) {
-//        Disposable getDayGraphEnergy = Api.getApiService().getDayGraphEnergy(ApiUrlService.getDayGraphEnergyUrl())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
-//                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
-//                    @Override
-//                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
-//                        if (monthEnergyResponse.containsErrors()) {
-//                            callback.onError(monthEnergyResponse.getErrorMessage());
-//                        } else {
-//                            callback.onDayGraphResponse(monthEnergyResponse.);
-//                        }
-//                    }
-//                });
-//        mCompositeDisposable.add(getDayGraphEnergy);
+    public void getDayGraphEnergy(EnergyGraphCallback callback) {
+        mDayEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
+        Disposable getDayGraphEnergy = Api.getApiService().getDayGraphEnergy(ApiUrlService.getDayGraphEnergyUrl())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
+                    @Override
+                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
+                        if (mDayEnergyGraphCallbackWeakReference != null && 
+                                mDayEnergyGraphCallbackWeakReference.get() != null)
+                            if (monthEnergyResponse.containsErrors()) {
+                                mDayEnergyGraphCallbackWeakReference.get().onError(monthEnergyResponse.getErrorMessage());
+                            } else {
+                                mDayEnergyGraphCallbackWeakReference.get().onGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
+                            }
+                    }
+                });
+        mCompositeDisposable.add(getDayGraphEnergy);
+    }
+    
+    public void removeDayGraphEnergy(){
+        if (mDayEnergyGraphCallbackWeakReference != null)
+            mDayEnergyGraphCallbackWeakReference = null;
     }
 
 
-    public void getWeekGraphEnergy(WeekEnergyGraphCallback callback) {
-//        Disposable getWeekGraphEnergy = Api.getApiService().getWeekGraphEnergy(ApiUrlService.getWeekGraphEnergyUrl())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
-//                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
-//                    @Override
-//                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
-//                        if (monthEnergyResponse.containsErrors()) {
-//                            callback.onError(monthEnergyResponse.getErrorMessage());
-//                        } else {
-//                            callback.onWeekGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
-//                        }
-//                    }
-//                });
-//        mCompositeDisposable.add(getWeekGraphEnergy);
+    public void getWeekGraphEnergy(EnergyGraphCallback callback) {
+        mWeekEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
+        Disposable getWeekGraphEnergy = Api.getApiService().getWeekGraphEnergy(ApiUrlService.getWeekGraphEnergyUrl())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
+                    @Override
+                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
+                        if (mWeekEnergyGraphCallbackWeakReference != null &&
+                                mWeekEnergyGraphCallbackWeakReference.get() != null)
+                            if (monthEnergyResponse.containsErrors()) {
+                                mWeekEnergyGraphCallbackWeakReference.get().onError(monthEnergyResponse.getErrorMessage());
+                            } else {
+                                mWeekEnergyGraphCallbackWeakReference.get().onGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
+                            }
+                    }
+                });
+        mCompositeDisposable.add(getWeekGraphEnergy);
     }
 
+    public void removeWeekGraphEnergy(){
+        if (mWeekEnergyGraphCallbackWeakReference != null)
+            mWeekEnergyGraphCallbackWeakReference = null;
+    }
 
-    public void getMonthGraphEnergy(MonthEnergyGraphCallback callback) {
+    public void getMonthGraphEnergy(EnergyGraphCallback callback) {
+        mMonthEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
         Disposable getMonthGraphEnergy = Api.getApiService().getMonthGraphEnergy(ApiUrlService.getMonthGraphEnergyUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -207,33 +223,48 @@ public class EnergyRepository implements ServerCallback{
                 .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
                     @Override
                     protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
-                        if (monthEnergyResponse.containsErrors()) {
-                            callback.onError(monthEnergyResponse.getErrorMessage());
-                        } else {
-                            callback.onMonthGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
-                        }
+                        if (mMonthEnergyGraphCallbackWeakReference != null &&
+                                mMonthEnergyGraphCallbackWeakReference.get() != null)
+                            if (monthEnergyResponse.containsErrors()) {
+                                mMonthEnergyGraphCallbackWeakReference.get().onError(monthEnergyResponse.getErrorMessage());
+                            } else {
+                                mMonthEnergyGraphCallbackWeakReference.get().onGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
+                            }
                     }
                 });
         mCompositeDisposable.add(getMonthGraphEnergy);
     }
 
+    public void removeMonthGraphEnergy(){
+        if (mMonthEnergyGraphCallbackWeakReference != null)
+            mMonthEnergyGraphCallbackWeakReference = null;
+    }
 
-    public void getYearGraphEnergy(YearEnergyGraphCallback callback) {
-//        Disposable getYearGraphEnergy = Api.getApiService().getYearGraphEnergy(ApiUrlService.getYearGraphEnergyUrl())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
-//                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
-//                    @Override
-//                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
-//                        if (monthEnergyResponse.containsErrors()) {
-//                            callback.onError(monthEnergyResponse.getErrorMessage());
-//                        } else {
-//                            callback.onYearGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
-//                        }
-//                    }
-//                });
-//        mCompositeDisposable.add(getYearGraphEnergy);
+
+    public void getYearGraphEnergy(EnergyGraphCallback callback) {
+        mYearEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
+        Disposable getYearGraphEnergy = Api.getApiService().getYearGraphEnergy(ApiUrlService.getYearGraphEnergyUrl())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
+                .subscribeWith(new CallbackWrapper<GraphEnergyResponse>(this){
+                    @Override
+                    protected void onSuccess(GraphEnergyResponse monthEnergyResponse) {
+                        if (mYearEnergyGraphCallbackWeakReference != null &&
+                                mYearEnergyGraphCallbackWeakReference.get() != null)
+                            if (monthEnergyResponse.containsErrors()) {
+                                mYearEnergyGraphCallbackWeakReference.get().onError(monthEnergyResponse.getErrorMessage());
+                            } else {
+                                mYearEnergyGraphCallbackWeakReference.get().onGraphResponse(monthEnergyResponse.fillGraphEnergyModel());
+                            }
+                    }
+                });
+        mCompositeDisposable.add(getYearGraphEnergy);
+    }
+
+    public void removeYearGraphEnergy(){
+        if (mYearEnergyGraphCallbackWeakReference != null)
+            mYearEnergyGraphCallbackWeakReference = null;
     }
 
     public interface EnergyCallback {
@@ -245,34 +276,9 @@ public class EnergyRepository implements ServerCallback{
         void onError(String message);
     }
 
+
     public interface EnergyGraphCallback {
-
-        void onDayGraphResponse(WeekEnergyModel energy);
-        void onWeekGraphResponse(WeekEnergyModel energy);
-        void onMonthGraphResponse(WeekEnergyModel energy);
-        void onYearGraphResponse(WeekEnergyModel energy);
-
-        void onError(String message);
-    }
-
-
-    public interface DayEnergyGraphCallback {
-        void onDayGraphResponse(WeekEnergyModel energy);
-
-        void onError(String message);
-    }
-    public interface WeekEnergyGraphCallback {
-        void onWeekGraphResponse(WeekEnergyModel energy);
-
-        void onError(String message);
-    }
-    public interface MonthEnergyGraphCallback {
-        void onMonthGraphResponse(GraphEnergyModel energy);
-
-        void onError(String message);
-    }
-    public interface YearEnergyGraphCallback {
-        void onYearGraphResponse(WeekEnergyModel energy);
+        void onGraphResponse(GraphEnergyModel energy);
 
         void onError(String message);
     }

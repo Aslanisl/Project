@@ -2,7 +2,6 @@ package com.livetyping.moydom.ui.fragment.mainScreen;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -24,9 +23,6 @@ import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.repository.EnergyRepository;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
-import com.livetyping.moydom.utils.HelpUtils;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -73,6 +69,7 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
         mResourcesRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mResourcesRecycler.setNestedScrollingEnabled(false);
         mAdapter.setAdviceListener(this::closeAdvice);
+        mAdapter.setIsItemClickable(true);
 
         mEnergyRepository.setEnergyCallback(this);
         mEnergyRepository.getEnergy();
@@ -98,6 +95,13 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
                 }));
     }
 
+    private void initAdvices(List<AdviceModel> models){
+        if (!models.isEmpty()){
+            // Get first advice
+            mAdapter.setAdviceModel(models.get(0));
+        }
+    }
+
     @Override
     public void onCurrentEnergyResponse(CurrentEnergyModel currentEnergy) {
         mAdapter.addCurrentEnergy(currentEnergy);
@@ -118,11 +122,9 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
         mAdapter.addMonthEnergy(monthEnergy);
     }
 
-    private void initAdvices(List<AdviceModel> models){
-        if (!models.isEmpty()){
-            // Get first advice
-            mAdapter.setAdviceModel(models.get(0));
-        }
+    @Override
+    public void onError(String message) {
+
     }
 
     private void closeAdvice(int adviceId){
@@ -140,11 +142,6 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
                         }
                     }
                 }));
-    }
-
-    @Override
-    public void onError(String message) {
-
     }
 
     @Override

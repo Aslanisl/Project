@@ -65,6 +65,7 @@
 
     <string name="rub">&#8381;</string>
 
+    <string name="short_energy_measure">%.0f кВт•ч</string>
     <string name="energy_measure">%.1f кВт•ч</string>
 
     <string name="camera_online">В эфире</string>
@@ -86,7 +87,8 @@
     <string name="month">Месяц</string>
     <string name="year">Год</string>
     <string name="energy_label">Электроэнергия</string>
-    <string name="rub_measure">%.0f &#8381;</string>
+    <string name="short_rub_measure">%.0f &#8381;</string>
+    <string name="rub_measure">%.1f &#8381;</string>
     <string name="total">Всего</string>
     <string name="average">В среднем</string>
 
@@ -113,5 +115,6 @@
     <string name="energy_less_percent">На %d%% меньше чем сейчас</string>
     <string name="about_cost_of_your">≈ %d&#8381; от ваших текущих затрат</string>
     <string name="prediction">Прогноз</string>
+    <string name="share_usage">Поделиться статистикой</string>
 
 </resources>

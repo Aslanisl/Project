@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.livetyping.moydom.App;
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.fragment.ResourceByPeriodFragment;
 
 /**
@@ -20,23 +21,23 @@ public class ResourcesPagerAdapter extends FragmentStatePagerAdapter{
 
     @Override
     public Fragment getItem(int position) {
-        int periodType = 0;
+        int type = EnergySwitchModel.ENERGY_TYPE_THIS_MONTH;
         switch (position){
             case 0:
-                periodType = R.string.day;
+                type = EnergySwitchModel.ENERGY_TYPE_TODAY;
                 break;
             case 1:
-                periodType = R.string.week;
+                type = EnergySwitchModel.ENERGY_TYPE_WEEK;
                 break;
             case 2:
-                periodType = R.string.month;
+                type = EnergySwitchModel.ENERGY_TYPE_THIS_MONTH;
                 break;
             case 3:
-                periodType = R.string.year;
+                type = EnergySwitchModel.ENERGY_TYPE_YEAR;
                 break;
 
         }
-        return ResourceByPeriodFragment.getInstance(position);
+        return ResourceByPeriodFragment.getInstance(type);
     }
 
     @Override

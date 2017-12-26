@@ -1,7 +1,6 @@
-package com.livetyping.moydom.ui;
+package com.livetyping.moydom.ui.custom;
 
 import android.content.Context;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.utils.MPPointF;
 
@@ -11,7 +10,6 @@ import com.github.mikephil.charting.utils.MPPointF;
 
 public class MyMarkerView extends com.github.mikephil.charting.components.MarkerView {
 
-    private TextView tvContent;
     private MPPointF mOffset;
 
     public MyMarkerView(Context context, int layoutResource) {

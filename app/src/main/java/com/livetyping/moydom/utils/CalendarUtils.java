@@ -83,4 +83,8 @@ public class CalendarUtils {
                 + " " + finishCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
                 + " " + finishCalendar.get(Calendar.YEAR);
     }
+
+    public static int getCurrentDay() {
+        return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+    }
 }

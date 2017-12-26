@@ -39,6 +39,16 @@ public class ApiUrlService {
         return url.toString();
     }
 
+    private static String getBaseOptions(){
+        StringBuilder url = new StringBuilder();
+        url.append(MAIN_METHOD);
+        url.append("p_operation=").append(OPERATION_CALL).append("&");
+        url.append("p_username=").append(USERNAME).append("&");
+        url.append("p_password=").append(PASSWORD).append("&");
+        url.append("p_context=").append(API_CONTEXT).append("&");
+        return url.toString();
+    }
+
     public static String getCallbackPhoneUrl(String phone){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
@@ -52,6 +62,15 @@ public class ApiUrlService {
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_CURRENT_ENERGY).append("&");
         url.append(getUuidPassword(false));
+        return url.toString();
+    }
+
+    private static String getUuidPassword(boolean withQuery){
+        StringBuilder url = new StringBuilder();
+        Prefs prefs = Prefs.getInstance();
+        url.append(prefs.getUUID()).append("&");
+        url.append(prefs.getPassword());
+        if (withQuery) url.append("&");
         return url.toString();
     }
 
@@ -116,25 +135,6 @@ public class ApiUrlService {
         return url.toString();
     }
 
-    private static String getUuidPassword(boolean withQuery){
-        StringBuilder url = new StringBuilder();
-        Prefs prefs = Prefs.getInstance();
-        url.append(prefs.getUUID()).append("&");
-        url.append(prefs.getPassword());
-        if (withQuery) url.append("&");
-        return url.toString();
-    }
-
-    private static String getBaseOptions(){
-        StringBuilder url = new StringBuilder();
-        url.append(MAIN_METHOD);
-        url.append("p_operation=").append(OPERATION_CALL).append("&");
-        url.append("p_username=").append(USERNAME).append("&");
-        url.append("p_password=").append(PASSWORD).append("&");
-        url.append("p_context=").append(API_CONTEXT).append("&");
-        return url.toString();
-    }
-
     public static String getDayGraphEnergyUrl(){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
@@ -167,7 +167,7 @@ public class ApiUrlService {
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_YEAR_GRAPH_ENERGY).append("&");
-        url.append(getUuidPassword(true)).append("&");
+        url.append(getUuidPassword(true));
         url.append(CalendarUtils.getCurrentYear());
         return url.toString();
     }

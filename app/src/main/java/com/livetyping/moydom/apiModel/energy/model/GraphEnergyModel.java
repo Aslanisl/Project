@@ -36,15 +36,89 @@ public class GraphEnergyModel {
         return childModels;
     }
 
+    public List<ZoneSummary> getZones(){
+
+        List<ZoneSummary> zoneSummaries = new ArrayList<>();
+        boolean doesZoneExist = false;
+        for (GraphItemEnergyModel model : childModels){
+            for (ZoneSummary summary : zoneSummaries){
+                if (summary.id == model.getTariff().getTariffId()){
+                    doesZoneExist = true;
+                    summary.entriesCount++;
+                    summary.totalEnergy += model.getPower();
+                    summary.totalEnergyCost += model.getPowerCost();
+                    break;
+                }
+            }
+
+            if (!doesZoneExist){
+                ZoneSummary zoneSummary = new ZoneSummary();
+                zoneSummary.name = model.getTariff().getTariffName();
+                zoneSummary.time = model.getTariff().getTariffTime().replace(';', '\n');
+                zoneSummary.id = model.getTariff().getTariffId();
+                zoneSummary.entriesCount = 1;
+                zoneSummary.totalEnergyCost = model.getPowerCost();
+                zoneSummary.totalEnergy = model.getPower();
+                zoneSummaries.add(zoneSummary);
+            }
+        }
+        return zoneSummaries;
+
+    }
+
     public BarData getGraphData(int type){
+
+
+        Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
+            if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())){
+                return graphItemEnergyModel.getTariff().getTariffId() - t1.getTariff().getTariffId();
+            } else {
+                try {
+                    return graphItemEnergyModel.getDate().compareTo(t1.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
+
         HashMap<String, ArrayList<Float>> values = new HashMap<>();
         ArrayList<Integer> colors = new ArrayList<>();
 
         for (GraphItemEnergyModel model : childModels){
-            if (!values.containsKey(model.getDate())){
-                values.put(model.getDate(), new ArrayList<>());
+            if (!values.containsKey(model.getStringDate())){
+                values.put(model.getStringDate(), new ArrayList<>());
             }
-            values.get(model.getDate()).add(model.getPowerCost());
+            values.get(model.getStringDate()).add(model.getPowerCost());
+        }
+        Log.d("****", new Gson().toJson(values));
+
+        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY){
+            for (int i = 0; i < 7; i++) {
+
+                colors.add(Color.parseColor("#343d94"));
+            }
+            for (int i = 0; i < 3; i++) {
+
+                colors.add(Color.parseColor("#ff5b91"));
+            }
+            for (int i = 0; i < 7; i++) {
+
+                colors.add(Color.parseColor("#ffc13c"));
+            }
+            for (int i = 0; i < 4; i++) {
+
+                colors.add(Color.parseColor("#ff5b91"));
+            }
+            for (int i = 0; i < 2; i++) {
+
+                colors.add(Color.parseColor("#ffc13c"));
+            }
+            colors.add(Color.parseColor("#343d94"));
+        } else {
+            colors.add(Color.parseColor("#ff5b91"));
+            colors.add(Color.parseColor("#343d94"));
+            colors.add(Color.parseColor("#ffc13c"));
         }
 
 
@@ -64,10 +138,6 @@ public class GraphEnergyModel {
         for (Map.Entry<String, ArrayList<Float>> mapEntry : values.entrySet()){
             try {
                 calendar.setTime(sdfIn.parse(mapEntry.getKey()));
-                colors.add(Color.YELLOW);
-                colors.add(Color.BLUE);
-                colors.add(Color.GREEN);
-
                 entry = new BarEntry(calendar.get(field), HelpUtils.listToFloatArray(mapEntry.getValue()));
                 entries.add(entry);
                 Log.d("***", calendar.get(field) + " " +  new Gson().toJson(HelpUtils.listToFloatArray(mapEntry.getValue())));
@@ -75,15 +145,15 @@ public class GraphEnergyModel {
                 e.printStackTrace();
             }
         }
-
         Collections.sort(entries, (barEntry, t1) -> (int)(barEntry.getX() - t1.getX()));
         BarDataSet barDataSet = new BarDataSet(entries, "rub");
         barDataSet.setColors(colors);
+        barDataSet.setDrawValues(false);
         barDataSet.setHighlightEnabled(true);
         return new BarData(barDataSet);
     }
 
-    public float getWeekPowerCost(){
+    public float getTotalPowerCost(){
         float cost = 0;
         if (childModels != null && ! childModels.isEmpty()){
             for (GraphItemEnergyModel model: childModels) {
@@ -93,7 +163,7 @@ public class GraphEnergyModel {
         return cost;
     }
 
-    public float getWeekPower(){
+    public float getTotalPower(){
         float power = 0;
         if (childModels != null && ! childModels.isEmpty()){
             for (GraphItemEnergyModel model : childModels){
@@ -103,12 +173,47 @@ public class GraphEnergyModel {
         return power;
     }
 
+
+    public String getDataText(){
+        StringBuilder result = new StringBuilder();
+        for (GraphItemEnergyModel model : childModels){
+            result.append(String.format(Locale.getDefault(),
+                    "%s: %.1f кВт•ч на сумму %.1f по тарифу %s\n",
+                    model.getStringDate(),
+                    model.getPower(),
+                    model.getPowerCost(),
+                    model.getTariff().getTariffName()));
+        }
+        return result.toString();
+    }
+    public float getAveragePowerCost(){
+        float cost = 0;
+        if (childModels != null && ! childModels.isEmpty()){
+            for (GraphItemEnergyModel model: childModels) {
+                cost = cost + model.getPowerCost();
+            }
+            cost /= childModels.size();
+        }
+        return cost;
+    }
+
+    public float getAveragePower(){
+        float power = 0;
+        if (childModels != null && ! childModels.isEmpty()){
+            for (GraphItemEnergyModel model : childModels){
+                power = power + model.getPower();
+            }
+            power /= childModels.size();
+        }
+        return power;
+    }
+
     public String getWeekDate(){
         long startWeekTime = 0;
         long finishWeekTime = 0;
         if (childModels != null && ! childModels.isEmpty()){
             for (GraphItemEnergyModel model : childModels){
-                long currentTime = CalendarUtils.getTimeMillisFromServerDate(model.getDate());
+                long currentTime = CalendarUtils.getTimeMillisFromServerDate(model.getStringDate());
                 if (startWeekTime == 0 || finishWeekTime == 0){
                     startWeekTime = currentTime;
                     finishWeekTime = currentTime;
@@ -124,5 +229,14 @@ public class GraphEnergyModel {
         return CalendarUtils.getBetweenDateFromTimeMillis(startWeekTime, finishWeekTime);
     }
 
+    public class ZoneSummary{
+        public String name;
+        public String time;
+        public int id;
+        public int entriesCount;
+        public float totalEnergy;
+        public float totalEnergyCost;
+
+    }
 
 }
