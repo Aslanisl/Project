@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -7,9 +8,11 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
+import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,10 +20,14 @@ import butterknife.ButterKnife;
 public class ManuallyEnterCodeActivity extends AuthorizationActivity {
 
     private static final int CODE_LENGTH = 16;
+    private static final int CODE_WHITESPACE = 4;
+
     private boolean mEnableDoneButton;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_manually_code_edit) EditText mCodeEdit;
+
+    private String mCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,25 +72,6 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
     }
 
     private void initEditCode(){
-        TextWatcher textWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == CODE_LENGTH){
-                    mEnableDoneButton = true;
-                    invalidateOptionsMenu();
-                } else if (mEnableDoneButton){
-                    mEnableDoneButton = false;
-                    invalidateOptionsMenu();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        };
-        mCodeEdit.addTextChangedListener(textWatcher);
         mCodeEdit.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE){
                 callCode();
@@ -91,10 +79,37 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
             }
             return false;
         });
+
+        final MaskedTextChangedListener listener = new MaskedTextChangedListener(
+                "[____] [____] [____] [____]",
+                false,
+                mCodeEdit,
+                null,
+                (maskFilled, extractedValue) ->{
+                    mCode = extractedValue;
+                    if (mCode.length() == CODE_LENGTH) {
+                        mEnableDoneButton = true;
+                        invalidateOptionsMenu();
+                    } else if (mEnableDoneButton) {
+                        mEnableDoneButton = false;
+                        invalidateOptionsMenu();
+                    }
+                }
+        );
+
+        mCodeEdit.addTextChangedListener(listener);
+        mCodeEdit.setOnFocusChangeListener(listener);
+
+        mCodeEdit.postDelayed(() -> {
+            mCodeEdit.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(mCodeEdit, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 50);
     }
 
     private void callCode(){
-        String uuid = mCodeEdit.getText().toString();
-        callAuthorization(uuid);
+        callAuthorization(mCode);
     }
 }

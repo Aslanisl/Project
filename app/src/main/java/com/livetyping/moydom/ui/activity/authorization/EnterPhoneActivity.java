@@ -1,11 +1,13 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
@@ -15,6 +17,7 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.api.CallbackWrapper;
+import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
 import com.livetyping.moydom.api.ServerCallback;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
@@ -57,6 +60,13 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
         mPhoneEdit.addTextChangedListener(listener);
         mPhoneEdit.setOnFocusChangeListener(listener);
         mPhoneEdit.setHint(listener.placeholder());
+        mPhoneEdit.postDelayed(() -> {
+            mPhoneEdit.requestFocus();
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (inputMethodManager != null) {
+                inputMethodManager.showSoftInput(mPhoneEdit, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 50);
     }
 
     @Override
@@ -119,6 +129,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
             if (model.containsErrors()) {
                 showToast(model.getErrorMessage());
             } else {
+                HelpUtils.hideSoftKeyborad(this);
                 Intent intent = new Intent(this, QrScannerActivity.class);
                 intent.putExtra(QrScannerActivity.KEY_ALERT_DIALOG_FROM_PHONE, true);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

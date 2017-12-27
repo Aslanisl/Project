@@ -21,6 +21,8 @@ import butterknife.OnClick;
 public class NewTargetActivity extends BaseActivity implements AverageEnergyCostRepository.AverageCostCallback {
     public static final String EDIT = "edit";
 
+    public static final int STANDARD_AVERAGE_COST = 600;
+
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
     @BindView(R.id.activity_new_target) CustomButtonView mNewTargetButton;
@@ -72,6 +74,8 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
             mPercentSelected = percent;
             if (!mNewTargetButton.isEnabled()) mNewTargetButton.setEnabled(true);
         });
+        mAverageCost = STANDARD_AVERAGE_COST;
+        mTargetsAdapter.setCurrentCost(mAverageCost);
     }
 
     @Override
@@ -84,7 +88,7 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
     @Override
     public void onAverageCostResponse(float averageCost) {
         mAverageCost = averageCost;
-        mTargetsAdapter.setCurrentCost(averageCost);
+        mTargetsAdapter.setCurrentCost(mAverageCost);
     }
 
     @Override

@@ -17,6 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.livetyping.moydom.ui.activity.otherSettings.NewTargetActivity.STANDARD_AVERAGE_COST;
+
 public class MyTargetActivity extends BaseActivity implements AverageEnergyCostRepository.AverageCostCallback {
 
     private static final int REQUEST_CODE_NEW_TARGET = 1;
@@ -51,6 +53,7 @@ public class MyTargetActivity extends BaseActivity implements AverageEnergyCostR
         mMyTargetRecycler.setAdapter(mAdapter);
         mMyTargetRecycler.setLayoutManager(new LinearLayoutManager(this));
         if (targetPercent == 0) mMyTargetRecycler.setVisibility(View.GONE);
+        mAdapter.setCurrentCost(mPrefs.getTargetCost());
     }
 
     @Override

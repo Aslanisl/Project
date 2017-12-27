@@ -145,7 +145,7 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
             }
             int percentAbs = (int)(percent * 100);
             mTitle.setText(mContext.getString(R.string.energy_less_percent, percentAbs));
-            int valueAbs = Math.round(value * percent);
+            int valueAbs = Math.round(value * (1 - percent));
             mDescription.setText(mContext.getString(R.string.about_cost_of_your, valueAbs));
             mContainer.setSelected(mSelectedPosition == getAdapterPosition());
             mTitle.setTextColor(mSelectedPosition == getAdapterPosition()
