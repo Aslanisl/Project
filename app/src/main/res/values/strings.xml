@@ -110,6 +110,6 @@
     <string name="look_who_come_open_door">Смотри, кто к тебе пришел и открывай дверь, где бы ты ни был!</string>
     <string name="videophone">Видеофон</string>
 
-    <string name="problem_with_loading_categories">Возникла проблема при загрузке категорий</string>
+    <string name="categories_loading">Подождите, категории загружаются…</string>
 
 </resources>

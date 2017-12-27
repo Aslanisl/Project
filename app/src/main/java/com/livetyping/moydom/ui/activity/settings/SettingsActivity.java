@@ -87,6 +87,7 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
         camerasItemTouchHelper.attachToRecyclerView(mCamerasRecycler);
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(this));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
+        mCamerasRecycler.setNestedScrollingEnabled(false);
         mCamerasAdapter.setOnDragListener(camerasItemTouchHelper::startDrag);
 
         //Remove cameras if they not in server response now
@@ -136,6 +137,7 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
         energyItemTouchHelper.attachToRecyclerView(mEnergyRecycler);
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(this));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
+        mEnergyRecycler.setNestedScrollingEnabled(false);
         mEnergyAdapter.setOnDragListener(energyItemTouchHelper::startDrag);
         mEnergyAdapter.addEnergySettings(mPrefs.getEnergyFilters());
     }

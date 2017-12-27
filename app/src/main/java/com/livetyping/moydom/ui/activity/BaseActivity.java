@@ -3,10 +3,16 @@ package com.livetyping.moydom.ui.activity;
 import android.app.ProgressDialog;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.ServerCallback;
+import com.livetyping.moydom.ui.custom.InternetView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +41,26 @@ public class BaseActivity extends AppCompatActivity implements ServerCallback{
         }
         mToast = Toast.makeText(this, resId, Toast.LENGTH_SHORT);
         mToast.show();
+    }
+
+    //Anchor to view bottom
+    protected void setUpInternetView(View container, View anchorView) {
+        if (container != null && anchorView != null) {
+            if (container instanceof RelativeLayout) {
+                InternetView internetView = new InternetView(this);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                layoutParams.addRule(RelativeLayout.BELOW, anchorView.getId());
+                internetView.setLayoutParams(layoutParams);
+                ((RelativeLayout) container).addView(internetView);
+            } else {
+                Log.d(InternetView.TAG, "Container to internet view must be relative layout");
+            }
+        } else {
+            throw new NullPointerException("Container or anchorView must not be null");
+        }
     }
 
     protected void showProgress() {

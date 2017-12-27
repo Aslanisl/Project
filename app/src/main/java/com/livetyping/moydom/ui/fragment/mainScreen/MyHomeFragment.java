@@ -169,10 +169,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
-            mEnergyRepository.setEnergyCallback(this);
-            mEnergyRepository.getEnergy();
-            mCamerasRepository.setCamerasCallback(this);
-            mCamerasRepository.getCameras(true);
+            mEnergyAdapter.addEnergyModels(mPrefs.getEnergyFilters());
         }
     }
 

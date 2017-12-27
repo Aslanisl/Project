@@ -13,4 +13,33 @@
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_marginTop="@dimen/spacing_tiny"/>
 
+    <ImageView
+        android:id="@+id/custom_internet_view_reload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:src="@drawable/reload"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/custom_internet_view_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:src="@drawable/accept_active"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/custom_internet_view_progress"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/spacing_normal"/>
+
 </RelativeLayout>

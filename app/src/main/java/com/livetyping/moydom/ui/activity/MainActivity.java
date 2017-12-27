@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
@@ -21,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+    @BindView(R.id.main_activity_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
 
@@ -39,6 +41,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        setUpInternetView(mContainer, mToolbar);
 
         BottomNavigationViewHelper.removeShiftMode(mBottomNavigationView);
 

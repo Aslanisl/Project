@@ -4,13 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,8 +27,9 @@ import com.livetyping.moydom.utils.ViewUtils;
 
 public class InternetView extends LinearLayout {
 
-    private static final String TAG = InternetView.class.getSimpleName();
+    public static final String TAG = InternetView.class.getSimpleName();
     private static final int CONNECTED_ANIMATION_DELAYED = 1000;
+    private static final int CONNECTING_DELAYED = 3000;
 
     public enum State{
         DISCONNECTED,
@@ -43,12 +47,16 @@ public class InternetView extends LinearLayout {
     };
 
     private State mState;
-    private Handler mAnimationHandler;
+    private Handler mHandler;
     private Runnable mInternetDisconnected;
     private Runnable mInternetConnected;
+    private Runnable mInternetConnecting;
 
     private RelativeLayout mContainer;
     private TextView mTitle;
+    private ImageView mReload;
+    private ProgressBar mProgressBar;
+    private ImageView mDone;
 
     public InternetView(Context context) {
         super(context);
@@ -69,23 +77,56 @@ public class InternetView extends LinearLayout {
         inflate(context, R.layout.custom_internet_view, this);
         mContainer = findViewById(R.id.custom_internet_view_container);
         mTitle = findViewById(R.id.custom_internet_view_text);
+        mReload = findViewById(R.id.custom_internet_view_reload);
+        mProgressBar = findViewById(R.id.custom_internet_view_progress);
+        mProgressBar.getIndeterminateDrawable()
+                .setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), PorterDuff.Mode.SRC_IN );
+        mReload.setOnClickListener(view -> {
+            mState = State.CONNECTING;
+            changeState();
+        });
+        mDone = findViewById(R.id.custom_internet_view_done);
+        setVisibility(NetworkUtil.isConnected(getContext()) ? GONE : VISIBLE);
 
-        mAnimationHandler = new Handler();
-        mInternetConnected = () -> ViewUtils.collapse(this);
-        mInternetDisconnected = () -> ViewUtils.expand(this);
+        mHandler = new Handler();
+        mInternetConnected = () -> {
+            if (getVisibility() == VISIBLE) ViewUtils.collapse(this);
+        };
+        mInternetDisconnected = () -> {
+            if (getVisibility() == GONE) ViewUtils.expand(this);
+        };
+        mInternetConnecting = () -> {
+            mState = State.DISCONNECTED;
+            changeState();
+        };
     }
 
     private void changeState(){
         switch (mState){
             case CONNECTED:
                 mTitle.setText(R.string.connected_with_internet);
+                mProgressBar.setVisibility(GONE);
+                mReload.setVisibility(GONE);
+                mDone.setVisibility(VISIBLE);
                 mContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_connected_color));
-                mAnimationHandler.postDelayed(mInternetConnected, CONNECTED_ANIMATION_DELAYED);
+                mHandler.removeCallbacks(mInternetConnecting);
+                mHandler.postDelayed(mInternetConnected, CONNECTED_ANIMATION_DELAYED);
+                break;
+            case CONNECTING:
+                mTitle.setText(R.string.connecting_with_internet);
+                mProgressBar.setVisibility(VISIBLE);
+                mReload.setVisibility(GONE);
+                mDone.setVisibility(GONE);
+                mContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_connecting_color));
+                mHandler.postDelayed(mInternetConnecting, CONNECTING_DELAYED);
                 break;
             case DISCONNECTED:
                 mTitle.setText(R.string.no_connection_with_internet);
+                mReload.setVisibility(VISIBLE);
+                mProgressBar.setVisibility(GONE);
+                mDone.setVisibility(GONE);
                 mContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_not_connected_color));
-                mAnimationHandler.postDelayed(mInternetDisconnected, 0);
+                mHandler.postDelayed(mInternetDisconnected, 0);
                 break;
         }
     }
@@ -97,7 +138,6 @@ public class InternetView extends LinearLayout {
         if (context != null) {
             context.registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
-        Log.d(TAG, "onAttachedToWindow");
     }
 
     @Override
@@ -107,10 +147,9 @@ public class InternetView extends LinearLayout {
         if (context != null) {
             context.unregisterReceiver(mConnectedReceiver);
         }
-        if (mAnimationHandler != null) {
-            mAnimationHandler.removeCallbacks(mInternetDisconnected);
-            mAnimationHandler.removeCallbacks(mInternetConnected);
+        if (mHandler != null) {
+            mHandler.removeCallbacks(mInternetDisconnected);
+            mHandler.removeCallbacks(mInternetConnected);
         }
-        Log.d(TAG, "onDetachedFromWindow");
     }
 }
