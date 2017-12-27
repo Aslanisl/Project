@@ -71,6 +71,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
 
     private List<File> mPhotoFiles = new ArrayList<>();
 
+    private boolean mTriedToGetCategories = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +111,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                     protected void onSuccess(AppealResponse appealResponse) {
                         removeProgress();
                         if (appealResponse.containsErrors()){
-                            appealResponse.getErrorMessage();
+                            showToast(appealResponse.getErrorMessage());
                         } else {
                             initAddresses(appealResponse.getAppealModels());
                         }
@@ -144,12 +146,10 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_send:
-                //TODO send appeal
                 if (mSelectedModel == null){
                     showToast(R.string.chose_category);
                 } else {
                     sendAppeal();
-                    AlertDialogUtils.showAlertDone(this);
                 }
                 return true;
         }
@@ -167,6 +167,11 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             intent.putExtra("categories", mCategories);
             intent.putExtra("selected", mSelectedModel);
             startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
+        } else if (!mTriedToGetCategories){
+            mTriedToGetCategories = true;
+            initCategories();
+        } else {
+            showToast(R.string.problem_with_loading_categories);
         }
     }
 

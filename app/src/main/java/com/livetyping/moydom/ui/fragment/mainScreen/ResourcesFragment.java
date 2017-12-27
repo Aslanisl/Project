@@ -74,11 +74,22 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
         mResourcesRecycler.setNestedScrollingEnabled(false);
         mAdapter.setAdviceListener(this::closeAdvice);
 
+        initAdvice();
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mEnergyRepository.setEnergyCallback(this);
         mEnergyRepository.getEnergy();
+    }
 
-        initAdvice();
-        return rootView;
+    @Override
+    public void onStop() {
+        super.onStop();
+        mEnergyRepository.removeEnergyCallback();
     }
 
     private void initAdvice(){

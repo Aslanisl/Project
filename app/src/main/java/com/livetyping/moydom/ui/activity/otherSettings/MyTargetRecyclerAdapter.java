@@ -137,15 +137,12 @@ public class MyTargetRecyclerAdapter extends RecyclerView.Adapter<MyTargetRecycl
         }
 
         public void bindHolder(float percent, float value){
+            mPercent = percent;
             if (mType == TYPE_TARGETS) {
                 if (Math.round(mPercentSelected * 100) == Math.round(percent * 100)) {
                     mSelectedPosition = getAdapterPosition();
-                    if (mListener != null) {
-                        mListener.percentSelected(mPercent);
-                    }
                 }
             }
-            mPercent = percent;
             int percentAbs = (int)(percent * 100);
             mTitle.setText(mContext.getString(R.string.energy_less_percent, percentAbs));
             int valueAbs = Math.round(value * percent);
