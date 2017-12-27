@@ -71,11 +71,22 @@ public class ResourcesFragment extends BaseFragment implements EnergyRepository.
         mAdapter.setAdviceListener(this::closeAdvice);
         mAdapter.setIsItemClickable(true);
 
+        initAdvice();
+
+        return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         mEnergyRepository.setEnergyCallback(this);
         mEnergyRepository.getEnergy();
+    }
 
-        initAdvice();
-        return rootView;
+    @Override
+    public void onStop() {
+        super.onStop();
+        mEnergyRepository.removeEnergyCallback();
     }
 
     private void initAdvice(){

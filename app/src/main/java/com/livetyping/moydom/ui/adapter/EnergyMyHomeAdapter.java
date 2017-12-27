@@ -3,6 +3,7 @@ package com.livetyping.moydom.ui.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.livetyping.moydom.apiModel.energy.model.CurrentEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.MonthEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
+import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.ui.activity.ResourcesActivity;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
@@ -55,6 +57,8 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private MonthEnergyModel mMonthEnergyModel;
     private AdviceModel mAdviceModel;
 
+    private float mTargetCost;
+
     private boolean mWithAdvice;
 
     private Context mContext;
@@ -63,6 +67,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public EnergyMyHomeAdapter(Context context, boolean withAdvice) {
         mContext = context;
         mWithAdvice = withAdvice;
+        mTargetCost = Prefs.getInstance().getTargetCost();
         if (withAdvice){
             addDefaultEnergyModels();
         }
@@ -250,16 +255,63 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     .setColorFilter(ContextCompat.getColor(mContext, R.color.gray), PorterDuff.Mode.SRC_IN );
         }
 
+        private void bindContainerWaveColor(RelativeLayout container, ImageView wave,
+                                            float cost, int type){
+            float targetCost = 0;
+            switch (type) {
+                case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                    // cuz 30 days in month approx
+                    targetCost = mTargetCost / 30;
+                    break;
+                case EnergySwitchModel.ENERGY_TYPE_WEEK:
+                    // cuz 4 week in month approx
+                    targetCost = mTargetCost / 4;
+                    break;
+                case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                    targetCost = mTargetCost;
+                    break;
+            }
+            if (targetCost != 0 && cost != 0){
+                float percent = cost / targetCost;
+                if (percent >= 1){
+                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red));
+                    wave.setImageResource(R.drawable.wave_red);
+                } else if (percent < 1 && percent >= 0.6){
+                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
+                    wave.setImageResource(R.drawable.wave_yellow);
+                } else if (percent < 0.6){
+                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+                    wave.setImageResource(R.drawable.wave_green);
+                }
+            } else {
+                container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+                wave.setImageResource(R.drawable.wave_green);
+            }
+        }
+
         public void bindCurrentEnergyHolder(CurrentEnergyModel model){
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
-                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
-                mWave.setImageResource(R.drawable.wave_yellow);
+                Drawable background;
+                Drawable wave;
+                if (model.getCostNowStatus() <= 1){
+                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_green);
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_green);
+                } else if (model.getCostNowStatus() > 1 && model.getCostNowStatus() <= 2){
+                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow);
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_yellow);
+                } else {
+                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_red);
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_red);
+                }
+                mContainer.setBackground(background);
+                mWave.setImageDrawable(wave);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));
                 mMeasure.setText(mContext.getString(R.string.rub));
                 mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerNow()));
                 mCurrentPeriod.setText(R.string.current_energy_power);
+                mCurrentDate.setVisibility(View.GONE);
             }
         }
 
@@ -267,12 +319,12 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
-                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red));
-                mWave.setImageResource(R.drawable.wave_red);
+                bindContainerWaveColor(mContainer, mWave, model.getPowerCost(), EnergySwitchModel.ENERGY_TYPE_TODAY);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
                 mUnit.setText(mContext.getString(R.string.energy_measure, model.getPower()));
                 mCurrentPeriod.setText(R.string.today);
+                mCurrentDate.setVisibility(View.GONE);
             }
         }
 
@@ -280,13 +332,13 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             bindHolderEmpty();
             if (model != null) {
                 mProgress.setVisibility(View.GONE);
-                mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
-                mWave.setImageResource(R.drawable.wave_yellow);
+                bindContainerWaveColor(mContainer, mWave, model.getWeekPowerCost(), EnergySwitchModel.ENERGY_TYPE_WEEK);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getWeekPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
                 mUnit.setText(mContext.getString(R.string.energy_measure, model.getWeekPower()));
                 mCurrentPeriod.setText(R.string.this_week);
                 mCurrentDate.setText(model.getWeekDate());
+                mCurrentDate.setVisibility(View.VISIBLE);
             }
         }
 
@@ -295,18 +347,17 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (model != null) {
                 if (!mWithAdvice) {
                     mProgress.setVisibility(View.GONE);
-                    mContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
-                    mWave.setImageResource(R.drawable.wave_green);
+                    bindContainerWaveColor(mContainer, mWave, model.getCostMonth(), EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
                     mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostMonth()));
                     mMeasure.setText(mContext.getString(R.string.rub));
                     mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));
                     mCurrentPeriod.setText(R.string.this_month);
                     mCurrentDate.setText(CalendarUtils.getCurrentMonthText());
+                    mCurrentDate.setVisibility(View.VISIBLE);
                 } else {
                     mContainer.setVisibility(View.GONE);
                     mMonthContainer.setVisibility(View.VISIBLE);
-                    mMonthContainer.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
-                    mMonthWave.setImageResource(R.drawable.wave_green);
+                    bindContainerWaveColor(mMonthContainer, mMonthWave, model.getCostMonth(), EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
                     mMonthPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostMonth()));
                     mMonthMeasure.setText(mContext.getString(R.string.rub));
                     mMonthUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));

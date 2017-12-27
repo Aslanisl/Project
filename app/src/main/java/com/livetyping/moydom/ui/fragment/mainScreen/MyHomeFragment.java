@@ -124,15 +124,27 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         View rootView = inflater.inflate(R.layout.fragment_my_home, container, false);
         mUnbinder = ButterKnife.bind(this, rootView);
 
-        mEnergyRepository.setEnergyCallback(this);
         initEnergyView();
-
-        mCamerasRepository.setCamerasCallback(this);
         initCameras();
-        mCamerasRepository.getCameras(true);
 
         getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mCamerasRepository.setCamerasCallback(this);
+        mCamerasRepository.getCameras(true);
+        mEnergyRepository.setEnergyCallback(this);
+        mEnergyRepository.getEnergy();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mEnergyRepository.removeEnergyCallback();
+        mCamerasRepository.removeCamerasCallback();
     }
 
     @Override
@@ -158,21 +170,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyRecycler.setNestedScrollingEnabled(false);
-        getEnergyFilters();
-    }
-
-    private void getEnergyFilters(){
-        mCompositeDisposable.add(Observable.create((ObservableOnSubscribe<List<EnergySwitchModel>>) e -> {
-                    e.onNext(mPrefs.getEnergyFilters());
-                    e.onComplete();
-                }).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(settingsSwitchModels -> {
-                                    mEnergyAdapter.addEnergyModels(settingsSwitchModels);
-                                    mEnergyRepository.getEnergy();
-                                },
-                                throwable -> showToast(throwable.getMessage()))
-        );
+        mEnergyAdapter.addEnergyModels(mPrefs.getEnergyFilters());
     }
 
     private void initCameras(){
@@ -237,7 +235,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
-            getEnergyFilters();
+            mEnergyRepository.setEnergyCallback(this);
+            mEnergyRepository.getEnergy();
             mCamerasRepository.setCamerasCallback(this);
             mCamerasRepository.getCameras(true);
         }
@@ -249,8 +248,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
             mAnimationHandler.removeCallbacks(mInternetDisconnected);
             mAnimationHandler.removeCallbacks(mInternetConnected);
         }
-        mEnergyRepository.removeEnergyCallback();
-        mCamerasRepository.removeCamerasCallback();
         mUnbinder.unbind();
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
         getContext().unregisterReceiver(mConnectedReceiver);
