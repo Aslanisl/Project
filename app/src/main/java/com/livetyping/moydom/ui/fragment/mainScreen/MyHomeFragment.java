@@ -1,13 +1,7 @@
 package com.livetyping.moydom.ui.fragment.mainScreen;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.apiModel.cameras.CameraModel;
@@ -35,8 +27,6 @@ import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
-import com.livetyping.moydom.utils.NetworkUtil;
-import com.livetyping.moydom.utils.ViewUtils;
 
 import java.util.List;
 
@@ -61,23 +51,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
     private EnergyMyHomeAdapter mEnergyAdapter;
 
-    private enum NetworkState{
-        DISCONNECTED,
-        CONNECTED
-    }
-
-    private NetworkState mNetworkState;
-
-    private static final int EXPANDED_ANIMATION_DURATION = 700;
-    private static final int CONNECTED_ANIMATION_DELAYED = 1000;
-    private Handler mAnimationHandler;
-    private Runnable mInternetDisconnected;
-    private Runnable mInternetConnected;
-    @BindView(R.id.fragment_my_home_internet_container) RelativeLayout mNoInternetContainer;
-    @BindView(R.id.fragment_my_home_internet_text) TextView mNoInternetTitle;
-
     private EnergyRepository mEnergyRepository;
-
     private CamerasRepository mCamerasRepository;
 
     private CompositeDisposable mCompositeDisposable;
@@ -85,14 +59,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     private Unbinder mUnbinder;
 
-    private BroadcastReceiver mConnectedReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            boolean isConnected = NetworkUtil.isConnected(getContext());
-            mNetworkState = isConnected ? NetworkState.CONNECTED : NetworkState.DISCONNECTED;
-            changeNoInternetViews();
-        }
-    };
 
     public static MyHomeFragment newInstance() {
         return new MyHomeFragment();
@@ -102,17 +68,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mAnimationHandler = new Handler();
-        mInternetConnected = () -> {
-            if (mNoInternetContainer != null) {
-                ViewUtils.collapse(mNoInternetContainer);
-            }
-        };
-        mInternetDisconnected = () -> {
-            if (mNoInternetContainer != null) {
-                ViewUtils.expand(mNoInternetContainer);
-            }
-        };
         mPrefs = Prefs.getInstance();
         mCompositeDisposable = new CompositeDisposable();
         mEnergyRepository = EnergyRepository.getInstance();
@@ -130,8 +85,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mCamerasRepository.setCamerasCallback(this);
         initCameras();
         mCamerasRepository.getCameras(true);
-
-        getContext().registerReceiver(mConnectedReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         return rootView;
     }
 
@@ -218,21 +171,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         showToast(error);
     }
 
-    private void changeNoInternetViews(){
-        switch (mNetworkState){
-            case CONNECTED:
-                mNoInternetTitle.setText(R.string.connected_with_internet);
-                mNoInternetContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_connected_color));
-                mAnimationHandler.postDelayed(mInternetConnected, CONNECTED_ANIMATION_DELAYED);
-                break;
-            case DISCONNECTED:
-                mNoInternetTitle.setText(R.string.no_connection_with_internet);
-                mNoInternetContainer.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.internet_not_connected_color));
-                mAnimationHandler.postDelayed(mInternetDisconnected, 0);
-                break;
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,15 +183,10 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     @Override
     public void onDestroyView() {
-        if (mAnimationHandler != null) {
-            mAnimationHandler.removeCallbacks(mInternetDisconnected);
-            mAnimationHandler.removeCallbacks(mInternetConnected);
-        }
         mEnergyRepository.removeEnergyCallback();
         mCamerasRepository.removeCamerasCallback();
         mUnbinder.unbind();
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
-        getContext().unregisterReceiver(mConnectedReceiver);
         super.onDestroyView();
     }
 }

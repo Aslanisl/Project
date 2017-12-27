@@ -1,35 +1,44 @@
-<android.support.v4.widget.NestedScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
     tools:context="com.livetyping.moydom.ui.fragment.mainScreen.ResourcesFragment">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:clipToPadding="false">
 
-        <TextView
-            style="@style/Black16LeftMd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginStart="@dimen/spacing_normal"
-            android:layout_marginTop="@dimen/spacing_normal"
-            android:text="@string/electric_energy"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_resources_recycler"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingEnd="@dimen/padding_tiny"
-            android:paddingStart="@dimen/padding_normal">
+            android:layout_height="wrap_content">
 
-        </android.support.v7.widget.RecyclerView>
+            <TextView
+                android:id="@+id/fragment_resources_title"
+                style="@style/Black16LeftMd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:text="@string/electric_energy"/>
 
-    </LinearLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fragment_resources_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragment_resources_title"
+                android:clipToPadding="false"
+                android:paddingEnd="@dimen/padding_tiny"
+                android:paddingStart="@dimen/padding_normal">
 
-</android.support.v4.widget.NestedScrollView>
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <include layout="@layout/layout_internet_view"/>
+
+</RelativeLayout>
