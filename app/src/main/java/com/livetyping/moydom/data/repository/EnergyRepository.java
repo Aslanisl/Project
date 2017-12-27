@@ -34,10 +34,8 @@ import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
 
 public class EnergyRepository implements ServerCallback{
 
-    private volatile static EnergyRepository sInstance;
-
     private static final int REFRESH_TIME = 30;
-
+    private volatile static EnergyRepository sInstance;
     private WeakReference<EnergyCallback> mCallbackWeakReference;
     private WeakReference<BaseFragment> mBaseFragmentWeakReference;
     private WeakReference<BaseActivity> mBaseActivityWeakReference;
@@ -62,16 +60,16 @@ public class EnergyRepository implements ServerCallback{
     }
 
     public void setEnergyCallback(BaseFragment fragment){
-        mBaseFragmentWeakReference = new WeakReference<BaseFragment>(fragment);
+        mBaseFragmentWeakReference = new WeakReference<>(fragment);
         if (fragment instanceof EnergyCallback){
-            mCallbackWeakReference = new WeakReference<EnergyCallback>((EnergyCallback) fragment);
+            mCallbackWeakReference = new WeakReference<>((EnergyCallback) fragment);
         }
     }
 
     public void setEnergyCallback(BaseActivity activity){
-        mBaseActivityWeakReference = new WeakReference<BaseActivity>(activity);
+        mBaseActivityWeakReference = new WeakReference<>(activity);
         if (activity instanceof EnergyCallback){
-            mCallbackWeakReference = new WeakReference<EnergyCallback>((EnergyCallback) activity);
+            mCallbackWeakReference = new WeakReference<>((EnergyCallback) activity);
         }
     }
 
@@ -168,6 +166,9 @@ public class EnergyRepository implements ServerCallback{
     }
 
     public void getDayGraphEnergy(EnergyGraphCallback callback) {
+        if (mCompositeDisposable == null || mCompositeDisposable.isDisposed()){
+            mCompositeDisposable = new CompositeDisposable();
+        }
         mDayEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
         Disposable getDayGraphEnergy = Api.getApiService().getDayGraphEnergy(ApiUrlService.getDayGraphEnergyUrl())
                 .subscribeOn(Schedulers.io())
@@ -195,6 +196,9 @@ public class EnergyRepository implements ServerCallback{
 
 
     public void getWeekGraphEnergy(EnergyGraphCallback callback) {
+        if (mCompositeDisposable == null || mCompositeDisposable.isDisposed()){
+            mCompositeDisposable = new CompositeDisposable();
+        }
         mWeekEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
         Disposable getWeekGraphEnergy = Api.getApiService().getWeekGraphEnergy(ApiUrlService.getWeekGraphEnergyUrl())
                 .subscribeOn(Schedulers.io())
@@ -221,6 +225,9 @@ public class EnergyRepository implements ServerCallback{
     }
 
     public void getMonthGraphEnergy(EnergyGraphCallback callback) {
+        if (mCompositeDisposable == null || mCompositeDisposable.isDisposed()){
+            mCompositeDisposable = new CompositeDisposable();
+        }
         mMonthEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
         Disposable getMonthGraphEnergy = Api.getApiService().getMonthGraphEnergy(ApiUrlService.getMonthGraphEnergyUrl())
                 .subscribeOn(Schedulers.io())
@@ -248,6 +255,9 @@ public class EnergyRepository implements ServerCallback{
 
 
     public void getYearGraphEnergy(EnergyGraphCallback callback) {
+        if (mCompositeDisposable == null || mCompositeDisposable.isDisposed()){
+            mCompositeDisposable = new CompositeDisposable();
+        }
         mYearEnergyGraphCallbackWeakReference = new WeakReference<>(callback);
         Disposable getYearGraphEnergy = Api.getApiService().getYearGraphEnergy(ApiUrlService.getYearGraphEnergyUrl())
                 .subscribeOn(Schedulers.io())
