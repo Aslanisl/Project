@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,7 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.apiModel.energy.model.GraphEnergyModel;
 import com.livetyping.moydom.data.repository.EnergyRepository;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
+import com.livetyping.moydom.ui.custom.ChartDataRenderer;
 import com.livetyping.moydom.ui.custom.MyMarkerView;
 import com.livetyping.moydom.utils.CalendarUtils;
 
@@ -176,6 +176,9 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                     result = "0" + result;
                 return result;
             }
+            if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK){
+                return CalendarUtils.getDayOfWeek(value);
+            }
             if (periodType == EnergySwitchModel.ENERGY_TYPE_YEAR){
                 return MONTH[(int) value];
             }
@@ -197,8 +200,9 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mChart.setDrawGridBackground(true);
         mChart.setGridBackgroundColor(Color.parseColor("#f5f5f5"));
         mChart.setBackgroundColor(Color.parseColor("#f5f5f5"));
-        mChart.setHighlightPerTapEnabled(true);
-        mChart.setHighlightPerDragEnabled(true);
+        mChart.setHighlightFullBarEnabled(true);
+
+        mChart.setRenderer(new ChartDataRenderer(mChart, mChart.getAnimator(), mChart.getViewPortHandler()));
 
         float leftOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 11, getResources().getDisplayMetrics());
         float rightOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
@@ -209,8 +213,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mChart.setPinchZoom(false);
         mChart.setDoubleTapToZoomEnabled(false);
         mChart.setOnChartValueSelectedListener(this);
-//        mChart.getAxisRight().setAxisMinimum(0);
-
         mChart.setMarker(new MyMarkerView(getContext(), R.layout.chart_marker));
 
         switch (periodType){
@@ -254,52 +256,49 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-        getActivity().runOnUiThread(() -> {
 
-            if (indicator.getVisibility() != View.VISIBLE)
-                indicator.setVisibility(View.VISIBLE);
-            if (label.getVisibility() != View.VISIBLE)
-                label.setVisibility(View.VISIBLE);
+        h = mChart.getHighlightByTouchPoint(h.getXPx(), 0);
 
-            if (mHeaderContainer.getVisibility() != View.GONE)
-                mHeaderContainer.setVisibility(View.GONE);
+        if (indicator.getVisibility() != View.VISIBLE)
+            indicator.setVisibility(View.VISIBLE);
+        if (label.getVisibility() != View.VISIBLE)
+            label.setVisibility(View.VISIBLE);
 
-            ((MyMarkerView) mChart.getMarker()).getLayoutParams().height =
-                    (int) (mChart.getY() - h.getYPx());
-            RelativeLayout.LayoutParams lp =
-                    (RelativeLayout.LayoutParams) indicator.getLayoutParams();
-            lp.width = Math.round(h.getXPx()) + 1;
-            indicator.setLayoutParams(lp);
-            indicator.invalidate();
+        if (mHeaderContainer.getVisibility() != View.GONE)
+            mHeaderContainer.setVisibility(View.GONE);
 
-            labelCost.setText(getString(R.string.rub_measure, mChart.getBarData().getDataSetForEntry(e).getEntryForXValue(e.getX(), 0).getPositiveSum()));
-            switch (periodType){
-                case EnergySwitchModel.ENERGY_TYPE_TODAY:
-                    labelData.setText(String.format(Locale.getDefault(), "%d dec\n%.0f-%.0f", CalendarUtils.getCurrentDay(), e.getX(), e.getX() + 1));
-                    break;
-                case EnergySwitchModel.ENERGY_TYPE_WEEK:
-                case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
-                    labelData.setText(String.format(Locale.getDefault(), "%.0f dec\n2017", e.getX()));
-                    break;
-                case EnergySwitchModel.ENERGY_TYPE_YEAR:
-                    labelData.setText(MONTH[(int) e.getX()] + "\n2017" );
+        ((MyMarkerView) mChart.getMarker()).setHeight((int) (h.getYPx()));
+        RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) indicator.getLayoutParams();
+        lp.width = Math.round(h.getXPx()) + 1;
+        indicator.setLayoutParams(lp);
+        indicator.invalidate();
 
-
-            }
-            lp = (RelativeLayout.LayoutParams) label.getLayoutParams();
-            int margin = Math.round(h.getXPx()) - label.getWidth() / 2;
-            
-            int marginMin = getResources().getDimensionPixelOffset(R.dimen.padding_normal);
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int marginMax = displayMetrics.widthPixels - label.getWidth() - marginMin;
-        
-            lp.leftMargin = Math.min(Math.max(margin, marginMin), marginMax) ;
-            label.setLayoutParams(lp);
-            label.invalidate();
+        labelCost.setText(getString(R.string.rub_measure, mChart.getBarData().getDataSetForEntry(e).getEntryForXValue(e.getX(), 0).getPositiveSum()));
+        switch (periodType){
+            case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                labelData.setText(String.format(Locale.getDefault(), "%d dec\n%.0f-%.0f", CalendarUtils.getCurrentDay(), e.getX(), e.getX() + 1));
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_WEEK:
+            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                labelData.setText(String.format(Locale.getDefault(), "%.0f dec\n2017", e.getX()));
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_YEAR:
+                labelData.setText(MONTH[(int) e.getX()] + "\n2017" );
 
 
-        });
+        }
+        lp = (RelativeLayout.LayoutParams) label.getLayoutParams();
+        int margin = Math.round(h.getXPx()) - label.getWidth() / 2;
+
+        int marginMin = getResources().getDimensionPixelOffset(R.dimen.padding_normal);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int marginMax = displayMetrics.widthPixels - label.getWidth() - marginMin;
+
+        lp.leftMargin = Math.min(Math.max(margin, marginMin), marginMax) ;
+        label.setLayoutParams(lp);
+        label.invalidate();
+
     }
 
     @Override
@@ -318,8 +317,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK){
             mHeader.setText(energy.getWeekDate());
         }
-
-        Log.d("debugg", periodType + "");
         mChart.setData(energy.getGraphData(periodType));
 
         if (periodType == EnergySwitchModel.ENERGY_TYPE_YEAR){
@@ -331,13 +328,12 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
         mTotalCost.setText(String.format(Locale.getDefault(), getString(R.string.short_rub_measure), energy.getTotalPowerCost()));
         mTotalValue.setText(String.format(Locale.getDefault(), getString(R.string.short_energy_measure), energy.getTotalPower()));
-        mAverageCost.setText(String.format(Locale.getDefault(), getString(R.string.rub_measure), energy.getAveragePowerCost()));
-        mAverageValue.setText(String.format(Locale.getDefault(), getString(R.string.energy_measure), energy.getAveragePower()));
+        mAverageCost.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
+                getString(R.string.short_rub_measure) : getString(R.string.rub_measure), energy.getAveragePowerCost()));
+        mAverageValue.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
+                getString(R.string.short_energy_measure) : getString(R.string.energy_measure), energy.getAveragePower()));
 
-
-        Log.d("***", periodType + " doneee");
         getActivity().runOnUiThread(() -> {
-
             mProgressBar.setVisibility(View.GONE);
             mError.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
@@ -355,7 +351,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         if (zoneSummaries.size() == 0)
             return;
         mFirstZone.setVisibility(View.VISIBLE);
-        mFirstZoneTitle.setText(zoneSummaries.get(0).name);
+        mFirstZoneTitle.setText(zoneSummaries.get(0).name.substring(0, 1).toUpperCase() + zoneSummaries.get(0).name.substring(1));
         mFirstZoneTime.setText(zoneSummaries.get(0).time);
         mFirstZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(0).totalEnergy));
         mFirstZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(0).totalEnergyCost));
@@ -364,7 +360,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         if (zoneSummaries.size() == 1)
             return;
         mSecondZone.setVisibility(View.VISIBLE);
-        mSecondZoneTitle.setText(zoneSummaries.get(1).name);
+        mSecondZoneTitle.setText(zoneSummaries.get(1).name.substring(0, 1).toUpperCase() + zoneSummaries.get(1).name.substring(1));
         mSecondZoneTime.setText(zoneSummaries.get(1).time);
         mSecondZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(1).totalEnergy));
         mSecondZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(1).totalEnergyCost));
@@ -373,7 +369,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         if (zoneSummaries.size() == 2)
             return;
         mThirdZone.setVisibility(View.VISIBLE);
-        mThirdZoneTitle.setText(zoneSummaries.get(2).name);
+        mThirdZoneTitle.setText(zoneSummaries.get(2).name.substring(0, 1).toUpperCase() + zoneSummaries.get(2).name.substring(1));
         mThirdZoneTime.setText(zoneSummaries.get(2).time);
         mThirdZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(2).totalEnergy));
         mThirdZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(2).totalEnergyCost));

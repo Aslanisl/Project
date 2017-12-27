@@ -87,4 +87,14 @@ public class CalendarUtils {
     public static int getCurrentDay() {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
+
+    public static String getDayOfWeek(String dateString) throws ParseException {
+        Date date = new SimpleDateFormat(DATE_SERVER_TIMESTAMP_FORMAT, Locale.getDefault()).parse(dateString);
+        return new SimpleDateFormat("EEE", Locale.getDefault()).format(date);
+    }
+    public static String getDayOfWeek(float day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, (int) day);
+        return new SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.getTime());
+    }
 }

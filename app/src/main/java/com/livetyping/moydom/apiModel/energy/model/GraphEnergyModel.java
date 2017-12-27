@@ -39,8 +39,10 @@ public class GraphEnergyModel {
     public List<ZoneSummary> getZones(){
 
         List<ZoneSummary> zoneSummaries = new ArrayList<>();
-        boolean doesZoneExist = false;
+        boolean doesZoneExist;
         for (GraphItemEnergyModel model : childModels){
+
+            doesZoneExist = false;
             for (ZoneSummary summary : zoneSummaries){
                 if (summary.id == model.getTariff().getTariffId()){
                     doesZoneExist = true;
@@ -62,12 +64,13 @@ public class GraphEnergyModel {
                 zoneSummaries.add(zoneSummary);
             }
         }
+
+        Collections.sort(zoneSummaries, (z1, z2) -> z1.id - z2.id);
         return zoneSummaries;
 
     }
 
     public BarData getGraphData(int type){
-
 
         Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
             if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())){
@@ -96,11 +99,11 @@ public class GraphEnergyModel {
         if (type == EnergySwitchModel.ENERGY_TYPE_TODAY){
             for (int i = 0; i < 7; i++) {
 
-                colors.add(Color.parseColor("#343d94"));
+                colors.add(Color.parseColor("#ff5b91"));
             }
             for (int i = 0; i < 3; i++) {
 
-                colors.add(Color.parseColor("#ff5b91"));
+                colors.add(Color.parseColor("#343d94"));
             }
             for (int i = 0; i < 7; i++) {
 
@@ -108,14 +111,15 @@ public class GraphEnergyModel {
             }
             for (int i = 0; i < 4; i++) {
 
-                colors.add(Color.parseColor("#ff5b91"));
+                colors.add(Color.parseColor("#343d94"));
             }
             for (int i = 0; i < 2; i++) {
 
                 colors.add(Color.parseColor("#ffc13c"));
             }
-            colors.add(Color.parseColor("#343d94"));
+            colors.add(Color.parseColor("#ff5b91"));
         } else {
+
             colors.add(Color.parseColor("#ff5b91"));
             colors.add(Color.parseColor("#343d94"));
             colors.add(Color.parseColor("#ffc13c"));
@@ -138,14 +142,22 @@ public class GraphEnergyModel {
         for (Map.Entry<String, ArrayList<Float>> mapEntry : values.entrySet()){
             try {
                 calendar.setTime(sdfIn.parse(mapEntry.getKey()));
-                entry = new BarEntry(calendar.get(field), HelpUtils.listToFloatArray(mapEntry.getValue()));
+                if (type == EnergySwitchModel.ENERGY_TYPE_TODAY)
+                    entry = new BarEntry(Integer.parseInt(mapEntry.getKey().substring(11, 13)), HelpUtils.listToFloatArray(mapEntry.getValue()));
+                else
+                    entry = new BarEntry(calendar.get(field), HelpUtils.listToFloatArray(mapEntry.getValue()));
                 entries.add(entry);
-                Log.d("***", calendar.get(field) + " " +  new Gson().toJson(HelpUtils.listToFloatArray(mapEntry.getValue())));
-            } catch (ParseException e) {
+             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
+
         Collections.sort(entries, (barEntry, t1) -> (int)(barEntry.getX() - t1.getX()));
+
+        for (BarEntry barEntry : entries){
+            Log.d("***", barEntry.getX() + " " + barEntry.getY() + " " + barEntry.getYVals().length);
+        }
+
         BarDataSet barDataSet = new BarDataSet(entries, "rub");
         barDataSet.setColors(colors);
         barDataSet.setDrawValues(false);
