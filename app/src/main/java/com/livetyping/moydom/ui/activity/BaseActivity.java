@@ -19,13 +19,22 @@ import retrofit2.Response;
 public class BaseActivity extends AppCompatActivity implements ServerCallback{
 
     protected ProgressDialog mProgressDialog;
+    private Toast mToast;
 
     public void showToast(String message){
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        if (mToast != null){
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     public void showToast(@StringRes int resId){
-        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+        if (mToast != null){
+            mToast.cancel();
+        }
+        mToast = Toast.makeText(this, resId, Toast.LENGTH_SHORT);
+        mToast.show();
     }
 
     protected void showProgress() {

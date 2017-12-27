@@ -32,6 +32,8 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
 
     private AverageEnergyCostRepository mCostRepository;
 
+    private float mAverageCost;
+
     private Prefs mPrefs;
 
     @Override
@@ -54,8 +56,6 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
             }
         }
 
-        mNewTargetButton.setEnabled(false);
-
         mPrefs = Prefs.getInstance();
         initViews();
 
@@ -63,7 +63,9 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
     }
 
     private void initViews(){
-        mTargetsAdapter = new MyTargetRecyclerAdapter(0, mPrefs.getTargetPercent());
+        mPercentSelected = mPrefs.getTargetPercent();
+        mNewTargetButton.setEnabled(mPercentSelected != 0);
+        mTargetsAdapter = new MyTargetRecyclerAdapter(0, mPercentSelected);
         mTargetsRecycler.setAdapter(mTargetsAdapter);
         mTargetsRecycler.setLayoutManager(new LinearLayoutManager(this));
         mTargetsAdapter.setPercentListener(percent -> {
@@ -81,6 +83,7 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
 
     @Override
     public void onAverageCostResponse(float averageCost) {
+        mAverageCost = averageCost;
         mTargetsAdapter.setCurrentCost(averageCost);
     }
 
@@ -92,6 +95,7 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
     @OnClick(R.id.activity_new_target)
     void addNewTarget(CustomButtonView view){
         mPrefs.saveTargetPercent(mPercentSelected);
+        mPrefs.saveTargetCost(mAverageCost * (1 - mPercentSelected));
         if (mEdit) {
             setResult(RESULT_OK);
             finish();

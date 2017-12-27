@@ -27,6 +27,7 @@ public class Prefs {
     private static final String KEY_ENERGY_FILTER = "k6";
     private static final String KEY_TARGET_PERCENT = "k7";
     private static final String KEY_FIRST_LAUNCH = "k8";
+    private static final String KEY_TARGET_COST = "k9";
 
     private Preferences mPreferences;
 
@@ -149,6 +150,15 @@ public class Prefs {
     public void saveTargetPercent(float percent){
         persistFloat(KEY_TARGET_PERCENT, percent);
     }
+
+    public float getTargetCost(){
+        return mPreferences.getFloat(KEY_TARGET_COST, 0);
+    }
+
+    public void saveTargetCost(float cost){
+        persistFloat(KEY_TARGET_COST, cost);
+    }
+
 
     private void persistBoolean(final String key, final boolean value) {
         mPreferences.edit().putBoolean(key, value).commit();
