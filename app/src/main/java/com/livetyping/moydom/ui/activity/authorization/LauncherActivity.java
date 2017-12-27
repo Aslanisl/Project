@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.ui.activity.BaseActivity;
 import com.livetyping.moydom.ui.activity.MainActivity;
+import com.livetyping.moydom.data.Prefs;
+import com.livetyping.moydom.ui.activity.appeal.AppealActivity;
+import com.livetyping.moydom.ui.activity.otherSettings.NewTargetActivity;
 
 public class LauncherActivity extends BaseActivity {
 
@@ -20,6 +22,8 @@ public class LauncherActivity extends BaseActivity {
         Prefs prefs = Prefs.getInstance();
         String uuid = prefs.getUUID();
         String password = prefs.getPassword();
+        float targetCost = prefs.getTargetCost();
+        float targetPercent = prefs.getTargetPercent();
         boolean firstLaunch = prefs.isFirstLaunch();
         if (firstLaunch){
             Intent intent = new Intent(this, OnboardingActivity.class);
@@ -27,6 +31,11 @@ public class LauncherActivity extends BaseActivity {
             finish();
         } else if (TextUtils.isEmpty(uuid) || TextUtils.isEmpty(password)) {
             Intent intent = new Intent(this, QrScannerActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (targetCost == 0 || targetPercent == 0){
+            Intent intent = new Intent(this, NewTargetActivity.class);
+            intent.putExtra(NewTargetActivity.EDIT, false);
             startActivity(intent);
             finish();
         } else {

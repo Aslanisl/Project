@@ -16,7 +16,7 @@
     <string name="phone_number">Номер телефона</string>
     <string name="leave_number">Оставить номер</string>
     <string name="phone">Телефон</string>
-    <string name="code_not_found">К сожалению, такой код не найден</string>
+    <string name="code_not_found">К сожалению, такой/nкод не найден</string>
     <string name="leave_phone_number">Если вы уверены, что ваш код верный, обратитесь в управляющую компанию или оставьте ваш номер телефона и мы вам перезвоним</string>
     <string name="leave_phone_number_we_will_call">Оставьте номер телефона и мы свяжемся с вами</string>
     <string name="enter_code_from_company">Введите код полученный от управляющей компании</string>
@@ -110,10 +110,10 @@
     <string name="change_target">Изменить цель</string>
     <string name="new_target">Новая цель</string>
 
-    <string name="how_many_you_want_to_pay_for_energy">Сколько вы бы хотели тратить на электроэнергию ежемесячно?</string>
+    <string name="how_many_you_want_to_pay_for_energy">Сколько вы хотите тратить на электроэнергию ежемесячно?</string>
 
     <string name="energy_less_percent">На %d%% меньше чем сейчас</string>
-    <string name="about_cost_of_your">≈ %d&#8381; от ваших текущих затрат</string>
+    <string name="about_cost_of_your">≈ %d&#8381;</string>
     <string name="prediction">Прогноз</string>
     <string name="share_usage">Поделиться статистикой</string>
 
@@ -121,6 +121,6 @@
     <string name="look_who_come_open_door">Смотри, кто к тебе пришел и открывай дверь, где бы ты ни был!</string>
     <string name="videophone">Видеофон</string>
 
-    <string name="problem_with_loading_categories">Возникла проблема при загрузке категорий</string>
+    <string name="categories_loading">Подождите, категории загружаются…</string>
 
 </resources>

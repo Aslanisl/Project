@@ -33,13 +33,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_COUNT;
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
 import static com.livetyping.moydom.apiModel.advice.AdviceModel.STATUS_READED;
 
 public class ResourcesFragment extends BaseFragment implements EnergyRepository.EnergyCallback{
     public static final String TAG = ResourcesFragment.class.getSimpleName();
-
-    private static final int API_RETRY_CALL_COUNT = 10;
-    private static final int API_RETRY_CALL_TIME = 5000;
 
     @BindView(R.id.fragment_resources_recycler) RecyclerView mResourcesRecycler;
     private EnergyMyHomeAdapter mAdapter;

@@ -23,6 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:alpha="0.54"
             android:layout_marginTop="@dimen/spacing_huge"
             android:text="@string/no_internet_connection"/>
 
@@ -31,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_tiny"
+            android:alpha="0.54"
             android:text="@string/check_internet_settings"/>
 
     </LinearLayout>

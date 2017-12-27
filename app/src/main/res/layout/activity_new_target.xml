@@ -28,10 +28,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/activity_new_target"
         android:layout_below="@id/activity_new_target_title"
-        android:layout_marginBottom="@dimen/spacing_huge"
-        android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:layout_marginTop="@dimen/spacing_huge">
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_large">
 
     </android.support.v7.widget.RecyclerView>
 

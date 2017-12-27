@@ -12,10 +12,10 @@
 
     <TextView
         style="@style/Gray12LeftRg"
+        android:alpha="0.54"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal"
-        android:labelFor="@+id/activity_manually_code_edit"
         android:text="@string/enter_code_from_company"/>
 
     <EditText
@@ -27,6 +27,6 @@
         android:layout_marginStart="@dimen/spacing_small"
         android:hint="@string/code"
         android:imeOptions="actionDone"
-        android:inputType="text"/>
+        android:inputType="textNoSuggestions|textVisiblePassword"/>
 
 </LinearLayout>

@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_normal"
-        android:labelFor="@+id/activity_manually_code_edit"
+        android:alpha="0.54"
         android:text="@string/leave_phone_number_we_will_call"/>
 
     <EditText
@@ -25,9 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/spacing_small"
         android:layout_marginStart="@dimen/spacing_small"
+        android:digits="0123456789 -.+()"
         android:hint="@string/phone_number"
         android:imeOptions="actionDone"
-        android:inputType="number|textNoSuggestions"
-        android:digits="0123456789 -.+()"/>
+        android:inputType="number|textNoSuggestions"/>
 
 </LinearLayout>

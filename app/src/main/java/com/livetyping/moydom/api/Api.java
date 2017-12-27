@@ -23,7 +23,7 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class Api {
     public static final String BASE_URL = "https://agtest.opk-bulat.ru";
-    public static final int API_RETRY_CALL_COUNT = 20;
+    public static final int API_RETRY_CALL_COUNT = 36;
     public static final int API_RETRY_CALL_TIME = 5000;
 
     private static volatile Endpoint mAPIServiceInstance;

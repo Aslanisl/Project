@@ -33,6 +33,7 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
+import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
@@ -49,6 +50,9 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_COUNT;
+import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
 
 public class AppealActivity extends BaseActivity implements AppealPhotoSelectorFragment.AppealPhotoSelectorListener{
 
@@ -71,13 +75,12 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
 
     private List<File> mPhotoFiles = new ArrayList<>();
 
-    private boolean mTriedToGetCategories = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appeal);
         ButterKnife.bind(this);
+        setUpInternetView(mContainer, mToolbar);
         initViews();
         initCategories();
         invalidateOptionsMenu();
@@ -101,15 +104,14 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     }
 
     private void initCategories(){
-        showProgress();
         mCompositeDisposable = new CompositeDisposable();
         mCompositeDisposable.add(Api.getApiService().getAddresses(ApiUrlService.getAddressesUrl())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .retryWhen(new RetryApiCallWithDelay(API_RETRY_CALL_COUNT, API_RETRY_CALL_TIME))
                 .subscribeWith(new CallbackWrapper<AppealResponse>(this){
                     @Override
                     protected void onSuccess(AppealResponse appealResponse) {
-                        removeProgress();
                         if (appealResponse.containsErrors()){
                             showToast(appealResponse.getErrorMessage());
                         } else {
@@ -167,11 +169,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             intent.putExtra("categories", mCategories);
             intent.putExtra("selected", mSelectedModel);
             startActivityForResult(intent, REQUEST_CODE_SELECT_CATEGORY);
-        } else if (!mTriedToGetCategories){
-            mTriedToGetCategories = true;
-            initCategories();
         } else {
-            showToast(R.string.problem_with_loading_categories);
+            showToast(R.string.categories_loading);
         }
     }
 
