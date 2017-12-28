@@ -313,7 +313,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         HelpUtils.hideSoftKeyborad(this);
         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_EMAIL, "");
+        intent.putExtra(Intent.EXTRA_EMAIL, mSelectedModel.getEmail() != null ? mSelectedModel.getEmail() : " ");
         intent.putExtra(Intent.EXTRA_SUBJECT, mSelectedModel.getTypeName() != null ? mSelectedModel.getTypeName() : " ");
         intent.putExtra(Intent.EXTRA_TEXT, mAppealBody.getText().toString());
         ArrayList<Uri> uris = new ArrayList<>();
