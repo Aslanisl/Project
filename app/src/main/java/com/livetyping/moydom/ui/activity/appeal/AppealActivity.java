@@ -18,11 +18,14 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableString;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -103,6 +106,20 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         int width = (int)(getResources().getDimension(R.dimen.appeal_photo_width_height) / getResources().getDisplayMetrics().density);
         mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
         HelpUtils.focusEditSoft(mAppealBody, this);
+        mAppealBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                changeEnableMenu();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     private void initCategories(){
@@ -129,22 +146,30 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         return super.onCreateOptionsMenu(menu);
     }
 
-//    @Override
-//    public boolean onPrepareOptionsMenu(Menu menu) {
-//        MenuItem item = menu.findItem(R.id.action_send);
-//        if (mEnableSendMenu){
-//            item.setEnabled(true);
-//            SpannableString s = new SpannableString(getString(R.string.send));
-//            s.setSpan(new ForegroundColorSpan(Color.WHITE), 0, s.length(), 0);
-//            item.setTitle(s);
-//        } else {
-//            item.setEnabled(false);
-//            SpannableString s = new SpannableString(getString(R.string.send));
-//            s.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.blue_gray)), 0, s.length(), 0);
-//            item.setTitle(s);
-//        }
-//        return super.onPrepareOptionsMenu(menu);
-//    }
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        View item = findViewById(R.id.action_send);
+        if (mEnableSendMenu){
+            if (item instanceof TextView) {
+                ((TextView) item).setTextColor(Color.WHITE);
+                item.setEnabled(true);
+            }
+        } else {
+            if (item instanceof TextView) {
+                ((TextView) item).setTextColor(ContextCompat.getColor(this, R.color.blue_gray));
+                item.setEnabled(false);
+            }
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void changeEnableMenu(){
+        boolean enable = mSelectedModel != null && mAppealBody.getText().length() > 0;
+        if (enable != mEnableSendMenu){
+            mEnableSendMenu = enable;
+            invalidateOptionsMenu();
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -269,8 +294,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             mSelectedModel = data.getParcelableExtra("category");
             if (mSelectedModel != null){
                 mCategoryName.setText(mSelectedModel.getName());
-                mEnableSendMenu = true;
-                invalidateOptionsMenu();
+                mCategoryName.setTextColor(ContextCompat.getColor(this, R.color.close_black));
+                changeEnableMenu();
                 HelpUtils.focusEditSoft(mAppealBody, this);
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AVATAR_FROM_CAMERA){
