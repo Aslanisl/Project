@@ -54,7 +54,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragment_my_home_cameras_recycler"
-            android:layout_margin="@dimen/spacing_normal">
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:layout_marginTop="@dimen/spacing_huge">
 
             <TextView
                 android:id="@+id/fragment_my_home_energy_all"

@@ -23,6 +23,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_appeal_categories) TextView mCategoryName;
+    @BindView(R.id.activity_appeal_body) EditText mAppealBody;
     @BindView(R.id.activity_appeal_photos_recycler) RecyclerView mPhotosRecycler;
     private AppealPhotoRecyclerAdapter mPhotoAdapter;
     private CompositeDisposable mCompositeDisposable;
@@ -100,7 +102,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         //width photo view in dp
         int width = (int)(getResources().getDimension(R.dimen.appeal_photo_width_height) / getResources().getDisplayMetrics().density);
         mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
-
+        HelpUtils.focusEditSoft(mAppealBody, this);
     }
 
     private void initCategories(){
@@ -269,6 +271,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
                 mCategoryName.setText(mSelectedModel.getName());
                 mEnableSendMenu = true;
                 invalidateOptionsMenu();
+                HelpUtils.focusEditSoft(mAppealBody, this);
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_AVATAR_FROM_CAMERA){
             File file = new File(
@@ -307,18 +310,18 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     }
 
     private void sendAppeal(){
+        HelpUtils.hideSoftKeyborad(this);
         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_EMAIL, "");
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Theme");
-        intent.putExtra(Intent.EXTRA_TEXT, "Text");
+        intent.putExtra(Intent.EXTRA_SUBJECT, mSelectedModel.getTypeName() != null ? mSelectedModel.getTypeName() : " ");
+        intent.putExtra(Intent.EXTRA_TEXT, mAppealBody.getText().toString());
         ArrayList<Uri> uris = new ArrayList<>();
         for (File file : mPhotoFiles){
             Uri uri = Uri.fromFile(file);
             uris.add(uri);
         }
         intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
-
         startActivity(Intent.createChooser(intent, "Send appeal"));
     }
 

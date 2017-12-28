@@ -1,6 +1,7 @@
 package com.livetyping.moydom.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
@@ -50,6 +51,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         if (savedInstanceState == null){
             mBottomNavigationView.setSelectedItemId(R.id.action_my_home);
         }
+    }
+
+    public void selectItemId(@IdRes int itemId){
+        mBottomNavigationView.setSelectedItemId(itemId);
     }
 
     @Override

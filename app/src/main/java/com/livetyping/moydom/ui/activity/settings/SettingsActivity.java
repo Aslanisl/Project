@@ -22,7 +22,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SettingsActivity extends BaseActivity implements CamerasRepository.CamerasCallback{
+public class SettingsActivity extends BaseActivity implements CamerasRepository.CamerasCallback, SettingsRecyclerAdapter.OnChangeListener{
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_settings_cameras_recycler) RecyclerView mCamerasRecycler;
@@ -32,6 +32,7 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
     private Prefs mPrefs;
 
     private CamerasRepository mCamerasRepository;
+    private boolean mEnableDoneButton = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,19 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.done_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item = menu.findItem(R.id.action_done);
+        if (mEnableDoneButton){
+            item.setEnabled(true);
+            item.setIcon(R.drawable.accept_active);
+        } else {
+            item.setEnabled(false);
+            item.setIcon(R.drawable.accept_disable);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -89,6 +103,7 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
         mCamerasRecycler.setAdapter(mCamerasAdapter);
         mCamerasRecycler.setNestedScrollingEnabled(false);
         mCamerasAdapter.setOnDragListener(camerasItemTouchHelper::startDrag);
+        mCamerasAdapter.setOnChangeListener(this);
 
         //Remove cameras if they not in server response now
         List<CamerasSwitchModel> camerasSwitchModels = mPrefs.getCamerasFilters();
@@ -140,6 +155,15 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
         mEnergyRecycler.setNestedScrollingEnabled(false);
         mEnergyAdapter.setOnDragListener(energyItemTouchHelper::startDrag);
         mEnergyAdapter.addEnergySettings(mPrefs.getEnergyFilters());
+        mEnergyAdapter.setOnChangeListener(this);
+    }
+
+    @Override
+    public void changedSettings() {
+        if (!mEnableDoneButton) {
+            mEnableDoneButton = true;
+            invalidateOptionsMenu();
+        }
     }
 
     private void saveFilters(){

@@ -7,14 +7,6 @@
     android:background="@drawable/background_advice">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/wave_light"/>
-
-    <ImageView
         android:id="@+id/item_advice_close_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,18 +31,24 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:layout_marginStart="@dimen/spacing_normal"
         android:fontFamily="@string/font_family_medium"
+        android:lineSpacingExtra="4sp"
         android:textColor="@color/black"
         android:textSize="@dimen/font_big"/>
 
     <TextView
         android:id="@+id/item_advice_description"
-        style="@style/Gray16CenteredRg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/item_advice_title"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginStart="@dimen/spacing_normal"/>
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:alpha="0.54"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="6sp"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/font_large"/>
 
 </RelativeLayout>

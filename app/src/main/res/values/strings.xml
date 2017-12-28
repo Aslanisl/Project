@@ -16,7 +16,7 @@
     <string name="phone_number">Номер телефона</string>
     <string name="leave_number">Оставить номер</string>
     <string name="phone">Телефон</string>
-    <string name="code_not_found">К сожалению, такой/nкод не найден</string>
+    <string name="code_not_found">К сожалению, такой\nкод не найден</string>
     <string name="leave_phone_number">Если вы уверены, что ваш код верный, обратитесь в управляющую компанию или оставьте ваш номер телефона и мы вам перезвоним</string>
     <string name="leave_phone_number_we_will_call">Оставьте номер телефона и мы свяжемся с вами</string>
     <string name="enter_code_from_company">Введите код полученный от управляющей компании</string>
@@ -49,7 +49,7 @@
         <item>В текущий момент</item>
     </string-array>
 
-    <string name="current_energy_power">Потребление в данный момент</string>
+    <string name="current_energy_power">Потребление\nв данный момент</string>
     <string name="today">Сегодня</string>
     <string name="this_week">Текущая неделя</string>
     <string name="this_month">Текущий месяц</string>
@@ -64,6 +64,7 @@
     <string name="connected_with_internet">Подключено</string>
 
     <string name="rub">&#8381;</string>
+    <string name="rub_hour">&#8381;/ч</string>
 
     <string name="energy_measure">%.1f кВт•ч</string>
 
