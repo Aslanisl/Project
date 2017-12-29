@@ -42,8 +42,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     private static final int SETTINGS_REQUEST_CODE = 2;
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
-    private CameraMyHomeAdapter mCamerasAdapter;
     @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
+    private CameraMyHomeAdapter mCamerasAdapter;
     private EnergyMyHomeAdapter mEnergyAdapter;
 
     private EnergyRepository mEnergyRepository;
@@ -57,6 +57,49 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     public static MyHomeFragment newInstance() {
         return new MyHomeFragment();
+    }
+
+    @Override
+    public void onCurrentEnergyResponse(CurrentEnergyModel energy) {
+        mEnergyAdapter.addCurrentEnergy(energy);
+    }
+
+    @Override
+    public void onTodayEnergyResponse(TodayEnergyModel energy) {
+        mEnergyAdapter.addTodayEnergy(energy);
+    }
+
+    @Override
+    public void onWeekEnergyResponse(WeekEnergyModel weekEnergy) {
+        mEnergyAdapter.addWeekEnergy(weekEnergy);
+    }
+
+    @Override
+    public void onMonthEnergyResponse(MonthEnergyModel monthEnergy) {
+        mEnergyAdapter.addMonthEnergy(monthEnergy);
+    }
+
+    @Override
+    public void onError(String message) {
+        showToast(message);
+    }
+
+    @Override
+    public void onCamerasResponse(List<CameraModel> cameras) {
+        mCamerasAdapter.addCameras(cameras);
+    }
+
+    @Override
+    public void onErrorResponse(String error) {
+        showToast(error);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
+            mEnergyAdapter.addEnergyModels(mPrefs.getEnergyFilters());
+        }
     }
 
     @Override
@@ -116,6 +159,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     private void initEnergyView(){
         mEnergyAdapter = new EnergyMyHomeAdapter(getContext(), false);
+        mEnergyAdapter.setIsItemClickable(true);
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
         mEnergyRecycler.setAdapter(mEnergyAdapter);
         mEnergyRecycler.setNestedScrollingEnabled(false);
@@ -128,49 +172,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mCamerasRecycler.setAdapter(mCamerasAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(mCamerasRecycler);
-    }
-
-    @Override
-    public void onCurrentEnergyResponse(CurrentEnergyModel energy) {
-        mEnergyAdapter.addCurrentEnergy(energy);
-    }
-
-    @Override
-    public void onTodayEnergyResponse(TodayEnergyModel energy) {
-        mEnergyAdapter.addTodayEnergy(energy);
-    }
-
-    @Override
-    public void onWeekEnergyResponse(WeekEnergyModel weekEnergy) {
-        mEnergyAdapter.addWeekEnergy(weekEnergy);
-    }
-
-    @Override
-    public void onMonthEnergyResponse(MonthEnergyModel monthEnergy) {
-        mEnergyAdapter.addMonthEnergy(monthEnergy);
-    }
-
-    @Override
-    public void onError(String message) {
-        showToast(message);
-    }
-
-    @Override
-    public void onCamerasResponse(List<CameraModel> cameras) {
-        mCamerasAdapter.addCameras(cameras);
-    }
-
-    @Override
-    public void onErrorResponse(String error) {
-        showToast(error);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SETTINGS_REQUEST_CODE && resultCode == RESULT_OK){
-            mEnergyAdapter.addEnergyModels(mPrefs.getEnergyFilters());
-        }
     }
 
     @Override

@@ -154,12 +154,16 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         switch (periodType){
             case EnergySwitchModel.ENERGY_TYPE_TODAY:
                 mHeader.setText("Сегодня");
+                mSubheader.setVisibility(View.VISIBLE);
+                mSubheader.setText(CalendarUtils.getCurrentDateShortText());
                 break;
             case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
-                mHeader.setText(CalendarUtils.getCurrentMonthText());
+                mHeader.setText(String.format(Locale.getDefault(), "%s, %d",
+                        MONTH[CalendarUtils.getCurrentMonth() - 1],
+                        CalendarUtils.getCurrentYear()));
                 break;
             case EnergySwitchModel.ENERGY_TYPE_YEAR:
-                mHeader.setText(CalendarUtils.getCurrentYear() + "");
+                mHeader.setText(String.format(Locale.getDefault(),"%d", CalendarUtils.getCurrentYear()));
                 break;
         }
         mChart.getDescription().setEnabled(false);
@@ -201,14 +205,13 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mChart.setGridBackgroundColor(Color.parseColor("#f5f5f5"));
         mChart.setBackgroundColor(Color.parseColor("#f5f5f5"));
         mChart.setHighlightFullBarEnabled(true);
-
         mChart.setRenderer(new ChartDataRenderer(mChart, mChart.getAnimator(), mChart.getViewPortHandler()));
 
         float leftOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 11, getResources().getDisplayMetrics());
         float rightOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50, getResources().getDisplayMetrics());
 
         mChart.setViewPortOffsets(leftOffset, 0, rightOffset, 0);
-        mChart.setDragEnabled(false);
+        mChart.setDragEnabled(true);
         mChart.setScaleEnabled(false);
         mChart.setPinchZoom(false);
         mChart.setDoubleTapToZoomEnabled(false);
@@ -284,8 +287,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                 break;
             case EnergySwitchModel.ENERGY_TYPE_YEAR:
                 labelData.setText(MONTH[(int) e.getX()] + "\n2017" );
-
-
         }
         lp = (RelativeLayout.LayoutParams) label.getLayoutParams();
         int margin = Math.round(h.getXPx()) - label.getWidth() / 2;
@@ -314,67 +315,76 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
     @Override
     public void onGraphResponse(GraphEnergyModel energy) {
 
-        if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK){
-            mHeader.setText(energy.getWeekDate());
-        }
-        mChart.setData(energy.getGraphData(periodType));
-
-        if (periodType == EnergySwitchModel.ENERGY_TYPE_YEAR){
-            mChart.getXAxis().setLabelCount(mChart.getBarData().getEntryCount());
-        }
-
-        mChart.notifyDataSetChanged();
-        mChart.invalidate();
-
-        mTotalCost.setText(String.format(Locale.getDefault(), getString(R.string.short_rub_measure), energy.getTotalPowerCost()));
-        mTotalValue.setText(String.format(Locale.getDefault(), getString(R.string.short_energy_measure), energy.getTotalPower()));
-        mAverageCost.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
-                getString(R.string.short_rub_measure) : getString(R.string.rub_measure), energy.getAveragePowerCost()));
-        mAverageValue.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
-                getString(R.string.short_energy_measure) : getString(R.string.energy_measure), energy.getAveragePower()));
-
         getActivity().runOnUiThread(() -> {
+
+            if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK){
+                mHeader.setText(energy.getWeekDate());
+            }
+            mChart.setData(energy.getGraphData(periodType));
+
+            if (periodType == EnergySwitchModel.ENERGY_TYPE_YEAR){
+                mChart.getXAxis().setLabelCount(mChart.getBarData().getEntryCount());
+            }
+
+            mChart.notifyDataSetChanged();
+            mChart.invalidate();
+
+            mTotalCost.setText(String.format(Locale.getDefault(), getString(R.string.short_rub_measure), energy.getTotalPowerCost()));
+            mTotalValue.setText(String.format(Locale.getDefault(), getString(R.string.short_energy_measure), energy.getTotalPower()));
+            mAverageCost.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
+                    getString(R.string.short_rub_measure) : getString(R.string.short_rub_measure), energy.getAveragePowerCost()));
+            mAverageValue.setText(String.format(Locale.getDefault(), periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
+                    getString(R.string.short_energy_measure) : getString(R.string.energy_measure), energy.getAveragePower()));
+
+
             mProgressBar.setVisibility(View.GONE);
             mError.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
-        });
 
-        mShare.setOnClickListener((view) -> {
-            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-            sharingIntent.setType("text/plain");
-            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_usage));
-            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, energy.getDataText());
-            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_usage)));
-        });
+            mShare.setOnClickListener((view) -> {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_usage));
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, energy.getDataText());
+                startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_usage)));
+            });
 
-        List<GraphEnergyModel.ZoneSummary> zoneSummaries = energy.getZones();
-        if (zoneSummaries.size() == 0)
-            return;
-        mFirstZone.setVisibility(View.VISIBLE);
-        mFirstZoneTitle.setText(zoneSummaries.get(0).name.substring(0, 1).toUpperCase() + zoneSummaries.get(0).name.substring(1));
-        mFirstZoneTime.setText(zoneSummaries.get(0).time);
-        mFirstZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(0).totalEnergy));
-        mFirstZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(0).totalEnergyCost));
-        mFirstZoneAverageValue.setText(String.format(getString(R.string.energy_measure), zoneSummaries.get(0).totalEnergy / zoneSummaries.get(0).entriesCount));
-        mFirstZoneAverageCost.setText(String.format(getString(R.string.rub_measure), zoneSummaries.get(0).totalEnergyCost / zoneSummaries.get(0).entriesCount));
-        if (zoneSummaries.size() == 1)
-            return;
-        mSecondZone.setVisibility(View.VISIBLE);
-        mSecondZoneTitle.setText(zoneSummaries.get(1).name.substring(0, 1).toUpperCase() + zoneSummaries.get(1).name.substring(1));
-        mSecondZoneTime.setText(zoneSummaries.get(1).time);
-        mSecondZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(1).totalEnergy));
-        mSecondZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(1).totalEnergyCost));
-        mSecondZoneAverageValue.setText(String.format(getString(R.string.energy_measure), zoneSummaries.get(1).totalEnergy / zoneSummaries.get(1).entriesCount));
-        mSecondZoneAverageCost.setText(String.format(getString(R.string.rub_measure), zoneSummaries.get(1).totalEnergyCost / zoneSummaries.get(1).entriesCount));
-        if (zoneSummaries.size() == 2)
-            return;
-        mThirdZone.setVisibility(View.VISIBLE);
-        mThirdZoneTitle.setText(zoneSummaries.get(2).name.substring(0, 1).toUpperCase() + zoneSummaries.get(2).name.substring(1));
-        mThirdZoneTime.setText(zoneSummaries.get(2).time);
-        mThirdZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), zoneSummaries.get(2).totalEnergy));
-        mThirdZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), zoneSummaries.get(2).totalEnergyCost));
-        mThirdZoneAverageValue.setText(String.format(getString(R.string.energy_measure), zoneSummaries.get(2).totalEnergy / zoneSummaries.get(2).entriesCount));
-        mThirdZoneAverageCost.setText(String.format(getString(R.string.rub_measure), zoneSummaries.get(2).totalEnergyCost / zoneSummaries.get(2).entriesCount));
+            List<GraphEnergyModel.ZoneSummary> zoneSummaries = energy.getZones();
+
+            for (GraphEnergyModel.ZoneSummary summary : zoneSummaries){
+
+                if (summary.id == GraphEnergyModel.ZONE_PEAK){
+
+                    mFirstZone.setVisibility(View.VISIBLE);
+                    mFirstZoneTitle.setText(summary.name.substring(0, 1).toUpperCase() + summary.name.substring(1));
+                    mFirstZoneTime.setText(summary.time.replace(" ", ""));
+                    mFirstZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), summary.totalEnergy));
+                    mFirstZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost));
+                    mFirstZoneAverageValue.setText(String.format(getString(R.string.energy_measure), summary.totalEnergy / summary.entriesCount));
+                    mFirstZoneAverageCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost / summary.entriesCount));
+                } else if (summary.id == GraphEnergyModel.ZONE_NIGHT){
+
+                    mSecondZone.setVisibility(View.VISIBLE);
+                    mSecondZoneTitle.setText(summary.name.substring(0, 1).toUpperCase() + summary.name.substring(1));
+                    mSecondZoneTime.setText(summary.time.replace(" ", ""));
+                    mSecondZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), summary.totalEnergy));
+                    mSecondZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost));
+                    mSecondZoneAverageValue.setText(String.format(getString(R.string.energy_measure), summary.totalEnergy / summary.entriesCount));
+                    mSecondZoneAverageCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost / summary.entriesCount));
+                } else if (summary.id == GraphEnergyModel.ZONE_SEMIPEAK){
+
+                    mThirdZone.setVisibility(View.VISIBLE);
+                    mThirdZoneTitle.setText(summary.name.substring(0, 1).toUpperCase() + summary.name.substring(1));
+                    mThirdZoneTime.setText(summary.time.replace(" ", ""));
+                    mThirdZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure), summary.totalEnergy));
+                    mThirdZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost));
+                    mThirdZoneAverageValue.setText(String.format(getString(R.string.energy_measure), summary.totalEnergy / summary.entriesCount));
+                    mThirdZoneAverageCost.setText(String.format(getString(R.string.short_rub_measure), summary.totalEnergyCost / summary.entriesCount));
+                }
+            }
+
+
+        });
 
     }
 

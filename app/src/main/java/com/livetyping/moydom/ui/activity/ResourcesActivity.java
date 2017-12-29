@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.ui.adapter.ResourcesPagerAdapter;
 
 import butterknife.BindView;
@@ -34,6 +35,28 @@ public class ResourcesActivity extends BaseActivity {
         mToolbar.setTitle(R.string.energy_label);
         mTabLayout.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(new ResourcesPagerAdapter(getSupportFragmentManager()));
+
+        if (getIntent().getExtras() != null) {
+            int type = getIntent().getIntExtra(EXTRA_TYPE, EnergySwitchModel.ENERGY_TYPE_TODAY);
+            int page = 0;
+            switch (type){
+                case EnergySwitchModel.ENERGY_TYPE_WEEK:
+                    page = 1;
+                    break;
+                case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                    page = 2;
+                    break;
+                case EnergySwitchModel.ENERGY_TYPE_YEAR:
+                    page = 3;
+                    break;
+                case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                default:
+                    page = 0;
+                    break;
+            }
+
+            mViewPager.setCurrentItem(page);
+        }
 
     }
 

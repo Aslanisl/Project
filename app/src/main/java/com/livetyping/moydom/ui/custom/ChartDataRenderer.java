@@ -69,28 +69,28 @@ public class ChartDataRenderer extends BarChartRenderer {
                 // is out of bounds, reuse colors.
                 mRenderPaint.setColor(dataSet.getColor(j / 4));
                 if (dataSet.getColor(j / 4) == Color.parseColor("#ff5b91")){
-                    color1 = Color.parseColor("#d23285");
-                    color2 = Color.parseColor("#ff5b91");
+                    color2 = Color.parseColor("#d23285");
+                    color1 = Color.parseColor("#ff5b91");
 
                 } else  if (dataSet.getColor(j / 4) == Color.parseColor("#343d94")){
-                    color1 = Color.parseColor("#6d2dd3");
                     color2 = Color.parseColor("#343d94");
+                    color1 = Color.parseColor("#6d2dd3");
 
                 } else  if (dataSet.getColor(j / 4) == Color.parseColor("#ffc13c")){
-                    color1 = Color.parseColor("#ff7e69");
-                    color2 = Color.parseColor("#ffc13c");
+                    color1 = Color.parseColor("#ffc13c");
+                    color2 = Color.parseColor("#ff7e69");
 
                 }
 
             }
-            gradient = new LinearGradient(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
-                    buffer.buffer[j + 3], color1, color2, Shader.TileMode.MIRROR);
+            gradient = new LinearGradient(0, buffer.buffer[j + 1], 0,
+                    c.getHeight(), color1, color2, Shader.TileMode.MIRROR);
             mRenderPaint.setShader(gradient);
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 c.drawRoundRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],
-                        buffer.buffer[j + 3], 1, 1, mRenderPaint);
+                        buffer.buffer[j + 3], 3, 3, mRenderPaint);
             } else {
 
                 c.drawRect(buffer.buffer[j], buffer.buffer[j + 1], buffer.buffer[j + 2],

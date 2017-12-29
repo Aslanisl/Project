@@ -16,7 +16,7 @@ public class GraphItemEnergyModel {
     private Tariff tariff;
 
     public Date getDate() throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault()).parse(date);
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(date);
     }
 
     public void setDate(String date) {

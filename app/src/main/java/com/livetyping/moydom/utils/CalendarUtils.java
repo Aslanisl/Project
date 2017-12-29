@@ -97,4 +97,9 @@ public class CalendarUtils {
         calendar.set(Calendar.DAY_OF_MONTH, (int) day);
         return new SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.getTime());
     }
+
+    public static String getCurrentDateShortText() {
+        SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_FORMAT_DD_MMM, Locale.getDefault());
+        return sdfServerFormat.format(Calendar.getInstance().getTime());
+    }
 }

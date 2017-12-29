@@ -2,8 +2,10 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context="com.livetyping.moydom.ui.activity.ResourcesActivity">
     <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
@@ -37,7 +39,7 @@
                     android:layout_alignParentBottom="true"
                     android:gravity="end"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
@@ -97,6 +99,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif"
                         android:lineSpacingExtra="4sp"
+                        android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="normal"/>
                     <TextView
@@ -121,7 +124,6 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/padding_tiny"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
@@ -131,7 +133,7 @@
                         android:text="@string/total"
                         android:textSize="16sp"
                         android:textStyle="normal"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/total_cost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -139,21 +141,26 @@
                         android:text="@string/rub_measure"
                         android:textColor="@color/black"
                         android:textSize="32sp"
-                        android:textStyle="bold"/>
-                    <TextView
+                        android:textStyle="bold"
+                        app:firstPartTextSize="32sp"
+                        app:secondPartTextSize="20sp"/>
+
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/energy_measure"
                         android:textSize="24sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="24sp"
+                        app:secondPartTextSize="16sp"/>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="114dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/padding_tiny"
+                    android:layout_marginStart="@dimen/padding_larger"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="wrap_content"
@@ -163,7 +170,7 @@
                         android:text="@string/average"
                         android:textSize="16sp"
                         android:textStyle="normal"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/average_cost"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -171,15 +178,19 @@
                         android:text="@string/rub_measure"
                         android:textColor="@color/black"
                         android:textSize="32sp"
-                        android:textStyle="bold"/>
-                    <TextView
+                        android:textStyle="bold"
+                        app:firstPartTextSize="32sp"
+                        app:secondPartTextSize="20sp"/>
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/average_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/energy_measure"
                         android:textSize="24sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="24sp"
+                        app:secondPartTextSize="16sp"/>
                 </LinearLayout>
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -226,6 +237,7 @@
                     android:layout_alignParentTop="true"
                     android:fontFamily="sans-serif-medium"
                     android:lineSpacingExtra="4sp"
+                    android:textColor="#26000000"
                     android:textSize="14sp"
                     android:textStyle="normal"/>
                 <LinearLayout
@@ -251,7 +263,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/first_zone_total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -259,7 +271,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -285,7 +299,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/first_zone_average_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -293,7 +307,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
             </RelativeLayout>
@@ -357,7 +373,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/second_zone_total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -365,7 +381,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -391,7 +409,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/second_zone_average_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -399,7 +417,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
             </RelativeLayout>
@@ -462,7 +482,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/third_zone_total_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -470,7 +490,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -496,7 +518,7 @@
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
-                    <TextView
+                    <com.livetyping.moydom.ui.custom.MultisizeTextView
                         android:id="@+id/third_zone_average_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -504,7 +526,9 @@
                         android:lineSpacingExtra="4sp"
                         android:text="@string/energy_measure"
                         android:textSize="16sp"
-                        android:textStyle="normal"/>
+                        android:textStyle="normal"
+                        app:firstPartTextSize="16sp"
+                        app:secondPartTextSize="12sp"/>
                 </LinearLayout>
 
             </RelativeLayout>

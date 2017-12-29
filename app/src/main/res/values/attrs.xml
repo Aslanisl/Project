@@ -9,4 +9,9 @@
         <attr name="buttonText" format="string"/>
     </declare-styleable>
 
+    <declare-styleable name="MultisizeTextView">
+        <attr name="firstPartTextSize" format="dimension"/>
+        <attr name="secondPartTextSize" format="dimension"/>
+    </declare-styleable>
+
 </resources>
