@@ -7,6 +7,28 @@
     android:layout_height="match_parent"
     tools:context="com.livetyping.moydom.ui.activity.authorization.OnboardingActivity">
 
+    <TextView
+        android:id="@+id/activity_onboarding_title"
+        style="@style/Gray18CenteredMd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_onboarding_image"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:layout_marginTop="-28dp"
+        android:text="@string/videophone"/>
+
+    <TextView
+        android:id="@+id/activity_onboarding_description"
+        style="@style/Gray16CenteredRg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/activity_onboarding_done"
+        android:layout_below="@id/activity_onboarding_title"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:text="@string/look_who_come_open_door"/>
+
     <com.livetyping.moydom.ui.custom.CustomButtonView
         android:id="@+id/activity_onboarding_done"
         android:layout_width="wrap_content"
@@ -14,37 +36,18 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/spacing_two_normal"
+        android:gravity="bottom"
         app:buttonText="@string/next">
 
     </com.livetyping.moydom.ui.custom.CustomButtonView>
 
-    <TextView
-        android:id="@+id/activity_onboarding_description"
-        style="@style/Gray16CenteredRg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/activity_onboarding_done"
-        android:layout_marginBottom="@dimen/spacing_large"
-        android:layout_marginEnd="@dimen/spacing_normal"
-        android:layout_marginStart="@dimen/spacing_normal"
-        android:text="@string/look_who_come_open_door"/>
-
-    <TextView
-        android:id="@+id/activity_onboarding_title"
-        style="@style/Gray18CenteredMd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/activity_onboarding_description"
-        android:layout_marginBottom="@dimen/spacing_tiny"
-        android:text="@string/videophone"/>
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/activity_onboarding_image"
+        android:layout_width="254dp"
+        android:layout_height="404dp"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/activity_onboarding_title"
-        android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="-28dp"
         android:src="@drawable/phone"/>
 
 </RelativeLayout>

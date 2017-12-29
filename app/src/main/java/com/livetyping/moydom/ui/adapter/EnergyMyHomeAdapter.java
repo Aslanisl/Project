@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.livetyping.moydom.ui.activity.ResourcesActivity;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 import com.livetyping.moydom.utils.GlideApp;
+import com.livetyping.moydom.utils.HelpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -308,8 +310,8 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mContainer.setBackground(background);
                 mWave.setImageDrawable(wave);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));
-                mMeasure.setText(mContext.getString(R.string.rub));
-                mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerNow()));
+                mMeasure.setText(mContext.getString(R.string.rub_hour));
+                mUnit.setText(getEnergyUnit(model.getPowerNow()));
                 mCurrentPeriod.setText(R.string.current_energy_power);
                 mCurrentDate.setVisibility(View.GONE);
             }
@@ -322,9 +324,10 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 bindContainerWaveColor(mContainer, mWave, model.getPowerCost(), EnergySwitchModel.ENERGY_TYPE_TODAY);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mUnit.setText(mContext.getString(R.string.energy_measure, model.getPower()));
+                mUnit.setText(getEnergyUnit(model.getPower()));
                 mCurrentPeriod.setText(R.string.today);
-                mCurrentDate.setVisibility(View.GONE);
+                mCurrentDate.setText(CalendarUtils.getCurrentDayString());
+                mCurrentDate.setVisibility(View.VISIBLE);
             }
         }
 
@@ -335,7 +338,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 bindContainerWaveColor(mContainer, mWave, model.getWeekPowerCost(), EnergySwitchModel.ENERGY_TYPE_WEEK);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getWeekPowerCost()));
                 mMeasure.setText(mContext.getString(R.string.rub));
-                mUnit.setText(mContext.getString(R.string.energy_measure, model.getWeekPower()));
+                mUnit.setText(getEnergyUnit(model.getWeekPower()));
                 mCurrentPeriod.setText(R.string.this_week);
                 mCurrentDate.setText(model.getWeekDate());
                 mCurrentDate.setVisibility(View.VISIBLE);
@@ -350,7 +353,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bindContainerWaveColor(mContainer, mWave, model.getCostMonth(), EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
                     mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostMonth()));
                     mMeasure.setText(mContext.getString(R.string.rub));
-                    mUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerMonth()));
+                    mUnit.setText(getEnergyUnit(model.getPowerMonth()));
                     mCurrentPeriod.setText(R.string.this_month);
                     mCurrentDate.setText(CalendarUtils.getCurrentMonthText());
                     mCurrentDate.setVisibility(View.VISIBLE);
@@ -365,9 +368,14 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     mMonthCurrentDate.setText(CalendarUtils.getCurrentMonthText());
                     mPredictionPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostTotal()));
                     mPredictionMeasure.setText(mContext.getString(R.string.rub));
-                    mPredictionUnit.setText(mContext.getString(R.string.energy_measure, model.getPowerTotal()));
+                    mPredictionUnit.setText(getEnergyUnit(model.getPowerTotal()));
                 }
             }
+        }
+
+        private String getEnergyUnit(float value){
+            String temp = mContext.getString(R.string.energy_measure, value);
+            return temp.replace(",",".");
         }
     }
 
@@ -378,6 +386,8 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.item_advice_description) TextView mDescription;
 
         private int mAdviceId;
+        private int mSpacingNormal;
+        private int mSpacingLarge;
 
         public AdviceViewHolder(View itemView) {
             super(itemView);
@@ -387,13 +397,23 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mAdviceModel = null;
                 notifyItemRemoved(ADVICE_POSITION);
             });
+            mSpacingNormal = (int)mContext.getResources().getDimension(R.dimen.spacing_normal);
+            mSpacingLarge = (int)mContext.getResources().getDimension(R.dimen.spacing_large);
         }
 
         public void bindViewHolder(AdviceModel model){
             mAdviceId = model.getAdviceId();
             GlideApp.with(mContext).load(model.getIconUrl()).into(mIcon);
             mTitle.setText(model.getTitle() != null ? model.getTitle() : " ");
-            mDescription.setText(model.getDescription() != null ? model.getDescription() : " ");
+            boolean descriptionEmpty = TextUtils.isEmpty(model.getDescription());
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mTitle.getLayoutParams();
+            if (descriptionEmpty){
+                layoutParams.setMargins(mSpacingNormal, 0, mSpacingNormal, mSpacingLarge);
+            } else {
+                layoutParams.setMargins(mSpacingNormal, 0, mSpacingNormal, 0);
+            }
+            mDescription.setVisibility(descriptionEmpty ? View.GONE : View.VISIBLE);
+            mDescription.setText(descriptionEmpty ? " " : model.getDescription());
         }
     }
 }

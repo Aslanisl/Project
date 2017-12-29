@@ -25,6 +25,12 @@ import butterknife.ButterKnife;
 
 public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecyclerAdapter.ViewHolder> implements ItemTouchMoveHelper {
 
+    public interface OnChangeListener{
+        void changedSettings();
+    }
+
+    private OnChangeListener mListener;
+
     private List<EnergySwitchModel> mEnergyList = new ArrayList<>();
     private List<CamerasSwitchModel> mCamerasList = new ArrayList<>();
 
@@ -48,6 +54,10 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
 
     public void setOnDragListener(OnDragStartListener listener){
         mDragStartListener = listener;
+    }
+
+    public void setOnChangeListener(OnChangeListener listener){
+        mListener = listener;
     }
 
     @Override
@@ -78,6 +88,7 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
             Collections.swap(mCamerasList, fromPosition, toPosition);
         }
         notifyItemMoved(fromPosition, toPosition);
+        if (mListener != null) mListener.changedSettings();
     }
 
     @Override
@@ -119,7 +130,10 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                     }
                     return false;
             });
-            mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> model.setChecked(isChecked));
+            mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                model.setChecked(isChecked);
+                if (mListener != null) mListener.changedSettings();
+            });
         }
 
         private void bindCamerasView(CamerasSwitchModel model){
@@ -133,7 +147,10 @@ public class SettingsRecyclerAdapter extends RecyclerView.Adapter<SettingsRecycl
                 }
                 return false;
             });
-            mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> model.setCameraChecked(isChecked));
+            mSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                model.setCameraChecked(isChecked);
+                if (mListener != null) mListener.changedSettings();
+            });
         }
     }
 }

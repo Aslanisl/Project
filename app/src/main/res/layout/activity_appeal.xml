@@ -37,7 +37,8 @@
                 android:layout_marginEnd="@dimen/spacing_small"
                 android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginTop="@dimen/spacing_tiny"
-                android:textColor="@color/close_black"
+                android:text="@string/chose_category"
+                android:textColor="@color/close_gray"
                 android:textSize="@dimen/font_large"/>
 
             <EditText

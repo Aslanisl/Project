@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.utils.HelpUtils;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
@@ -100,13 +101,7 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
         mCodeEdit.addTextChangedListener(listener);
         mCodeEdit.setOnFocusChangeListener(listener);
 
-        mCodeEdit.postDelayed(() -> {
-            mCodeEdit.requestFocus();
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.showSoftInput(mCodeEdit, InputMethodManager.SHOW_IMPLICIT);
-            }
-        }, 50);
+        HelpUtils.focusEditSoft(mCodeEdit, this);
     }
 
     private void callCode(){

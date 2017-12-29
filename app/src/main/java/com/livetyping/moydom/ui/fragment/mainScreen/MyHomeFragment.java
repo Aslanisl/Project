@@ -1,5 +1,6 @@
 package com.livetyping.moydom.ui.fragment.mainScreen;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.CamerasRepository;
 import com.livetyping.moydom.data.repository.EnergyRepository;
+import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
@@ -31,6 +33,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -47,7 +50,6 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     private EnergyMyHomeAdapter mEnergyAdapter;
 
     private EnergyRepository mEnergyRepository;
-
     private CamerasRepository mCamerasRepository;
 
     private CompositeDisposable mCompositeDisposable;
@@ -124,8 +126,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         mCamerasRepository.setCamerasCallback(this);
         mCamerasRepository.getCameras(true);
         mEnergyRepository.setEnergyCallback(this);
@@ -133,10 +135,26 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         mEnergyRepository.removeEnergyCallback();
         mCamerasRepository.removeCamerasCallback();
+    }
+
+    @OnClick(R.id.fragment_my_home_cameras_all)
+    void showAllCameras(){
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity){
+            ((MainActivity) activity).selectItemId(R.id.action_cameras);
+        }
+    }
+
+    @OnClick(R.id.fragment_my_home_energy_all)
+    void showAllEnergy(){
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity){
+            ((MainActivity) activity).selectItemId(R.id.action_resources);
+        }
     }
 
     @Override

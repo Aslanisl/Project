@@ -14,11 +14,17 @@ public class CalendarUtils {
     private final static String DATE_TIMESTAMP_FORMAT = "yyyy-MM-dd";
     private final static String DATE_SERVER_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
-    private final static String DATE_CURRENT_MONTH = "MMMM, yyyy";
+    private final static String DATE_CURRENT_MONTH = "LLLL, yyyy";
+    private final static String DATE_CURRENT_DAY = "dd MMMM";
     private final static String DATE_FORMAT_DD_MMM = "dd MMMM";
 
     public static String getCurrentDate(){
         SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_TIMESTAMP_FORMAT, Locale.getDefault());
+        return sdfServerFormat.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getCurrentDayString(){
+        SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_CURRENT_DAY, Locale.getDefault());
         return sdfServerFormat.format(Calendar.getInstance().getTime());
     }
 
@@ -28,7 +34,8 @@ public class CalendarUtils {
 
     public static String getCurrentMonthText(){
         SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_CURRENT_MONTH, Locale.getDefault());
-        return sdfServerFormat.format(Calendar.getInstance().getTime());
+        String month = sdfServerFormat.format(Calendar.getInstance().getTime());
+        return month.substring(0, 1).toUpperCase() + month.substring(1);
     }
 
     public static int getCurrentYear(){
@@ -73,13 +80,13 @@ public class CalendarUtils {
         int finishMonth = finishCalendar.get(Calendar.MONTH);
         if (startMonth == finishMonth){
             return String.valueOf(startCalendar.get(Calendar.DAY_OF_MONTH))
-                    + " - " + String.valueOf(finishCalendar.get(Calendar.DAY_OF_MONTH))
+                    + " — " + String.valueOf(finishCalendar.get(Calendar.DAY_OF_MONTH))
                     + " " + startCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
                     + " " + startCalendar.get(Calendar.YEAR);
         }
         return String.valueOf(startCalendar.get(Calendar.DAY_OF_MONTH))
                 + " " + startCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
-                + " - " + String.valueOf(finishCalendar.get(Calendar.DAY_OF_MONTH))
+                + " — " + String.valueOf(finishCalendar.get(Calendar.DAY_OF_MONTH))
                 + " " + finishCalendar.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault())
                 + " " + finishCalendar.get(Calendar.YEAR);
     }

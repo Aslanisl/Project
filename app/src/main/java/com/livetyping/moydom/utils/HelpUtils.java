@@ -3,6 +3,7 @@ package com.livetyping.moydom.utils;
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -56,5 +57,17 @@ public class HelpUtils {
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
+    }
+
+    public static void focusEditSoft(EditText editText, Context context) {
+        editText.postDelayed(() -> {
+            if (editText != null && context != null) {
+                editText.requestFocus();
+                InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (inputMethodManager != null) {
+                    inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+                }
+            }
+        }, 50);
     }
 }

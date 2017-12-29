@@ -1,6 +1,7 @@
 package com.livetyping.moydom.ui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
@@ -52,6 +53,10 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         }
     }
 
+    public void selectItemId(@IdRes int itemId){
+        mBottomNavigationView.setSelectedItemId(itemId);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -64,7 +69,6 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
             case R.id.action_my_home:
                 fragment = MyHomeFragment.newInstance();
                 tag = MyHomeFragment.TAG;
-                toolBarTitle = getString(R.string.my_home);
                 break;
             case R.id.action_resources:
                 fragment = ResourcesFragment.newInstance();
@@ -87,8 +91,14 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         fragmentTransaction.replace(R.id.main_activity_fragment_container, fragment, tag);
         fragmentTransaction.commit();
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null && toolBarTitle != null){
-            actionBar.setTitle(toolBarTitle);
+        if (actionBar != null){
+            if (toolBarTitle == null){
+                actionBar.setTitle(" ");
+                actionBar.setIcon(R.drawable.logotype);
+            } else {
+                actionBar.setTitle(toolBarTitle);
+                actionBar.setIcon(null);
+            }
         }
         return true;
     }

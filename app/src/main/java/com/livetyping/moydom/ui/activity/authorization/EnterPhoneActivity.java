@@ -60,13 +60,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
         mPhoneEdit.addTextChangedListener(listener);
         mPhoneEdit.setOnFocusChangeListener(listener);
         mPhoneEdit.setHint(listener.placeholder());
-        mPhoneEdit.postDelayed(() -> {
-            mPhoneEdit.requestFocus();
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputMethodManager != null) {
-                inputMethodManager.showSoftInput(mPhoneEdit, InputMethodManager.SHOW_IMPLICIT);
-            }
-        }, 50);
+        HelpUtils.focusEditSoft(mPhoneEdit, this);
     }
 
     @Override
