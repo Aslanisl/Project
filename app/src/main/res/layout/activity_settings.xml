@@ -32,6 +32,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:overScrollMode="never">
 
             </android.support.v7.widget.RecyclerView>
@@ -50,6 +52,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_normal"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:overScrollMode="never">
 
             </android.support.v7.widget.RecyclerView>

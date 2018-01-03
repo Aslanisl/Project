@@ -159,6 +159,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     }
 
     @Override
+
     public void onWeekEnergyResponse(WeekEnergyModel weekEnergy) {
         mEnergyAdapter.addWeekEnergy(weekEnergy);
     }

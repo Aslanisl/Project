@@ -3,11 +3,15 @@ package com.livetyping.moydom.ui.activity.settings;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.h6ah4i.android.widget.advrecyclerview.animator.DraggableItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
+import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.data.Prefs;
@@ -27,8 +31,10 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_settings_cameras_recycler) RecyclerView mCamerasRecycler;
     private SettingsRecyclerAdapter mCamerasAdapter;
+    private RecyclerViewDragDropManager mCamerasRecyclerViewDragDropManager;
     @BindView(R.id.activity_settings_energy_recycler) RecyclerView mEnergyRecycler;
     private SettingsRecyclerAdapter mEnergyAdapter;
+    private RecyclerViewDragDropManager mEnergyRecyclerViewDragDropManager;
     private Prefs mPrefs;
 
     private CamerasRepository mCamerasRepository;
@@ -96,14 +102,15 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
 
     private void initCameras(List<CameraModel> cameras){
         mCamerasAdapter = new SettingsRecyclerAdapter();
-        ItemTouchMoveHelperCallback camerasCallback = new ItemTouchMoveHelperCallback(mCamerasAdapter);
-        final ItemTouchHelper camerasItemTouchHelper = new ItemTouchHelper(camerasCallback);
-        camerasItemTouchHelper.attachToRecyclerView(mCamerasRecycler);
+        mCamerasRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+        RecyclerView.Adapter wrappedAdapter = mCamerasRecyclerViewDragDropManager.createWrappedAdapter(mCamerasAdapter);
+        ((SimpleItemAnimator) mCamerasRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mCamerasRecycler.setAdapter(mCamerasAdapter);
-        mCamerasRecycler.setNestedScrollingEnabled(false);
-        mCamerasAdapter.setOnDragListener(camerasItemTouchHelper::startDrag);
+        mCamerasRecycler.setAdapter(wrappedAdapter);
+        final GeneralItemAnimator animator = new DraggableItemAnimator();
+        mCamerasRecycler.setItemAnimator(animator);
         mCamerasAdapter.setOnChangeListener(this);
+        mCamerasRecyclerViewDragDropManager.attachRecyclerView(mCamerasRecycler);
 
         //Remove cameras if they not in server response now
         List<CamerasSwitchModel> camerasSwitchModels = mPrefs.getCamerasFilters();
@@ -147,15 +154,27 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
 
     private void initEnergy(){
         mEnergyAdapter = new SettingsRecyclerAdapter();
-        ItemTouchMoveHelperCallback energyCallback = new ItemTouchMoveHelperCallback(mEnergyAdapter);
-        final ItemTouchHelper energyItemTouchHelper = new ItemTouchHelper(energyCallback);
-        energyItemTouchHelper.attachToRecyclerView(mEnergyRecycler);
+        mEnergyRecyclerViewDragDropManager = new RecyclerViewDragDropManager();
+        RecyclerView.Adapter wrappedAdapter = mEnergyRecyclerViewDragDropManager.createWrappedAdapter(mEnergyAdapter);
         mEnergyRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mEnergyRecycler.setAdapter(mEnergyAdapter);
-        mEnergyRecycler.setNestedScrollingEnabled(false);
-        mEnergyAdapter.setOnDragListener(energyItemTouchHelper::startDrag);
+        ((SimpleItemAnimator) mEnergyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
+        mEnergyRecycler.setAdapter(wrappedAdapter);
+        final GeneralItemAnimator animator = new DraggableItemAnimator();
+        mEnergyRecycler.setItemAnimator(animator);
         mEnergyAdapter.addEnergySettings(mPrefs.getEnergyFilters());
         mEnergyAdapter.setOnChangeListener(this);
+        mEnergyRecyclerViewDragDropManager.attachRecyclerView(mEnergyRecycler);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mEnergyRecyclerViewDragDropManager != null){
+            mEnergyRecyclerViewDragDropManager.cancelDrag();
+        }
+        if (mCamerasRecyclerViewDragDropManager != null){
+            mCamerasRecyclerViewDragDropManager.cancelDrag();
+        }
     }
 
     @Override
@@ -167,13 +186,28 @@ public class SettingsActivity extends BaseActivity implements CamerasRepository.
     }
 
     private void saveFilters(){
-        if (mCamerasAdapter != null && mEnergyAdapter != null) {
+        if (mCamerasAdapter != null) {
             mPrefs.saveCamerasFilters(mCamerasAdapter.getCamerasList());
-            mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
-        } else {
-            mCamerasRepository.removeCamerasCallback();
         }
+        if (mEnergyAdapter != null){
+            mPrefs.saveEnergyFilters(mEnergyAdapter.getEnergyList());
+        }
+        mCamerasRepository.removeCamerasCallback();
+
         setResult(RESULT_OK);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mEnergyRecyclerViewDragDropManager != null){
+            mEnergyRecyclerViewDragDropManager.release();
+            mEnergyRecyclerViewDragDropManager = null;
+        }
+        if (mCamerasRecyclerViewDragDropManager != null){
+            mCamerasRecyclerViewDragDropManager.release();
+            mCamerasRecyclerViewDragDropManager = null;
+        }
     }
 }
