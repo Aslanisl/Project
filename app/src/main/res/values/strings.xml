@@ -72,6 +72,7 @@
     <string name="camera_offline">Не в эфире</string>
 
     <string name="appeal">Обращение</string>
+    <string name="appeal_from_category">Обращение от пользователя МойДом - %s</string>
     <string name="send">Отправить</string>
 
     <string name="category">Категория</string>
@@ -112,5 +113,5 @@
     <string name="videophone">Видеофон</string>
 
     <string name="categories_loading">Подождите, категории загружаются…</string>
-
+    
 </resources>
