@@ -94,7 +94,9 @@
             android:name=".ui.activity.otherSettings.NewTargetActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.ResourcesActivity">
+        <activity
+            android:name=".ui.activity.ResourcesActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".ui.activity.authorization.OnboardingActivity">
         </activity>
