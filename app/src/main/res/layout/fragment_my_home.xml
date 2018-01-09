@@ -38,7 +38,7 @@
 
         </RelativeLayout>
 
-        <com.livetyping.moydom.ui.custom.UntouchableRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_my_home_cameras_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             android:paddingEnd="@dimen/padding_tiny"
             android:paddingStart="@dimen/padding_normal">
 
-        </com.livetyping.moydom.ui.custom.UntouchableRecyclerView>
+        </android.support.v7.widget.RecyclerView>
 
         <RelativeLayout
             android:id="@+id/fragment_my_home_energy_container"

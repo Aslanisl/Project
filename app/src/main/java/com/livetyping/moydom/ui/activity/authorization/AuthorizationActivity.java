@@ -47,6 +47,7 @@ public class AuthorizationActivity extends BaseActivity implements NoInternetDia
     }
 
     private void authorizationUser(){
+        showProgress();
         mAuthorizationDisposable = Api.getApiService().authorizationUser(ApiUrlService.getAuthorizationUrl(mUUID, mPassword))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

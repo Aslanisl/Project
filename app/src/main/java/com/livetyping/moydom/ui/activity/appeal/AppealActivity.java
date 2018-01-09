@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -19,10 +20,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.Html;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,7 +39,6 @@ import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.apiModel.appeal.AppealModel;
 import com.livetyping.moydom.apiModel.appeal.AppealResponse;
 import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.utils.AlertDialogUtils;
 import com.livetyping.moydom.utils.HelpUtils;
 
 import java.io.File;
@@ -66,6 +63,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     private static final int REQUEST_PERMISSION_READ_IMAGES = 4;
     private static final int REQUEST_PERMISSION_READ_IMAGES_ACTIVITY = 5;
 
+    private final int DELAY_TIME = 20;
+
     private boolean mEnableSendMenu = false;
 
     @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
@@ -73,6 +72,10 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     @BindView(R.id.activity_appeal_categories) TextView mCategoryName;
     @BindView(R.id.activity_appeal_body) EditText mAppealBody;
     @BindView(R.id.activity_appeal_photos_recycler) RecyclerView mPhotosRecycler;
+    private View mMenuView;
+    private Handler mMenuItemHandler;
+    private Runnable mChangeMenuItemRunnable;
+    private int mChangeCounter;
     private AppealPhotoRecyclerAdapter mPhotoAdapter;
     private CompositeDisposable mCompositeDisposable;
     private ArrayList<AppealModel> mCategories = new ArrayList<>();
@@ -85,10 +88,10 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appeal);
         ButterKnife.bind(this);
+        mMenuView = findViewById(R.id.action_send);
         setUpInternetView(mContainer, mToolbar);
         initViews();
         initCategories();
-        invalidateOptionsMenu();
     }
 
     private void initToolBar(){
@@ -120,6 +123,9 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        mMenuItemHandler = new Handler();
+        mChangeMenuItemRunnable = this::changeMenuEnableColor;
     }
 
     private void initCategories(){
@@ -148,19 +154,36 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        View item = findViewById(R.id.action_send);
-        if (mEnableSendMenu){
-            if (item instanceof TextView) {
-                ((TextView) item).setTextColor(Color.WHITE);
-                item.setEnabled(true);
-            }
-        } else {
-            if (item instanceof TextView) {
-                ((TextView) item).setTextColor(ContextCompat.getColor(this, R.color.blue_gray));
-                item.setEnabled(false);
-            }
+        if (mMenuView == null){
+            mMenuView = findViewById(R.id.action_send);
+        }
+        if (mMenuItemHandler != null && mChangeMenuItemRunnable != null) {
+            mMenuItemHandler.post(mChangeMenuItemRunnable);
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void changeMenuEnableColor(){
+        if (mMenuView != null) {
+            mChangeCounter = 0;
+            if (mEnableSendMenu) {
+                if (mMenuView instanceof TextView) {
+                    ((TextView) mMenuView).setTextColor(Color.WHITE);
+                    mMenuView.setEnabled(true);
+                }
+            } else {
+                if (mMenuView instanceof TextView) {
+                    ((TextView) mMenuView).setTextColor(ContextCompat.getColor(this, R.color.blue_gray));
+                    mMenuView.setEnabled(false);
+                }
+            }
+        } else if (mChangeCounter < 5){
+            mChangeCounter++;
+            if (mMenuView == null){
+                mMenuView = findViewById(R.id.action_send);
+            }
+            mMenuItemHandler.postDelayed(mChangeMenuItemRunnable, DELAY_TIME);
+        }
     }
 
     private void changeEnableMenu(){
@@ -358,5 +381,6 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     protected void onDestroy() {
         super.onDestroy();
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
+        if (mMenuItemHandler != null && mChangeMenuItemRunnable != null) mMenuItemHandler.removeCallbacks(mChangeMenuItemRunnable);
     }
 }
