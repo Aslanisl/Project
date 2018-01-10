@@ -119,11 +119,11 @@ public class CustomBottomNavigationView extends LinearLayout {
                 break;
             case ITEM_CAMERAS:
                 changeTextStyle(mCamerasText, select);
-                mCamerasIcon.setImageResource(R.drawable.cameras_inactive);
+                mCamerasIcon.setImageResource(select ? R.drawable.cameras_active : R.drawable.cameras_inactive);
                 break;
             case ITEM_OTHER:
                 changeTextStyle(mOtherText, select);
-                mOtherIcon.setImageResource(R.drawable.more_inactive);
+                mOtherIcon.setImageResource(select ? R.drawable.more_active : R.drawable.more_inactive);
                 break;
         }
     }
