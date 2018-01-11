@@ -20,6 +20,7 @@ public class MultisizeTextView extends android.support.v7.widget.AppCompatTextVi
 
     private int mFirstPartSize = 14;
     private int mSecondPartSize = 14;
+    private boolean mWithSpace = true;
 
     public MultisizeTextView(Context context) {
         super(context);
@@ -36,6 +37,7 @@ public class MultisizeTextView extends android.support.v7.widget.AppCompatTextVi
                     ta.getDimensionPixelSize(R.styleable.MultisizeTextView_firstPartTextSize, 57);
             mSecondPartSize =
                     ta.getDimensionPixelSize(R.styleable.MultisizeTextView_secondPartTextSize, 57);
+            mWithSpace = ta.getBoolean(R.styleable.MultisizeTextView_withSpace, true);
         } finally {
             ta.recycle();
         }
@@ -62,7 +64,11 @@ public class MultisizeTextView extends android.support.v7.widget.AppCompatTextVi
         span1.setSpan(new AbsoluteSizeSpan(mFirstPartSize), 0, textParts[0].length(), SPAN_INCLUSIVE_INCLUSIVE);
         span2.setSpan(new AbsoluteSizeSpan(mSecondPartSize), 0, textParts[1].length(), SPAN_INCLUSIVE_INCLUSIVE);
 
-        super.setText(TextUtils.concat(span1, " ", span2), type);
+        if (mWithSpace){
+            super.setText(TextUtils.concat(span1, " ", span2), type);
+        } else {
+            super.setText(TextUtils.concat(span1, span2), type);
+        }
     }
 
 

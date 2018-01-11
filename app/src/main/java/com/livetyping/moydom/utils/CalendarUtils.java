@@ -17,6 +17,7 @@ public class CalendarUtils {
     private final static String DATE_CURRENT_MONTH = "LLLL, yyyy";
     private final static String DATE_CURRENT_DAY = "dd MMMM";
     private final static String DATE_FORMAT_DD_MMM = "dd MMMM";
+    private static final String DATE_CURRENT_MONTH_SHORT = "MMM";
 
     public static String getCurrentDate(){
         SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_TIMESTAMP_FORMAT, Locale.getDefault());
@@ -37,6 +38,14 @@ public class CalendarUtils {
         String month = sdfServerFormat.format(Calendar.getInstance().getTime());
         return month.substring(0, 1).toUpperCase() + month.substring(1);
     }
+
+    public static String getCurrentMonthShortText(){
+        SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_CURRENT_MONTH_SHORT, Locale.getDefault());
+        String month = sdfServerFormat.format(Calendar.getInstance().getTime());
+        return month;
+    }
+
+
 
     public static int getCurrentYear(){
         return Calendar.getInstance().get(Calendar.YEAR);
@@ -108,5 +117,24 @@ public class CalendarUtils {
     public static String getCurrentDateShortText() {
         SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_FORMAT_DD_MMM, Locale.getDefault());
         return sdfServerFormat.format(Calendar.getInstance().getTime());
+    }
+
+    public static String getStringFromDate(Date date) {
+        SimpleDateFormat sdfServerFormat = new SimpleDateFormat(DATE_TIMESTAMP_FORMAT, Locale.getDefault());
+        return sdfServerFormat.format(date);
+    }
+
+    public static int getYearFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.YEAR);
+
+    }
+
+    public static int getMonthFromDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.MONTH) + 1;
+
     }
 }

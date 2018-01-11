@@ -30,6 +30,17 @@ public class BaseModel {
         return containErrors;
     }
 
+    public int getErrorCode() {
+        int code = -1;
+        if (records != null && !records.isEmpty()) {
+            Map<String, String> errors = records.get(0).getRecords();
+            if (errors != null) {
+                code = Integer.parseInt(errors.get(Record.ERROR_CODE));
+            }
+        }
+        return code;
+    }
+
     public String getErrorMessage(){
         String message = "";
         if (records != null && !records.isEmpty()) {

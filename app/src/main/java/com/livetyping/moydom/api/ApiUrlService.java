@@ -3,6 +3,8 @@ package com.livetyping.moydom.api;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.utils.CalendarUtils;
 
+import java.util.Date;
+
 /**
  * Created by Ivan on 29.11.2017.
  */
@@ -135,40 +137,41 @@ public class ApiUrlService {
         return url.toString();
     }
 
-    public static String getDayGraphEnergyUrl(){
+    public static String getDayGraphEnergyUrl(Date date){
+
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_DAY_GRAPH_ENERGY).append("&");
         url.append(getUuidPassword(true));
-        url.append(CalendarUtils.getCurrentDate());
+        url.append(CalendarUtils.getStringFromDate(date));
         return url.toString();
     }
 
-    public static String getWeekGraphEnergyUrl(){
+    public static String getWeekGraphEnergyUrl(Date date){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_WEEK_GRAPH_ENERGY).append("&");
         url.append(getUuidPassword(true));
-        url.append(CalendarUtils.getCurrentDate());
+        url.append(CalendarUtils.getStringFromDate(date));
         return url.toString();
     }
 
-    public static String getMonthGraphEnergyUrl(){
+    public static String getMonthGraphEnergyUrl(Date date){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_MONTH_GRAPH_ENERGY).append("&");
         url.append(getUuidPassword(false)).append("&");
-        url.append(CalendarUtils.getCurrentMonth()).append("&");
-        url.append(CalendarUtils.getCurrentYear());
+        url.append(CalendarUtils.getMonthFromDate(date)).append("&");
+        url.append(CalendarUtils.getYearFromDate(date));
         return url.toString();
     }
 
-    public static String getYearGraphEnergyUrl(){
+    public static String getYearGraphEnergyUrl(Date date){
         StringBuilder url = new StringBuilder();
         url.append(getBaseOptions());
         url.append("p_function=").append(FUNCTION_YEAR_GRAPH_ENERGY).append("&");
         url.append(getUuidPassword(true));
-        url.append(CalendarUtils.getCurrentYear());
+        url.append(CalendarUtils.getYearFromDate(date));
         return url.toString();
     }
 

@@ -1,10 +1,12 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
 import android.graphics.Color;
+import android.util.Log;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.gson.Gson;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 import com.livetyping.moydom.utils.HelpUtils;
@@ -29,23 +31,23 @@ public class GraphEnergyModel {
     public static final int ZONE_SEMIPEAK = 8;
     private List<GraphItemEnergyModel> childModels = new ArrayList<>();
 
-    public void addDayModel(GraphItemEnergyModel model){
+    public void addDayModel(GraphItemEnergyModel model) {
         childModels.add(model);
     }
 
-    public List<GraphItemEnergyModel> getGraphItems(){
+    public List<GraphItemEnergyModel> getGraphItems() {
         return childModels;
     }
 
-    public List<ZoneSummary> getZones(){
+    public List<ZoneSummary> getZones() {
 
         List<ZoneSummary> zoneSummaries = new ArrayList<>();
         boolean doesZoneExist;
-        for (GraphItemEnergyModel model : childModels){
+        for (GraphItemEnergyModel model : childModels) {
 
             doesZoneExist = false;
-            for (ZoneSummary summary : zoneSummaries){
-                if (summary.id == model.getTariff().getTariffId()){
+            for (ZoneSummary summary : zoneSummaries) {
+                if (summary.id == model.getTariff().getTariffId()) {
                     doesZoneExist = true;
                     summary.entriesCount++;
                     summary.totalEnergy += model.getPower();
@@ -54,7 +56,7 @@ public class GraphEnergyModel {
                 }
             }
 
-            if (!doesZoneExist){
+            if (! doesZoneExist) {
                 ZoneSummary zoneSummary = new ZoneSummary();
                 zoneSummary.name = model.getTariff().getTariffName();
                 zoneSummary.time = model.getTariff().getTariffTime().replace(';', '\n');
@@ -71,11 +73,12 @@ public class GraphEnergyModel {
 
     }
 
-    public BarData getGraphData(int type){
+    public BarData getGraphData(int type) {
 
         Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
-            if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())){
-                return graphItemEnergyModel.getTariff().getTariffId() - t1.getTariff().getTariffId();
+            if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())) {
+                return graphItemEnergyModel.getTariff().getTariffId() -
+                        t1.getTariff().getTariffId();
             } else {
                 try {
                     return graphItemEnergyModel.getDate().compareTo(t1.getDate());
@@ -89,8 +92,8 @@ public class GraphEnergyModel {
         HashMap<String, ArrayList<Float>> values = new HashMap<>();
         ArrayList<Integer> colors = new ArrayList<>();
 
-        for (GraphItemEnergyModel model : childModels){
-            if (!values.containsKey(model.getStringDate())){
+        for (GraphItemEnergyModel model : childModels) {
+            if (! values.containsKey(model.getStringDate())) {
                 values.put(model.getStringDate(), new ArrayList<>());
             }
             values.get(model.getStringDate()).add(model.getPowerCost());
@@ -104,6 +107,8 @@ public class GraphEnergyModel {
 
             }
         }
+
+        Log.d("***", new Gson().toJson(childModels));
 //
 //        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY){
 //            for (int i = 0; i < 7; i++) {
@@ -130,35 +135,58 @@ public class GraphEnergyModel {
 //        } else {
 //
 //        }
-
-
         List<BarEntry> entries = new ArrayList<>();
         BarEntry entry;
         SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
+
         int field;
-        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY){
+        int entriesMaxCount = 0;
+        Calendar calendar = Calendar.getInstance();
+        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
             field = Calendar.HOUR_OF_DAY;
-        } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK || type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+            entriesMaxCount = 24;
+        } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK) {
+            field = Calendar.DAY_OF_WEEK;
+            entriesMaxCount = 7;
+        } else if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH) {
             field = Calendar.DAY_OF_MONTH;
+            entriesMaxCount = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         } else {
             field = Calendar.MONTH;
-
+            entriesMaxCount = 12;
         }
-        Calendar calendar = Calendar.getInstance();
-        for (Map.Entry<String, ArrayList<Float>> mapEntry : values.entrySet()){
+        for (Map.Entry<String, ArrayList<Float>> mapEntry : values.entrySet()) {
             try {
                 calendar.setTime(sdfIn.parse(mapEntry.getKey()));
-                if (type == EnergySwitchModel.ENERGY_TYPE_TODAY)
-                    entry = new BarEntry(Integer.parseInt(mapEntry.getKey().substring(11, 13)), HelpUtils.listToFloatArray(mapEntry.getValue()));
-                else
-                    entry = new BarEntry(calendar.get(field), HelpUtils.listToFloatArray(mapEntry.getValue()));
+                if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
+                    entry = new BarEntry(Integer.parseInt(mapEntry.getKey().substring(11, 13)),
+                            HelpUtils.listToFloatArray(mapEntry.getValue()));
+                } else {
+                    entry = new BarEntry(calendar.get(field),
+                            HelpUtils.listToFloatArray(mapEntry.getValue()));
+                }
                 entries.add(entry);
-             } catch (ParseException e) {
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
 
-        Collections.sort(entries, (barEntry, t1) -> (int)(barEntry.getX() - t1.getX()));
+        Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
+
+        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
+            for (int i = 0; i < entriesMaxCount; i++) {
+                if (i >= entries.size() || entries.get(i).getX() != i) {
+                    entries.add(i, new BarEntry(i, 0));
+                }
+            }
+        } else {
+            float[] dummyEntryValues = {0, 0, 0};
+            for (int i = 0; i < entriesMaxCount; i++) {
+                if (i >= entries.size() || entries.get(i).getX() != i) {
+                    entries.add(i, new BarEntry(i, dummyEntryValues));
+                }
+            }
+        }
 
         BarDataSet barDataSet = new BarDataSet(entries, "rub");
         barDataSet.setColors(colors);
@@ -167,20 +195,20 @@ public class GraphEnergyModel {
         return new BarData(barDataSet);
     }
 
-    public float getTotalPowerCost(){
+    public float getTotalPowerCost() {
         float cost = 0;
-        if (childModels != null && ! childModels.isEmpty()){
-            for (GraphItemEnergyModel model: childModels) {
+        if (childModels != null && ! childModels.isEmpty()) {
+            for (GraphItemEnergyModel model : childModels) {
                 cost = cost + model.getPowerCost();
             }
         }
         return cost;
     }
 
-    public float getTotalPower(){
+    public float getTotalPower() {
         float power = 0;
-        if (childModels != null && ! childModels.isEmpty()){
-            for (GraphItemEnergyModel model : childModels){
+        if (childModels != null && ! childModels.isEmpty()) {
+            for (GraphItemEnergyModel model : childModels) {
                 power = power + model.getPower();
             }
         }
@@ -188,9 +216,9 @@ public class GraphEnergyModel {
     }
 
 
-    public String getDataText(){
+    public String getDataText() {
         StringBuilder result = new StringBuilder();
-        for (GraphItemEnergyModel model : childModels){
+        for (GraphItemEnergyModel model : childModels) {
             result.append(String.format(Locale.getDefault(),
                     "%s: %.1f кВт•ч на сумму %.1f по тарифу %s\n",
                     model.getStringDate(),
@@ -200,10 +228,11 @@ public class GraphEnergyModel {
         }
         return result.toString();
     }
-    public float getAveragePowerCost(){
+
+    public float getAveragePowerCost() {
         float cost = 0;
-        if (childModels != null && ! childModels.isEmpty()){
-            for (GraphItemEnergyModel model: childModels) {
+        if (childModels != null && ! childModels.isEmpty()) {
+            for (GraphItemEnergyModel model : childModels) {
                 cost = cost + model.getPowerCost();
             }
             cost /= childModels.size();
@@ -211,10 +240,10 @@ public class GraphEnergyModel {
         return cost;
     }
 
-    public float getAveragePower(){
+    public float getAveragePower() {
         float power = 0;
-        if (childModels != null && ! childModels.isEmpty()){
-            for (GraphItemEnergyModel model : childModels){
+        if (childModels != null && ! childModels.isEmpty()) {
+            for (GraphItemEnergyModel model : childModels) {
                 power = power + model.getPower();
             }
             power /= childModels.size();
@@ -222,20 +251,20 @@ public class GraphEnergyModel {
         return power;
     }
 
-    public String getWeekDate(){
+    public String getWeekDate() {
         long startWeekTime = 0;
         long finishWeekTime = 0;
-        if (childModels != null && ! childModels.isEmpty()){
-            for (GraphItemEnergyModel model : childModels){
+        if (childModels != null && ! childModels.isEmpty()) {
+            for (GraphItemEnergyModel model : childModels) {
                 long currentTime = CalendarUtils.getTimeMillisFromServerDate(model.getStringDate());
-                if (startWeekTime == 0 || finishWeekTime == 0){
+                if (startWeekTime == 0 || finishWeekTime == 0) {
                     startWeekTime = currentTime;
                     finishWeekTime = currentTime;
                 }
-                if (currentTime > finishWeekTime){
+                if (currentTime > finishWeekTime) {
                     finishWeekTime = currentTime;
                 }
-                if (currentTime < startWeekTime){
+                if (currentTime < startWeekTime) {
                     startWeekTime = currentTime;
                 }
             }
@@ -243,7 +272,7 @@ public class GraphEnergyModel {
         return CalendarUtils.getBetweenDateFromTimeMillis(startWeekTime, finishWeekTime);
     }
 
-    public class ZoneSummary{
+    public class ZoneSummary {
         public String name;
         public String time;
         public int id;

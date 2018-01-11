@@ -20,7 +20,7 @@
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="#b3ffffff"/>
 
-    <android.support.v4.view.ViewPager
+    <com.livetyping.moydom.ui.custom.MyViewPager
         android:id="@+id/resources_activity_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

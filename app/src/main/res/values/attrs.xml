@@ -12,6 +12,7 @@
     <declare-styleable name="MultisizeTextView">
         <attr name="firstPartTextSize" format="dimension"/>
         <attr name="secondPartTextSize" format="dimension"/>
+        <attr name="withSpace" format="boolean"/>
     </declare-styleable>
 
 </resources>
