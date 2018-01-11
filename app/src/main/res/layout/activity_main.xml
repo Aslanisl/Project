@@ -20,13 +20,10 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.BottomNavigationView
+    <com.livetyping.moydom.ui.custom.CustomBottomNavigationView
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="start"
-        android:background="@color/bottom_navigation_view_background"
-        app:menu="@menu/bottom_navigation_menu"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

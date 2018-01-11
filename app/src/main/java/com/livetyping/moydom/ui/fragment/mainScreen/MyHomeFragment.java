@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.livetyping.moydom.ui.activity.MainActivity;
 import com.livetyping.moydom.ui.activity.settings.SettingsActivity;
 import com.livetyping.moydom.ui.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.ui.adapter.EnergyMyHomeAdapter;
+import com.livetyping.moydom.ui.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 
 import java.util.List;
@@ -45,8 +47,8 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     private static final int SETTINGS_REQUEST_CODE = 2;
 
     @BindView(R.id.fragment_my_home_cameras_recycler) RecyclerView mCamerasRecycler;
-    @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
     private CameraMyHomeAdapter mCamerasAdapter;
+    @BindView(R.id.fragment_my_home_energy_recycler) RecyclerView mEnergyRecycler;
     private EnergyMyHomeAdapter mEnergyAdapter;
 
     private EnergyRepository mEnergyRepository;
@@ -145,7 +147,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     void showAllCameras(){
         Activity activity = getActivity();
         if (activity instanceof MainActivity){
-            ((MainActivity) activity).selectItemId(R.id.action_cameras);
+            ((MainActivity) activity).selectItemId(CustomBottomNavigationView.Item.ITEM_CAMERAS);
         }
     }
 
@@ -153,7 +155,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
     void showAllEnergy(){
         Activity activity = getActivity();
         if (activity instanceof MainActivity){
-            ((MainActivity) activity).selectItemId(R.id.action_resources);
+            ((MainActivity) activity).selectItemId(CustomBottomNavigationView.Item.ITEM_RESOURCES);
         }
     }
 
@@ -188,7 +190,7 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
         mCamerasAdapter = new CameraMyHomeAdapter(getContext());
         mCamerasRecycler.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         mCamerasRecycler.setAdapter(mCamerasAdapter);
-        SnapHelper snapHelper = new LinearSnapHelper();
+        SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mCamerasRecycler);
     }
 

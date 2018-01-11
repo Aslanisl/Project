@@ -9,7 +9,8 @@
         android:id="@+id/item_energy_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginBottom="@dimen/spacing_tiny">
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground">
 
         <ProgressBar
             android:id="@+id/item_energy_progress_bar"
@@ -86,6 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="188dp"
         android:layout_marginBottom="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground"
         android:visibility="visible">
 
         <ImageView

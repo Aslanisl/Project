@@ -30,19 +30,29 @@
 
             <TextView
                 android:id="@+id/activity_appeal_categories"
-                style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/activity_appeal_categories_title"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_marginTop="@dimen/spacing_tiny"
+                android:drawableEnd="@drawable/dropdown"
                 android:text="@string/chose_category"
                 android:textColor="@color/close_gray"
                 android:textSize="@dimen/font_large"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/activity_appeal_categories"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="4dp"
+                android:background="#1e000000"/>
+
             <EditText
                 android:id="@+id/activity_appeal_body"
+                style="@style/Black20LeftLt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/activity_appeal_categories"

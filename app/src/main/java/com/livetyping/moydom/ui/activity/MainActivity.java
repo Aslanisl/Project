@@ -2,39 +2,28 @@ package com.livetyping.moydom.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.ui.custom.CustomBottomNavigationView;
+import com.livetyping.moydom.ui.custom.CustomBottomNavigationView.Item;
 import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.CamerasFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.OtherFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.ResourcesFragment;
-import com.livetyping.moydom.utils.BottomNavigationViewHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity implements CustomBottomNavigationView.OnItemClickListener{
     @BindView(R.id.main_activity_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
-    @BindView(R.id.bottom_navigation_view) BottomNavigationView mBottomNavigationView;
-
-    private enum PageState{
-        ITEM_MY_HOME,
-        ITEM_RESOURSES,
-        ITEM_CAMERAS,
-        ITEM_OTHER
-    }
-
-    private PageState mPageState;
+    @BindView(R.id.bottom_navigation_view) CustomBottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,43 +33,41 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         setSupportActionBar(mToolbar);
         setUpInternetView(mContainer, mToolbar);
 
-        BottomNavigationViewHelper.removeShiftMode(mBottomNavigationView);
-
-        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
+        mBottomNavigationView.setItemClickListener(this);
 
         if (savedInstanceState == null){
-            mBottomNavigationView.setSelectedItemId(R.id.action_my_home);
+            mBottomNavigationView.selectItem(Item.ITEM_MY_HOME);
         }
     }
 
-    public void selectItemId(@IdRes int itemId){
-        mBottomNavigationView.setSelectedItemId(itemId);
+    public void selectItemId(Item item){
+        mBottomNavigationView.selectItem(item);
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public void onItemSelected(Item item) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         BaseFragment fragment = null;
         String tag = null;
 
         String toolBarTitle = null;
-        switch (item.getItemId()) {
-            case R.id.action_my_home:
+        switch (item) {
+            case ITEM_MY_HOME:
                 fragment = MyHomeFragment.newInstance();
                 tag = MyHomeFragment.TAG;
                 break;
-            case R.id.action_resources:
+            case ITEM_RESOURCES:
                 fragment = ResourcesFragment.newInstance();
                 tag = ResourcesFragment.TAG;
                 toolBarTitle = getString(R.string.resources);
                 break;
-            case R.id.action_cameras:
+            case ITEM_CAMERAS:
                 fragment = CamerasFragment.newInstance();
                 tag = CamerasFragment.TAG;
                 toolBarTitle = getString(R.string.cameras);
                 break;
-            case R.id.action_other:
+            case ITEM_OTHER:
                 fragment = OtherFragment.newInstance();
                 tag = OtherFragment.TAG;
                 toolBarTitle = getString(R.string.other);
@@ -100,6 +87,5 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 actionBar.setIcon(null);
             }
         }
-        return true;
     }
 }
