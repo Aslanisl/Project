@@ -24,6 +24,8 @@ public class MyViewPager extends ViewPager {
 
     @Override
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
-        return v.getClass() == SwipableTextView.class || super.canScroll(v, checkV, dx, x, y);
+        return v.getClass() == SwipeableTextView.class ||
+                v.getClass().getName().startsWith("com.github.mikephil") ||
+                super.canScroll(v, checkV, dx, x, y);
     }
 }

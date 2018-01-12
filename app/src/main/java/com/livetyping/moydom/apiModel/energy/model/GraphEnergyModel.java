@@ -1,12 +1,10 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
 import android.graphics.Color;
-import android.util.Log;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.google.gson.Gson;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 import com.livetyping.moydom.utils.HelpUtils;
@@ -75,6 +73,10 @@ public class GraphEnergyModel {
 
     public BarData getGraphData(int type) {
 
+        if (childModels.size() == 0){
+            return new BarData(new BarDataSet(new ArrayList<>(), ""));
+        }
+
         Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
             if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())) {
                 return graphItemEnergyModel.getTariff().getTariffId() -
@@ -101,14 +103,11 @@ public class GraphEnergyModel {
                 colors.add(Color.parseColor("#343d94"));
             } else if (model.getTariff().getTariffId() == ZONE_NIGHT) {
                 colors.add(Color.parseColor("#ff5b91"));
-
             } else if (model.getTariff().getTariffId() == ZONE_SEMIPEAK) {
                 colors.add(Color.parseColor("#ffc13c"));
-
             }
         }
 
-        Log.d("***", new Gson().toJson(childModels));
 //
 //        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY){
 //            for (int i = 0; i < 7; i++) {
@@ -135,12 +134,11 @@ public class GraphEnergyModel {
 //        } else {
 //
 //        }
-        List<BarEntry> entries = new ArrayList<>();
         BarEntry entry;
         SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
 
         int field;
-        int entriesMaxCount = 0;
+        int entriesMaxCount;
         Calendar calendar = Calendar.getInstance();
         if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
             field = Calendar.HOUR_OF_DAY;
@@ -155,17 +153,29 @@ public class GraphEnergyModel {
             field = Calendar.MONTH;
             entriesMaxCount = 12;
         }
+        List<BarEntry> entries = new ArrayList<>();
+
         for (Map.Entry<String, ArrayList<Float>> mapEntry : values.entrySet()) {
             try {
                 calendar.setTime(sdfIn.parse(mapEntry.getKey()));
                 if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
                     entry = new BarEntry(Integer.parseInt(mapEntry.getKey().substring(11, 13)),
                             HelpUtils.listToFloatArray(mapEntry.getValue()));
+
+                    entries.add(entry);
+                } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK){
+                    int dayOfWeek = calendar.get(field);
+                    int index;
+                    if (dayOfWeek == Calendar.SUNDAY)
+                        dayOfWeek = 8;
+                    index = dayOfWeek - 2;
+                    entry = new BarEntry(index, HelpUtils.listToFloatArray(mapEntry.getValue()));
+                    entries.add(entry);
                 } else {
                     entry = new BarEntry(calendar.get(field),
                             HelpUtils.listToFloatArray(mapEntry.getValue()));
+                    entries.add(entry);
                 }
-                entries.add(entry);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -173,22 +183,69 @@ public class GraphEnergyModel {
 
         Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
 
+
+        int colorsBefore = 0;
         if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
             for (int i = 0; i < entriesMaxCount; i++) {
                 if (i >= entries.size() || entries.get(i).getX() != i) {
                     entries.add(i, new BarEntry(i, 0));
+                    colors.add(i, Color.parseColor("#343d94"));
                 }
             }
-        } else {
+        } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK) {
             float[] dummyEntryValues = {0, 0, 0};
             for (int i = 0; i < entriesMaxCount; i++) {
                 if (i >= entries.size() || entries.get(i).getX() != i) {
                     entries.add(i, new BarEntry(i, dummyEntryValues));
+                    colors.add(colorsBefore, Color.parseColor("#343d94"));
+                    colors.add(colorsBefore, Color.parseColor("#343d94"));
+                    colors.add(colorsBefore, Color.parseColor("#343d94"));
+                    colorsBefore += 3;
+                } else {
+                    colorsBefore += entries.get(i).getYVals().length;
+                }
+            }
+        } else {
+            float[] dummyEntryValues = {0, 0, 0};
+
+            for (int i = type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH ? 1 : 0; i < entriesMaxCount; i++) {
+                if (i >= entries.size() || entries.get(i).getX() != i) {
+                    entries.add(i, new BarEntry(i, dummyEntryValues));
+                }
+
+            }
+        }
+
+        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+
+            colorsBefore = 0;
+            for (BarEntry barEntry : entries){
+                for (float f : barEntry.getYVals()){
+                    if (f == 0)
+                        colors.add(colorsBefore,Color.parseColor("#343d94") );
+                    colorsBefore++;
                 }
             }
         }
 
+//
+//        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+//            colorsBefore = 0;
+//            for (int i = 0; i < entries.size(); i++){
+//                if (entries.get(i).isStacked()) {
+//                    String s = "";
+//                    String c = "";
+//                    for (int j = 0; j < entries.get(i).getYVals().length; j++) {
+//                        s += entries.get(i).getYVals()[j] + " ";
+//                        c += colors.get(colorsBefore++) + " ";
+//                    }
+//                    Log.d("***", s + c);
+//                }
+//            }
+//
+//        }
         BarDataSet barDataSet = new BarDataSet(entries, "rub");
+
         barDataSet.setColors(colors);
         barDataSet.setDrawValues(false);
         barDataSet.setHighlightEnabled(true);

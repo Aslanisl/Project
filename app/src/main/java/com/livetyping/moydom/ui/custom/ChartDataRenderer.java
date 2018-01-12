@@ -64,25 +64,30 @@ public class ChartDataRenderer extends BarChartRenderer {
                 break;
 
 
-            if (!isSingleColor) {
-                // Set the color for the currently drawn value. If the index
-                // is out of bounds, reuse colors.
-                mRenderPaint.setColor(dataSet.getColor(j / 4));
-                if (dataSet.getColor(j / 4) == Color.parseColor("#ff5b91")){
-                    color2 = Color.parseColor("#d23285");
-                    color1 = Color.parseColor("#ff5b91");
+            try {
+                if (!isSingleColor) {
+                    // Set the color for the currently drawn value. If the index
+                    // is out of bounds, reuse colors.
+                    mRenderPaint.setColor(dataSet.getColor(j / 4));
+                    if (dataSet.getColor(j / 4) == Color.parseColor("#ff5b91")){
+                        color2 = Color.parseColor("#d23285");
+                        color1 = Color.parseColor("#ff5b91");
 
-                } else  if (dataSet.getColor(j / 4) == Color.parseColor("#343d94")){
-                    color2 = Color.parseColor("#343d94");
-                    color1 = Color.parseColor("#6d2dd3");
+                    } else  if (dataSet.getColor(j / 4) == Color.parseColor("#343d94")){
+                        color2 = Color.parseColor("#343d94");
+                        color1 = Color.parseColor("#6d2dd3");
 
-                } else  if (dataSet.getColor(j / 4) == Color.parseColor("#ffc13c")){
-                    color1 = Color.parseColor("#ffc13c");
-                    color2 = Color.parseColor("#ff7e69");
+                    } else  if (dataSet.getColor(j / 4) == Color.parseColor("#ffc13c")){
+                        color1 = Color.parseColor("#ffc13c");
+                        color2 = Color.parseColor("#ff7e69");
+
+                    }
 
                 }
-
+            } catch (ArithmeticException e){
+                e.printStackTrace();
             }
+
             gradient = new LinearGradient(0, buffer.buffer[j + 1], 0,
                     c.getHeight(), color1, color2, Shader.TileMode.MIRROR);
             mRenderPaint.setShader(gradient);
