@@ -1,10 +1,10 @@
 package com.livetyping.moydom.ui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.widget.RelativeLayout;
 
@@ -29,6 +29,9 @@ public class MainActivity extends BaseActivity implements CustomBottomNavigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         setUpInternetView(mContainer, mToolbar);

@@ -3,7 +3,6 @@ package com.livetyping.moydom.ui.custom;
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -48,15 +47,14 @@ public class SwipeableTextView extends AppCompatTextView {
         switch (me.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mSwipeGesturePreviousTime = System.currentTimeMillis();
-                mSwipeGestureStartX = - me.getRawX() + getX();
+                mSwipeGestureStartX = me.getRawX();
 
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d("***", me.getRawX() + mSwipeGestureStartX  + " " + mSwipeGesturePreviousX);
-                if (!(!isRightSwipeable && me.getRawX() + mSwipeGestureStartX < 0)) {
+                if (!(!isRightSwipeable && me.getRawX() - mSwipeGestureStartX < 0)) {
                     mSwipeGesturePreviousTime = System.currentTimeMillis();
-                    mSwipeGesturePreviousX = me.getRawX() + mSwipeGestureStartX;
-                    setTranslationX(me.getRawX() + mSwipeGestureStartX);
+                    mSwipeGesturePreviousX = me.getRawX() - mSwipeGestureStartX;
+                    setTranslationX(me.getRawX() - mSwipeGestureStartX);
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -74,7 +72,6 @@ public class SwipeableTextView extends AppCompatTextView {
                                     }
                                 })
                                 .start();
-                        Log.d("***", "left");
                     }
                     if (totalDistance < -SWIPE_MIN_DISTANCE) {
                         animate()
@@ -87,7 +84,6 @@ public class SwipeableTextView extends AppCompatTextView {
                                     }
                                 })
                                 .start();
-                        Log.d("***", "right");
                     }
                 }
                 return false;

@@ -1,5 +1,7 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
+import android.util.Log;
+
 /**
  * Created by Ivan on 07.12.2017.
  */
@@ -77,5 +79,30 @@ public class CurrentEnergyModel {
 
     public void setTariffValue(float tariffValue) {
         this.tariffValue = tariffValue;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof  CurrentEnergyModel){
+            CurrentEnergyModel anotherModel = (CurrentEnergyModel) obj;
+            Log.d("***", (powerNow == anotherModel.powerNow) + " " +
+                    (powerNowStatus == anotherModel.powerNowStatus) + " " +
+                    (costNow == anotherModel.costNow) + " " +
+                    (costNowStatus == anotherModel.costNowStatus) + " " +
+                    (tariffId == anotherModel.tariffId) + " " +
+                    (tariffTypeId == anotherModel.tariffTypeId) + " " +
+                    tariffName.equals(anotherModel.tariffName) + " " +
+                    (tariffValue == anotherModel.tariffValue));
+            return
+                    powerNow == anotherModel.powerNow &&
+                    powerNowStatus == anotherModel.powerNowStatus &&
+                    costNow == anotherModel.costNow &&
+                    costNowStatus == anotherModel.costNowStatus &&
+                    tariffId == anotherModel.tariffId &&
+                    tariffTypeId == anotherModel.tariffTypeId &&
+                    tariffName.equals(anotherModel.tariffName) &&
+                    tariffValue == anotherModel.tariffValue;
+        }
+        return super.equals(obj);
     }
 }

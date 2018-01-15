@@ -77,19 +77,57 @@ public class TodayEnergyModel {
         this.tariffValue = this.tariffValue + tariffValue;
     }
 
-    public List<String> getTariffNames() {
-        return tariffNames;
-    }
-
     public void addTariffName(String tariffName) {
         this.tariffNames.add(tariffName);
+    }
+
+    public void addTariffTime(String tariffTime) {
+        this.tariffTimes.add(tariffTime);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof  TodayEnergyModel){
+            TodayEnergyModel anotherModel = (TodayEnergyModel) obj;
+            if (anotherModel.getTariffTimes() != null && tariffTimes != null ){
+
+                if (anotherModel.getTariffTimes().size() != tariffTimes.size())
+                    return false;
+
+                for (int i = 0; i < tariffTimes.size(); i++){
+                    if (!anotherModel.getTariffTimes().get(i).equals(tariffTimes.get(i)))
+                        return false;
+                }
+            } else if (anotherModel.getTariffTimes() != tariffTimes)
+                return false;
+
+            if (anotherModel.getTariffNames() != null && tariffNames != null ){
+
+                if (anotherModel.getTariffNames().size() != tariffNames.size())
+                    return false;
+
+                for (int i = 0; i < tariffNames.size(); i++){
+                    if (!anotherModel.getTariffNames().get(i).equals(tariffNames.get(i)))
+                        return false;
+                }
+            } else if (anotherModel.getTariffNames() != tariffNames)
+                return false;
+
+            return power == anotherModel.power &&
+                    powerCost == anotherModel.powerCost &&
+                    tariffId == anotherModel.tariffId &&
+                    tariffTypeId == anotherModel.tariffTypeId &&
+                    tariffValue == anotherModel.tariffValue &&
+                    date.equals(anotherModel.date);
+        }
+        return super.equals(obj);
     }
 
     public List<String> getTariffTimes() {
         return tariffTimes;
     }
 
-    public void addTariffTime(String tariffTime) {
-        this.tariffTimes.add(tariffTime);
+    public List<String> getTariffNames() {
+        return tariffNames;
     }
 }

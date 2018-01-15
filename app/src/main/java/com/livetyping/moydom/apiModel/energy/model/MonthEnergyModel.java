@@ -60,4 +60,19 @@ public class MonthEnergyModel {
     public void setCostTotalStatus(int costTotalStatus) {
         this.costTotalStatus = costTotalStatus;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof  MonthEnergyModel){
+            MonthEnergyModel anotherModel = (MonthEnergyModel) obj;
+            return
+                   powerMonth == anotherModel.powerMonth &&
+                   costMonth == anotherModel.costMonth &&
+                   powerTotal == anotherModel.powerTotal &&
+                   costTotal == anotherModel.costTotal &&
+                   powerTotalStatus == anotherModel.powerTotalStatus &&
+                   costTotalStatus == anotherModel.costTotalStatus;
+        }
+        return super.equals(obj);
+    }
 }

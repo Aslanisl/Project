@@ -57,7 +57,11 @@ public class GraphEnergyModel {
             if (! doesZoneExist) {
                 ZoneSummary zoneSummary = new ZoneSummary();
                 zoneSummary.name = model.getTariff().getTariffName();
-                zoneSummary.time = model.getTariff().getTariffTime().replace(';', '\n');
+                zoneSummary.time =
+                        model.getTariff().getTariffTime()
+                                .replace(';', '\n')
+                                .replace(" ", "")
+                                + "\n ";
                 zoneSummary.id = model.getTariff().getTariffId();
                 zoneSummary.entriesCount = 1;
                 zoneSummary.totalEnergyCost = model.getPowerCost();
@@ -73,7 +77,7 @@ public class GraphEnergyModel {
 
     public BarData getGraphData(int type) {
 
-        if (childModels.size() == 0){
+        if (childModels.size() == 0) {
             return new BarData(new BarDataSet(new ArrayList<>(), ""));
         }
 
@@ -163,11 +167,10 @@ public class GraphEnergyModel {
                             HelpUtils.listToFloatArray(mapEntry.getValue()));
 
                     entries.add(entry);
-                } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK){
+                } else if (type == EnergySwitchModel.ENERGY_TYPE_WEEK) {
                     int dayOfWeek = calendar.get(field);
                     int index;
-                    if (dayOfWeek == Calendar.SUNDAY)
-                        dayOfWeek = 8;
+                    if (dayOfWeek == Calendar.SUNDAY) { dayOfWeek = 8; }
                     index = dayOfWeek - 2;
                     entry = new BarEntry(index, HelpUtils.listToFloatArray(mapEntry.getValue()));
                     entries.add(entry);
@@ -208,7 +211,8 @@ public class GraphEnergyModel {
         } else {
             float[] dummyEntryValues = {0, 0, 0};
 
-            for (int i = type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH ? 1 : 0; i < entriesMaxCount; i++) {
+            for (int i = type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH ? 1 : 0;
+                    i < entriesMaxCount; i++) {
                 if (i >= entries.size() || entries.get(i).getX() != i) {
                     entries.add(i, new BarEntry(i, dummyEntryValues));
                 }
@@ -216,13 +220,12 @@ public class GraphEnergyModel {
             }
         }
 
-        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH) {
 
             colorsBefore = 0;
-            for (BarEntry barEntry : entries){
-                for (float f : barEntry.getYVals()){
-                    if (f == 0)
-                        colors.add(colorsBefore,Color.parseColor("#343d94") );
+            for (BarEntry barEntry : entries) {
+                for (float f : barEntry.getYVals()) {
+                    if (f == 0) { colors.add(colorsBefore, Color.parseColor("#343d94")); }
                     colorsBefore++;
                 }
             }
@@ -249,6 +252,8 @@ public class GraphEnergyModel {
         barDataSet.setColors(colors);
         barDataSet.setDrawValues(false);
         barDataSet.setHighlightEnabled(true);
+        barDataSet.setHighLightColor(Color.TRANSPARENT);
+        barDataSet.setHighLightAlpha(0);
         return new BarData(barDataSet);
     }
 

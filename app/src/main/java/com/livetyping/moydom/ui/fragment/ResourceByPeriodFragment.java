@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -181,13 +182,11 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         initData();
 
         label.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-                mChart.highlightValue(0, - 1);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) { mChart.highlightValue(0, - 1); }
             return false;
         });
         mStatisticsContainer.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN)
-                mChart.highlightValue(0, - 1);
+            if (event.getAction() == MotionEvent.ACTION_DOWN) { mChart.highlightValue(0, - 1); }
             return false;
         });
 
@@ -270,12 +269,11 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Highlight h = mChart.getHighlightByTouchPoint(event.getX(), event.getY());
-                        if (h == null)
-                            return false;
+                        if (h == null) { return false; }
                         highlighting = (h.getYPx() < event.getY());
                         startX = event.getX();
                         onNothingSelected();
-                        if (highlighting){
+                        if (highlighting) {
                             ResourceByPeriodFragment.this.mChart.highlightValue(
                                     ResourceByPeriodFragment.this.mChart.getHighlightByTouchPoint(
                                             event.getX(),
@@ -296,7 +294,8 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
                             ViewPortHandler vph = mChart.getViewPortHandler();
                             Matrix transformation = vph.getMatrixTouch();
-                            transformation.postTranslate(event.getX() - startX, 0); // unset the negs to make x / y inverted
+                            transformation.postTranslate(event.getX() - startX,
+                                    0); // unset the negs to make x / y inverted
                             vph.refresh(transformation, mChart, true);
 
                             startX = event.getX();
@@ -340,7 +339,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mHeader.setRightSwipeable(checkIfSwipeableRight());
     }
 
-    private void setTitle(){
+    private void setTitle() {
         mSubheader.setText(CalendarUtils.getCurrentDate());
         switch (periodType) {
             case EnergySwitchModel.ENERGY_TYPE_TODAY:
@@ -476,7 +475,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         indicator.setLayoutParams(lp);
         indicator.invalidate();
 
-        labelCost.setText(getString(R.string.rub_measure,
+        labelCost.setText(String.format(Locale.US, getString(R.string.rub_measure),
                 mChart.getBarData()
                         .getDataSetForEntry(e)
                         .getEntryForXValue(e.getX(), 0)
@@ -521,7 +520,10 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         int marginMin = getResources().getDimensionPixelOffset(R.dimen.padding_normal);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int marginMax = displayMetrics.widthPixels - label.getWidth() - marginMin;
+        label.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int marginMax = displayMetrics.widthPixels - label.getMeasuredWidth() - marginMin;
+
+        Log.d("***", displayMetrics.widthPixels + " " + label.getWidth() + " " + marginMin);
 
         lp.leftMargin = Math.min(Math.max(margin, marginMin), marginMax);
         label.setLayoutParams(lp);
@@ -607,7 +609,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                             String.format("%s%s",
                                     summary.name.substring(0, 1).toUpperCase(),
                                     summary.name.substring(1)));
-                    mFirstZoneTime.setText(summary.time.replace(" ", ""));
+                    mFirstZoneTime.setText(summary.time);
                     mFirstZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure),
                             summary.totalEnergy));
                     mFirstZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure),
@@ -624,7 +626,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                             String.format("%s%s",
                                     summary.name.substring(0, 1).toUpperCase(),
                                     summary.name.substring(1)));
-                    mSecondZoneTime.setText(summary.time.replace(" ", ""));
+                    mSecondZoneTime.setText(summary.time);
                     mSecondZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure),
                             summary.totalEnergy));
                     mSecondZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure),
@@ -641,7 +643,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                             String.format("%s%s",
                                     summary.name.substring(0, 1).toUpperCase(),
                                     summary.name.substring(1)));
-                    mThirdZoneTime.setText(summary.time.replace(" ", ""));
+                    mThirdZoneTime.setText(summary.time);
                     mThirdZoneTotalValue.setText(String.format(getString(R.string.short_energy_measure),
                             summary.totalEnergy));
                     mThirdZoneTotalCost.setText(String.format(getString(R.string.short_rub_measure),
@@ -651,7 +653,8 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                             summary.totalEnergy / summary.entriesCount));
                     mThirdZoneAverageCost.setText(String.format(getString(R.string.short_rub_measure),
                             summary.totalEnergyCost / summary.entriesCount));
-                }
+
+                 }
             }
         });
 

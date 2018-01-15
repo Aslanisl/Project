@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -26,7 +28,6 @@ import com.livetyping.moydom.ui.activity.ResourcesActivity;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 import com.livetyping.moydom.utils.GlideApp;
-import com.livetyping.moydom.utils.HelpUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,28 +45,17 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private final static int VIEW_TYPE_ENERGY = 0;
     private final static int VIEW_TYPE_ADVICE = 1;
     private final static int ADVICE_POSITION = 2;
-
-    public interface CloseAdviceListener {
-        void closeAdvice(int adviceId);
-    }
-
     private CloseAdviceListener mListener;
-
     private List<EnergySwitchModel> mEnergyModels = new ArrayList<>();
-
     private CurrentEnergyModel mCurrentEnergyModel;
     private TodayEnergyModel mTodayEnergyModel;
     private WeekEnergyModel mWeekEnergyModel;
     private MonthEnergyModel mMonthEnergyModel;
     private AdviceModel mAdviceModel;
-
     private float mTargetCost;
-
     private boolean mWithAdvice;
-
     private Context mContext;
     private boolean mClickable = false;
-
     public EnergyMyHomeAdapter(Context context, boolean withAdvice) {
         mContext = context;
         mWithAdvice = withAdvice;
@@ -103,32 +93,10 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void addCurrentEnergy(CurrentEnergyModel model){
-        mCurrentEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
-    }
-
-    public void addTodayEnergy(TodayEnergyModel model){
-        mTodayEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_TODAY);
-    }
-
-    public void addWeekEnergy(WeekEnergyModel model){
-        mWeekEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_WEEK);
-    }
-
-    public void addMonthEnergy(MonthEnergyModel model){
-        mMonthEnergyModel = model;
-        updatePositionByType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
-    }
-
-    public void setAdviceModel(AdviceModel model){
-        mAdviceModel = model;
-        notifyItemInserted(ADVICE_POSITION);
-    }
-
-    public void setAdviceListener(CloseAdviceListener listener){
-        mListener = listener;
+        if (mCurrentEnergyModel == null || !mCurrentEnergyModel.equals(model)){
+            mCurrentEnergyModel = model;
+            updatePositionByType(EnergySwitchModel.ENERGY_TYPE_CURRENT);
+        }
     }
 
     private void updatePositionByType(int type){
@@ -142,6 +110,37 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             notifyItemChanged(position);
         }
+    }
+
+    public void addTodayEnergy(TodayEnergyModel model){
+        if (mTodayEnergyModel == null || !mTodayEnergyModel.equals(model)){
+            mTodayEnergyModel = model;
+            updatePositionByType(EnergySwitchModel.ENERGY_TYPE_TODAY);
+        }
+    }
+
+    public void addWeekEnergy(WeekEnergyModel model){
+
+        if (mWeekEnergyModel == null || !mWeekEnergyModel.equals(model)){
+            mWeekEnergyModel = model;
+            updatePositionByType(EnergySwitchModel.ENERGY_TYPE_WEEK);
+        }
+    }
+
+    public void addMonthEnergy(MonthEnergyModel model){
+        if (mMonthEnergyModel == null || !mMonthEnergyModel.equals(model)){
+            mMonthEnergyModel = model;
+            updatePositionByType(EnergySwitchModel.ENERGY_TYPE_THIS_MONTH);
+        }
+    }
+
+    public void setAdviceModel(AdviceModel model){
+        mAdviceModel = model;
+        notifyItemInserted(ADVICE_POSITION);
+    }
+
+    public void setAdviceListener(CloseAdviceListener listener){
+        mListener = listener;
     }
 
     /**
@@ -192,11 +191,17 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         break;
                 }
                 if (mClickable){
-                    energyHolder.itemView.setOnClickListener((v) -> {
+                    energyHolder.mContainer.setOnClickListener((v) -> {
                         Intent intent = new Intent(mContext, ResourcesActivity.class);
                         intent.putExtra(ResourcesActivity.EXTRA_TYPE, model.getType());
                         mContext.startActivity(intent);
+
                     });
+                    energyHolder.mContainer.setClickable(true);
+                    energyHolder.mContainer.setFocusable(true);
+//                    TypedValue outValue = new TypedValue();
+//                    mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+//                    energyHolder.mContainer.setBackgroundResource(outValue.resourceId);
                 }
                 break;
             case VIEW_TYPE_ADVICE:
@@ -207,18 +212,18 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public int getItemCount() {
-        if (mAdviceModel == null && mEnergyModels.isEmpty()) return 0;
-        if (mAdviceModel == null && !mEnergyModels.isEmpty()) return mEnergyModels.size();
-        return mEnergyModels.size() + 1;
-    }
-
-    @Override
     public int getItemViewType(int position) {
         if (position == ADVICE_POSITION && mAdviceModel != null){
             return VIEW_TYPE_ADVICE;
         }
         return VIEW_TYPE_ENERGY;
+    }
+
+    @Override
+    public int getItemCount() {
+        if (mAdviceModel == null && mEnergyModels.isEmpty()) return 0;
+        if (mAdviceModel == null && !mEnergyModels.isEmpty()) return mEnergyModels.size();
+        return mEnergyModels.size() + 1;
     }
 
     class EnergyViewHolder extends RecyclerView.ViewHolder {
@@ -247,6 +252,45 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, itemView);
         }
 
+        public void bindCurrentEnergyHolder(CurrentEnergyModel model){
+            bindHolderEmpty();
+            if (model != null) {
+                mProgress.setVisibility(View.GONE);
+                @DrawableRes int background;
+                Drawable wave;
+                if (model.getCostNowStatus() <= 1){
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        background = R.drawable.background_energy_green_ripple;
+                    } else {
+                        background = R.drawable.background_energy_green;
+                    }
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_green);
+                } else if (model.getCostNowStatus() > 1 && model.getCostNowStatus() <= 2){
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        background = R.drawable.background_energy_yellow_ripple;
+                    } else {
+                        background = R.drawable.background_energy_yellow;
+                    }
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_yellow);
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        background = R.drawable.background_energy_red_ripple;
+                    } else {
+                        background = R.drawable.background_energy_red;
+                    }
+                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_red);
+                }
+                mContainer.setBackgroundResource(background);
+                mWave.setImageDrawable(wave);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));
+                mMeasure.setText(mContext.getString(R.string.rub_hour));
+                mUnit.setText(getEnergyUnit(model.getPowerNow()));
+                mCurrentPeriod.setText(R.string.current_energy_power);
+                mCurrentDate.setVisibility(View.GONE);
+            }
+        }
+
         public void bindHolderEmpty(){
             mContainer.setVisibility(View.VISIBLE);
             mMonthContainer.setVisibility(View.GONE);
@@ -255,6 +299,25 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mProgress.setVisibility(View.VISIBLE);
             mProgress.getIndeterminateDrawable()
                     .setColorFilter(ContextCompat.getColor(mContext, R.color.gray), PorterDuff.Mode.SRC_IN );
+        }
+
+        private String getEnergyUnit(float value){
+            String temp = mContext.getString(R.string.energy_measure, value);
+            return temp.replace(",",".");
+        }
+
+        public void bindTodayEnergyHolder(TodayEnergyModel model){
+            bindHolderEmpty();
+            if (model != null) {
+                mProgress.setVisibility(View.GONE);
+                bindContainerWaveColor(mContainer, mWave, model.getPowerCost(), EnergySwitchModel.ENERGY_TYPE_TODAY);
+                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerCost()));
+                mMeasure.setText(mContext.getString(R.string.rub));
+                mUnit.setText(getEnergyUnit(model.getPower()));
+                mCurrentPeriod.setText(R.string.today);
+                mCurrentDate.setText(CalendarUtils.getCurrentDayString());
+                mCurrentDate.setVisibility(View.VISIBLE);
+            }
         }
 
         private void bindContainerWaveColor(RelativeLayout container, ImageView wave,
@@ -276,58 +339,34 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (targetCost != 0 && cost != 0){
                 float percent = cost / targetCost;
                 if (percent >= 1){
-                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red));
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red_ripple));
+                    } else {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_red));
+                    }
                     wave.setImageResource(R.drawable.wave_red);
                 } else if (percent < 1 && percent >= 0.6){
-                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow_ripple));
+                    } else {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow));
+                    }
                     wave.setImageResource(R.drawable.wave_yellow);
                 } else if (percent < 0.6){
-                    container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green_ripple));
+                    } else {
+                        container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+                    }
                     wave.setImageResource(R.drawable.wave_green);
                 }
+            } else {if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green_ripple));
             } else {
                 container.setBackground(ContextCompat.getDrawable(mContext, R.drawable.background_energy_green));
+            }
                 wave.setImageResource(R.drawable.wave_green);
-            }
-        }
-
-        public void bindCurrentEnergyHolder(CurrentEnergyModel model){
-            bindHolderEmpty();
-            if (model != null) {
-                mProgress.setVisibility(View.GONE);
-                Drawable background;
-                Drawable wave;
-                if (model.getCostNowStatus() <= 1){
-                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_green);
-                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_green);
-                } else if (model.getCostNowStatus() > 1 && model.getCostNowStatus() <= 2){
-                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_yellow);
-                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_yellow);
-                } else {
-                    background = ContextCompat.getDrawable(mContext, R.drawable.background_energy_red);
-                    wave = ContextCompat.getDrawable(mContext, R.drawable.wave_red);
-                }
-                mContainer.setBackground(background);
-                mWave.setImageDrawable(wave);
-                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));
-                mMeasure.setText(mContext.getString(R.string.rub_hour));
-                mUnit.setText(getEnergyUnit(model.getPowerNow()));
-                mCurrentPeriod.setText(R.string.current_energy_power);
-                mCurrentDate.setVisibility(View.GONE);
-            }
-        }
-
-        public void bindTodayEnergyHolder(TodayEnergyModel model){
-            bindHolderEmpty();
-            if (model != null) {
-                mProgress.setVisibility(View.GONE);
-                bindContainerWaveColor(mContainer, mWave, model.getPowerCost(), EnergySwitchModel.ENERGY_TYPE_TODAY);
-                mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getPowerCost()));
-                mMeasure.setText(mContext.getString(R.string.rub));
-                mUnit.setText(getEnergyUnit(model.getPower()));
-                mCurrentPeriod.setText(R.string.today);
-                mCurrentDate.setText(CalendarUtils.getCurrentDayString());
-                mCurrentDate.setVisibility(View.VISIBLE);
             }
         }
 
@@ -372,11 +411,6 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             }
         }
-
-        private String getEnergyUnit(float value){
-            String temp = mContext.getString(R.string.energy_measure, value);
-            return temp.replace(",",".");
-        }
     }
 
     class AdviceViewHolder extends RecyclerView.ViewHolder {
@@ -415,5 +449,9 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mDescription.setVisibility(descriptionEmpty ? View.GONE : View.VISIBLE);
             mDescription.setText(descriptionEmpty ? " " : model.getDescription());
         }
+    }
+
+    public interface CloseAdviceListener {
+        void closeAdvice(int adviceId);
     }
 }

@@ -1,6 +1,5 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
-import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 
 import java.util.ArrayList;
@@ -15,10 +14,6 @@ public class WeekEnergyModel {
 
     public void addDayModel(TodayEnergyModel model){
         dayModels.add(model);
-    }
-
-    public List<TodayEnergyModel> getWeekDays(){
-        return dayModels;
     }
 
     public float getWeekPowerCost(){
@@ -60,5 +55,28 @@ public class WeekEnergyModel {
             }
         }
         return CalendarUtils.getBetweenDateFromTimeMillis(startWeekTime, finishWeekTime);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof WeekEnergyModel) {
+            List<TodayEnergyModel> anotherWeekModels = ((WeekEnergyModel) obj).getWeekDays();
+            if (anotherWeekModels != null && getWeekDays() != null){
+                if (anotherWeekModels.size() != getWeekDays().size())
+                    return false;
+
+                for (int i = 0; i < anotherWeekModels.size(); i++){
+                    if (!anotherWeekModels.get(i).equals(getWeekDays().get(i))){
+                        return false;
+                    }
+                }
+            } else if (anotherWeekModels != getWeekDays())
+                return false;
+        }
+        return super.equals(obj);
+    }
+
+    public List<TodayEnergyModel> getWeekDays(){
+        return dayModels;
     }
 }
