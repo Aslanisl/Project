@@ -191,14 +191,18 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         break;
                 }
                 if (mClickable){
-                    energyHolder.mContainer.setOnClickListener((v) -> {
+                    View.OnClickListener listener = (v) -> {
                         Intent intent = new Intent(mContext, ResourcesActivity.class);
                         intent.putExtra(ResourcesActivity.EXTRA_TYPE, model.getType());
                         mContext.startActivity(intent);
 
-                    });
+                    };
+                    energyHolder.mContainer.setOnClickListener(listener);
                     energyHolder.mContainer.setClickable(true);
                     energyHolder.mContainer.setFocusable(true);
+                    energyHolder.mMonthContainer.setOnClickListener(listener);
+                    energyHolder.mMonthContainer.setClickable(true);
+                    energyHolder.mMonthContainer.setFocusable(true);
 //                    TypedValue outValue = new TypedValue();
 //                    mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
 //                    energyHolder.mContainer.setBackgroundResource(outValue.resourceId);
