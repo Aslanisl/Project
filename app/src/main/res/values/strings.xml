@@ -113,5 +113,7 @@
     <string name="videophone">Видеофон</string>
 
     <string name="categories_loading">Подождите, категории загружаются…</string>
+
+    <string name="send_appeal_with_email">Отправьте обращение через почтовый клиент</string>
     
 </resources>

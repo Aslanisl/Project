@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.utils.HelpUtils;
@@ -21,11 +22,11 @@ import butterknife.ButterKnife;
 public class ManuallyEnterCodeActivity extends AuthorizationActivity {
 
     private static final int CODE_LENGTH = 16;
-    private static final int CODE_WHITESPACE = 4;
 
     private boolean mEnableDoneButton;
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.activity_manually_container) LinearLayout mContainer;
     @BindView(R.id.activity_manually_code_edit) EditText mCodeEdit;
 
     private String mCode;
@@ -72,6 +73,18 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkCode();
+    }
+
+    @Override
+    protected void handlingInternetError() {
+        super.handlingInternetError();
+        checkCode();
+    }
+
     private void initEditCode(){
         mCodeEdit.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE){
@@ -88,13 +101,7 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
                 null,
                 (maskFilled, extractedValue) ->{
                     mCode = extractedValue;
-                    if (mCode.length() == CODE_LENGTH) {
-                        mEnableDoneButton = true;
-                        invalidateOptionsMenu();
-                    } else if (mEnableDoneButton) {
-                        mEnableDoneButton = false;
-                        invalidateOptionsMenu();
-                    }
+                    checkCode();
                 }
         );
 
@@ -104,7 +111,24 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
         HelpUtils.focusEditSoft(mCodeEdit, this);
     }
 
+    private void checkCode(){
+        if (mCode != null) {
+            if (mCode.length() == CODE_LENGTH) {
+                enableOptionMenu(true);
+            } else if (mEnableDoneButton) {
+                enableOptionMenu(false);
+            }
+        }
+    }
+
+    private void enableOptionMenu(boolean enable){
+        mEnableDoneButton = enable;
+        invalidateOptionsMenu();
+    }
+
     private void callCode(){
-        callAuthorization(mCode);
+        enableOptionMenu(false);
+        HelpUtils.hideSoftKeyborad(this);
+        callAuthorization(mCode, mContainer);
     }
 }

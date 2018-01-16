@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.Api;
@@ -32,6 +33,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
         NoInternetDialogFragment.OnInternetDialogListener {
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
+    @BindView(R.id.activity_enter_phone_container) LinearLayout mContainer;
     @BindView(R.id.activity_enter_phone_edit) EditText mPhoneEdit;
 
     private boolean mEnableDoneButton = false;
@@ -86,6 +88,8 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
+                HelpUtils.hideSoftKeyborad(this);
+                enableOptionMenu(false);
                 sendPhone();
                 return true;
             default:
@@ -96,17 +100,20 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     @Override
     public void onTextChanged(boolean maskFilled, @NonNull final String extractedValue) {
         if (maskFilled){
-            mEnableDoneButton = true;
+            enableOptionMenu(true);
             mPhone = extractedValue;
-            invalidateOptionsMenu();
         } else if (mEnableDoneButton){
-            mEnableDoneButton = false;
-            invalidateOptionsMenu();
+            enableOptionMenu(false);
         }
     }
 
+    private void enableOptionMenu(boolean enable){
+        mEnableDoneButton = enable;
+        invalidateOptionsMenu();
+    }
+
     private void sendPhone(){
-        showProgress();
+        showProgress(mContainer);
         mSendPhoneDisposable = Api.getApiService().sendPhone(ApiUrlService.getCallbackPhoneUrl(mPhone))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,19 +129,22 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
         if (model != null) {
             if (model.containsErrors()) {
                 showToast(model.getErrorMessage());
+                enableOptionMenu(true);
+                removeProgress(mContainer);
             } else {
-                HelpUtils.hideSoftKeyborad(this);
                 Intent intent = new Intent(this, QrScannerActivity.class);
                 intent.putExtra(QrScannerActivity.KEY_ALERT_DIALOG_FROM_PHONE, true);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
+                removeProgress(mContainer);
             }
         }
     }
 
     @Override
     public void onUnknownError(String error) {
-        removeProgress();
+        removeProgress(mContainer);
+        enableOptionMenu(true);
         showToast(error);
     }
 
@@ -149,7 +159,8 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     }
 
     private void handlingError(){
-        removeProgress();
+        removeProgress(mContainer);
+        enableOptionMenu(true);
         if (!NetworkUtil.isConnected(this)) {
             NoInternetDialogFragment fragment = NoInternetDialogFragment.newInstance();
             fragment.show(getSupportFragmentManager(), NoInternetDialogFragment.TAG);

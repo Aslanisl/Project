@@ -62,12 +62,14 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     private static final int REQUEST_CODE_AVATAR_FROM_GALLERY = 3;
     private static final int REQUEST_PERMISSION_READ_IMAGES = 4;
     private static final int REQUEST_PERMISSION_READ_IMAGES_ACTIVITY = 5;
+    private static final int REQUEST_CODE_SEND_APPEAL = 6;
 
     private final int DELAY_TIME = 20;
 
     private boolean mEnableSendMenu = false;
 
     @BindView(R.id.activity_appeal_container) RelativeLayout mContainer;
+    @BindView(R.id.activity_appeal_content_container) RelativeLayout mContentContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.activity_appeal_categories) TextView mCategoryName;
     @BindView(R.id.activity_appeal_body) EditText mAppealBody;
@@ -91,6 +93,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         mMenuView = findViewById(R.id.action_send);
         setUpInternetView(mContainer, mToolbar);
         initViews();
+        showProgress(mContentContainer);
         initCategories();
     }
 
@@ -108,7 +111,6 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         //width photo view in dp
         int width = (int)(getResources().getDimension(R.dimen.appeal_photo_width_height) / getResources().getDisplayMetrics().density);
         mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
-        HelpUtils.focusEditSoft(mAppealBody, this);
         mAppealBody.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -209,6 +211,8 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     }
 
     private void initAddresses(List<AppealModel> models){
+        removeProgress(mContentContainer);
+        HelpUtils.focusEditSoft(mAppealBody, this);
         mCategories.addAll(models);
     }
 
@@ -338,6 +342,9 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
             }
         } else if (requestCode == REQUEST_PERMISSION_READ_IMAGES_ACTIVITY){
             fromFile();
+        } else if (requestCode == REQUEST_CODE_SEND_APPEAL && resultCode == RESULT_OK){
+            setResult(RESULT_OK);
+            finish();
         }
     }
 
@@ -374,7 +381,10 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         if (!uris.isEmpty()) {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         }
-        startActivity(Intent.createChooser(intent, "Send appeal"));
+        Intent emailIntent = Intent.createChooser(intent, getString(R.string.send_appeal_with_email));
+        if (emailIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(emailIntent, REQUEST_CODE_SEND_APPEAL);
+        }
     }
 
     @Override
