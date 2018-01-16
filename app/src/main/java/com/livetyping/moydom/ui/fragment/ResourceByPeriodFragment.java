@@ -129,6 +129,24 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         super.onDestroyView();
     }
 
+    private void removeEndpointCallbacks() {
+        switch (periodType) {
+            case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                EnergyRepository.getInstance().removeDayGraphEnergy();
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_WEEK:
+                EnergyRepository.getInstance().removeWeekGraphEnergy();
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                EnergyRepository.getInstance().removeMonthGraphEnergy();
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_YEAR:
+                EnergyRepository.getInstance().removeYearGraphEnergy();
+                break;
+
+        }
+    }
+
     @Override
     public void onValueSelected(Entry e, Highlight h) {
 
@@ -143,8 +161,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
         ((MyMarkerView) mChart.getMarker()).setHeight((int) (h.getYPx()));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) indicator.getLayoutParams();
-        lp.width =
-                (int) (Math.round(h.getXPx()) + (1 * getResources().getDisplayMetrics().density));
+        lp.leftMargin = Math.round(h.getXPx());
         indicator.setLayoutParams(lp);
         indicator.invalidate();
 
@@ -460,6 +477,99 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         load();
     }
 
+    private void setTitle() {
+        mSubheader.setText(CalendarUtils.getCurrentDate());
+        switch (periodType) {
+            case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                mHeader.setText(CalendarUtils.getDateShortText(date));
+                mSubheader.setVisibility(View.GONE);
+                mSubheader.setText(CalendarUtils.getCurrentDateShortText());
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_WEEK:
+                mHeader.setText(CalendarUtils.getWeekText(date));
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                mHeader.setText(String.format(Locale.US, "%s, %d",
+                        MONTH[CalendarUtils.getMonthFromDate(date) - 1],
+                        CalendarUtils.getYearFromDate(date)));
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_YEAR:
+                mHeader.setText(String.format(Locale.US,
+                        "%d",
+                        CalendarUtils.getYearFromDate(date)));
+                break;
+        }
+    }
+
+    private boolean checkIfSwipeableRight() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK) {
+            while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                calendar.add(Calendar.DAY_OF_YEAR, 1);
+            }
+            calendar.getTime();
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        return new Date().after(calendar.getTime());
+    }
+
+    private void load() {
+//        ArrayList<Integer> colors = new ArrayList<>();
+//        List<BarEntry> entries = new ArrayList<>();
+//
+//        int entriesMaxCount = 0;
+//        entriesMaxCount = 24;
+//
+//        for (int i = 0; i < 24; i++) {
+//            entries.add(new BarEntry(i, new Random().nextFloat() * 58));
+//            colors.add(Color.parseColor("#ffc13c"));
+//        }
+//
+//        Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
+//
+//        for (int i = 0; i < entriesMaxCount; i++) {
+//            if (i >= entries.size() || entries.get(i).getX() != i) {
+//                entries.add(i, new BarEntry(i, 0));
+//            }
+//        }
+//
+//        BarDataSet barDataSet = new BarDataSet(entries, "rub");
+//        barDataSet.setColors(colors);
+//        barDataSet.setDrawValues(false);
+//        barDataSet.setHighlightEnabled(true);
+//        BarData barData = new BarData(barDataSet);
+//        mChart.setData(barData);
+//
+//        mContent.setVisibility(View.VISIBLE);
+//        mProgressBar.setVisibility(View.GONE);
+//        mError.setVisibility(View.GONE);
+
+        removeEndpointCallbacks();
+
+        mContent.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.VISIBLE);
+        mError.setVisibility(View.GONE);
+
+        switch (periodType) {
+            case EnergySwitchModel.ENERGY_TYPE_TODAY:
+                EnergyRepository.getInstance().getDayGraphEnergy(this, date);
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_WEEK:
+                EnergyRepository.getInstance().getWeekGraphEnergy(this, date);
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
+                EnergyRepository.getInstance().getMonthGraphEnergy(this, date);
+                break;
+            case EnergySwitchModel.ENERGY_TYPE_YEAR:
+                EnergyRepository.getInstance().getYearGraphEnergy(this, date);
+                break;
+
+        }
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_MY_PICK){
@@ -595,7 +705,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
                             h = mChart.getHighlightByTouchPoint(event.getX(), event.getY());
                             if (h == null) { return false; }
-                            if (h.getYPx() < event.getY()){
+                            if (h.getYPx() < event.getY() && h.getY() > 0){
                                 ResourceByPeriodFragment.this.mChart.highlightValue(
                                         ResourceByPeriodFragment.this.mChart.getHighlightByTouchPoint(
                                                 event.getX(),
@@ -649,116 +759,5 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         }
 
         mHeader.setRightSwipeable(checkIfSwipeableRight());
-    }
-
-    private void setTitle() {
-        mSubheader.setText(CalendarUtils.getCurrentDate());
-        switch (periodType) {
-            case EnergySwitchModel.ENERGY_TYPE_TODAY:
-                mHeader.setText(CalendarUtils.getDateShortText(date));
-                mSubheader.setVisibility(View.GONE);
-                mSubheader.setText(CalendarUtils.getCurrentDateShortText());
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_WEEK:
-                mHeader.setText(CalendarUtils.getWeekText(date));
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
-                mHeader.setText(String.format(Locale.US, "%s, %d",
-                        MONTH[CalendarUtils.getMonthFromDate(date) - 1],
-                        CalendarUtils.getYearFromDate(date)));
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_YEAR:
-                mHeader.setText(String.format(Locale.US,
-                        "%d",
-                        CalendarUtils.getYearFromDate(date)));
-                break;
-        }
-    }
-
-    private void load() {
-//        ArrayList<Integer> colors = new ArrayList<>();
-//        List<BarEntry> entries = new ArrayList<>();
-//
-//        int entriesMaxCount = 0;
-//        entriesMaxCount = 24;
-//
-//        for (int i = 0; i < 24; i++) {
-//            entries.add(new BarEntry(i, new Random().nextFloat() * 58));
-//            colors.add(Color.parseColor("#ffc13c"));
-//        }
-//
-//        Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
-//
-//        for (int i = 0; i < entriesMaxCount; i++) {
-//            if (i >= entries.size() || entries.get(i).getX() != i) {
-//                entries.add(i, new BarEntry(i, 0));
-//            }
-//        }
-//
-//        BarDataSet barDataSet = new BarDataSet(entries, "rub");
-//        barDataSet.setColors(colors);
-//        barDataSet.setDrawValues(false);
-//        barDataSet.setHighlightEnabled(true);
-//        BarData barData = new BarData(barDataSet);
-//        mChart.setData(barData);
-//
-//        mContent.setVisibility(View.VISIBLE);
-//        mProgressBar.setVisibility(View.GONE);
-//        mError.setVisibility(View.GONE);
-
-        removeEndpointCallbacks();
-
-        mContent.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
-        mError.setVisibility(View.GONE);
-
-        switch (periodType) {
-            case EnergySwitchModel.ENERGY_TYPE_TODAY:
-                EnergyRepository.getInstance().getDayGraphEnergy(this, date);
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_WEEK:
-                EnergyRepository.getInstance().getWeekGraphEnergy(this, date);
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
-                EnergyRepository.getInstance().getMonthGraphEnergy(this, date);
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_YEAR:
-                EnergyRepository.getInstance().getYearGraphEnergy(this, date);
-                break;
-
-        }
-    }
-
-    private boolean checkIfSwipeableRight() {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        if (periodType == EnergySwitchModel.ENERGY_TYPE_WEEK) {
-            while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
-                calendar.add(Calendar.DAY_OF_YEAR, 1);
-            }
-            calendar.getTime();
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        return new Date().after(calendar.getTime());
-    }
-
-    private void removeEndpointCallbacks() {
-        switch (periodType) {
-            case EnergySwitchModel.ENERGY_TYPE_TODAY:
-                EnergyRepository.getInstance().removeDayGraphEnergy();
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_WEEK:
-                EnergyRepository.getInstance().removeWeekGraphEnergy();
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_THIS_MONTH:
-                EnergyRepository.getInstance().removeMonthGraphEnergy();
-                break;
-            case EnergySwitchModel.ENERGY_TYPE_YEAR:
-                EnergyRepository.getInstance().removeYearGraphEnergy();
-                break;
-
-        }
     }
 }
