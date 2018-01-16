@@ -63,6 +63,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (withAdvice){
             addDefaultEnergyModels();
         }
+        setHasStableIds(true);
     }
 
     private void addDefaultEnergyModels(){
@@ -120,7 +121,6 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void addWeekEnergy(WeekEnergyModel model){
-
         if (mWeekEnergyModel == null || !mWeekEnergyModel.equals(model)){
             mWeekEnergyModel = model;
             updatePositionByType(EnergySwitchModel.ENERGY_TYPE_WEEK);
@@ -224,6 +224,11 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
     public int getItemCount() {
         if (mAdviceModel == null && mEnergyModels.isEmpty()) return 0;
         if (mAdviceModel == null && !mEnergyModels.isEmpty()) return mEnergyModels.size();
@@ -285,6 +290,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     wave = ContextCompat.getDrawable(mContext, R.drawable.wave_red);
                 }
+
                 mContainer.setBackgroundResource(background);
                 mWave.setImageDrawable(wave);
                 mPrice.setText(String.format(Locale.getDefault(), "%.0f", model.getCostNow()));

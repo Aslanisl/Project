@@ -1,10 +1,14 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
 import android.graphics.Color;
+import android.support.annotation.DrawableRes;
+import android.util.Log;
+import android.util.SparseIntArray;
 
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.livetyping.moydom.R;
 import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
 import com.livetyping.moydom.utils.CalendarUtils;
 import com.livetyping.moydom.utils.HelpUtils;
@@ -12,6 +16,7 @@ import com.livetyping.moydom.utils.HelpUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,9 +29,12 @@ import java.util.Map;
  */
 
 public class GraphEnergyModel {
-    public static final int ZONE_PEAK = 6;
-    public static final int ZONE_NIGHT = 7;
-    public static final int ZONE_SEMIPEAK = 8;
+
+    private final static int COLOR_VIOLET = Color.parseColor("#343d94");
+    private final static int COLOR_PINK = Color.parseColor("#ff5b91");
+    private final static int COLOR_YELLOW = Color.parseColor("#ffc13c");
+    private final static int[] COLORS = {COLOR_VIOLET, COLOR_PINK, COLOR_YELLOW};
+
     private List<GraphItemEnergyModel> childModels = new ArrayList<>();
 
     public void addDayModel(GraphItemEnergyModel model) {
@@ -38,6 +46,17 @@ public class GraphEnergyModel {
     }
 
     public List<ZoneSummary> getZones() {
+
+        SparseIntArray associatedColors = new SparseIntArray();
+
+        Collections.sort(childModels, (m1,m2) -> m1.getTariff().getTariffId() -
+                m2.getTariff().getTariffId());
+
+        for (GraphItemEnergyModel model : childModels){
+            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0){
+                associatedColors.append(model.getTariff().getTariffId(), COLORS[associatedColors.size()]);
+            }
+        }
 
         List<ZoneSummary> zoneSummaries = new ArrayList<>();
         boolean doesZoneExist;
@@ -66,6 +85,14 @@ public class GraphEnergyModel {
                 zoneSummary.entriesCount = 1;
                 zoneSummary.totalEnergyCost = model.getPowerCost();
                 zoneSummary.totalEnergy = model.getPower();
+
+                if (associatedColors.get(zoneSummary.id) == COLOR_YELLOW) {
+                    zoneSummary.color = R.drawable.energy_zone_yellow_gradient;
+                } else if (associatedColors.get(zoneSummary.id) == COLOR_PINK) {
+                    zoneSummary.color = R.drawable.energy_zone_pink_gradient;
+                } else
+                    zoneSummary.color = R.drawable.energy_zone_violet_gradient;
+
                 zoneSummaries.add(zoneSummary);
             }
         }
@@ -81,6 +108,20 @@ public class GraphEnergyModel {
             return new BarData(new BarDataSet(new ArrayList<>(), ""));
         }
 
+
+        HashMap<String, ArrayList<Float>> values = new HashMap<>();
+        ArrayList<Integer> colors = new ArrayList<>();
+        SparseIntArray associatedColors = new SparseIntArray();
+
+        Collections.sort(childModels, (m1,m2) -> m1.getTariff().getTariffId() -
+                m2.getTariff().getTariffId());
+
+        for (GraphItemEnergyModel model : childModels){
+
+            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0){
+                associatedColors.append(model.getTariff().getTariffId(), COLORS[associatedColors.size()]);
+            }
+        }
         Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
             if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())) {
                 return graphItemEnergyModel.getTariff().getTariffId() -
@@ -95,21 +136,12 @@ public class GraphEnergyModel {
             }
         });
 
-        HashMap<String, ArrayList<Float>> values = new HashMap<>();
-        ArrayList<Integer> colors = new ArrayList<>();
-
         for (GraphItemEnergyModel model : childModels) {
             if (! values.containsKey(model.getStringDate())) {
                 values.put(model.getStringDate(), new ArrayList<>());
             }
             values.get(model.getStringDate()).add(model.getPowerCost());
-            if (model.getTariff().getTariffId() == ZONE_PEAK) {
-                colors.add(Color.parseColor("#343d94"));
-            } else if (model.getTariff().getTariffId() == ZONE_NIGHT) {
-                colors.add(Color.parseColor("#ff5b91"));
-            } else if (model.getTariff().getTariffId() == ZONE_SEMIPEAK) {
-                colors.add(Color.parseColor("#ffc13c"));
-            }
+            colors.add(associatedColors.get(model.getTariff().getTariffId()));
         }
 
 //
@@ -184,8 +216,17 @@ public class GraphEnergyModel {
             }
         }
 
-        Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
 
+        for (BarEntry entry1 : entries){
+            if (entry1.isStacked()){
+                Log.d("dataset" + type, entry1.getX() + " " + Arrays.toString(entry1.getYVals()));
+            } else {
+                Log.d("dataset" + type, entry1.getX() + " " + entry1.getY());
+            }
+        }
+
+
+        Collections.sort(entries, (barEntry, t1) -> (int) (barEntry.getX() - t1.getX()));
 
         int colorsBefore = 0;
         if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
@@ -211,13 +252,15 @@ public class GraphEnergyModel {
         } else {
             float[] dummyEntryValues = {0, 0, 0};
 
-            for (int i = type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH ? 1 : 0;
+            for (int i = 0;
                     i < entriesMaxCount; i++) {
                 if (i >= entries.size() || entries.get(i).getX() != i) {
                     entries.add(i, new BarEntry(i, dummyEntryValues));
                 }
-
             }
+        }
+        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+            entries.remove(0);
         }
 
         if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH) {
@@ -231,6 +274,13 @@ public class GraphEnergyModel {
             }
         }
 
+        for (BarEntry entry1 : entries){
+            if (entry1.isStacked()){
+                Log.d("dataset" + type, entry1.getX() + " " + Arrays.toString(entry1.getYVals()));
+            } else {
+                Log.d("dataset" + type, entry1.getX() + " " + entry1.getY());
+            }
+        }
 //
 //        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
 //            colorsBefore = 0;
@@ -341,7 +391,7 @@ public class GraphEnergyModel {
         public int entriesCount;
         public float totalEnergy;
         public float totalEnergyCost;
-
+        @DrawableRes public int color;
     }
 
 }

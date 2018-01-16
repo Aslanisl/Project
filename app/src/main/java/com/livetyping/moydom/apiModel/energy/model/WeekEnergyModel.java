@@ -1,5 +1,7 @@
 package com.livetyping.moydom.apiModel.energy.model;
 
+import android.util.Log;
+
 import com.livetyping.moydom.utils.CalendarUtils;
 
 import java.util.ArrayList;
@@ -66,12 +68,14 @@ public class WeekEnergyModel {
                     return false;
 
                 for (int i = 0; i < anotherWeekModels.size(); i++){
+                    Log.d("WeekModelTest", !anotherWeekModels.get(i).equals(getWeekDays().get(i)) + "");
                     if (!anotherWeekModels.get(i).equals(getWeekDays().get(i))){
                         return false;
                     }
                 }
             } else if (anotherWeekModels != getWeekDays())
                 return false;
+            return true;
         }
         return super.equals(obj);
     }
