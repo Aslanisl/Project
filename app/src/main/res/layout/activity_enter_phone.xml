@@ -10,24 +10,33 @@
 
     <include layout="@layout/toolbar"/>
 
-    <TextView
-        style="@style/Gray12LeftRg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_normal"
-        android:alpha="0.54"
-        android:text="@string/leave_phone_number_we_will_call"/>
-
-    <EditText
-        android:id="@+id/activity_enter_phone_edit"
-        style="@style/Gray16LeftRg"
+    <LinearLayout
+        android:id="@+id/activity_enter_phone_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:digits="0123456789 -.+()"
-        android:hint="@string/phone_number"
-        android:imeOptions="actionDone"
-        android:inputType="number|textNoSuggestions"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Gray12LeftRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            android:alpha="0.54"
+            android:text="@string/leave_phone_number_we_will_call"/>
+
+        <EditText
+            android:id="@+id/activity_enter_phone_edit"
+            style="@style/Gray16LeftRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:digits="0123456789 -.+()"
+            android:hint="@string/phone_number"
+            android:imeOptions="actionDone"
+            android:inputType="number|textNoSuggestions"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -10,23 +10,31 @@
 
     <include layout="@layout/toolbar"/>
 
-    <TextView
-        style="@style/Gray12LeftRg"
-        android:alpha="0.54"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_normal"
-        android:text="@string/enter_code_from_company"/>
-
-    <EditText
-        android:id="@+id/activity_manually_code_edit"
-        style="@style/Gray16LeftRg"
+    <LinearLayout
+        android:id="@+id/activity_manually_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/spacing_small"
-        android:layout_marginStart="@dimen/spacing_small"
-        android:hint="@string/code"
-        android:imeOptions="actionDone"
-        android:inputType="textNoSuggestions|textVisiblePassword"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Gray12LeftRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            android:alpha="0.54"
+            android:text="@string/enter_code_from_company"/>
+
+        <EditText
+            android:id="@+id/activity_manually_code_edit"
+            style="@style/Gray16LeftRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:hint="@string/code"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions|textVisiblePassword"/>
+
+    </LinearLayout>
 
 </LinearLayout>

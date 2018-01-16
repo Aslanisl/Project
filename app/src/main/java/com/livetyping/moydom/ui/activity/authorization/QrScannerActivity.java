@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.BeepManager;
@@ -32,6 +33,7 @@ public class QrScannerActivity extends AuthorizationActivity implements BarcodeC
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_CAMERA_CODE_FROM_ACTIVITY = 2;
 
+    @BindView(R.id.activity_qr_scanner_container) RelativeLayout mContainer;
     @BindView(R.id.activity_qr_scanner_view) DecoratedBarcodeView mScannerView;
     @BindView(R.id.activity_qr_scanner_flash) ImageView mFlashView;
 
@@ -71,7 +73,7 @@ public class QrScannerActivity extends AuthorizationActivity implements BarcodeC
     public void barcodeResult(BarcodeResult result) {
         mScannerView.pause();
         String uuid = result.getText();
-        callAuthorization(uuid);
+        callAuthorization(uuid, mContainer);
     }
 
     @Override

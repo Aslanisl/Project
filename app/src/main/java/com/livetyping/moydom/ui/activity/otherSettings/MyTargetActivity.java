@@ -6,12 +6,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.AverageEnergyCostRepository;
 import com.livetyping.moydom.ui.activity.BaseActivity;
+import com.livetyping.moydom.ui.custom.CustomButtonView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ public class MyTargetActivity extends BaseActivity implements AverageEnergyCostR
 
     @BindView(R.id.toolbar) Toolbar mToolbar;
 
+    @BindView(R.id.activity_my_target_container) RelativeLayout mContainer;
     @BindView(R.id.activity_my_target_targets) RecyclerView mMyTargetRecycler;
     private MyTargetRecyclerAdapter mAdapter;
 
@@ -43,8 +46,9 @@ public class MyTargetActivity extends BaseActivity implements AverageEnergyCostR
         mToolbar.setNavigationOnClickListener(view -> onBackPressed());
 
         mPrefs = Prefs.getInstance();
-        mCostRepository = AverageEnergyCostRepository.getInstance();
         initViews();
+        showProgress(mContainer);
+        mCostRepository = AverageEnergyCostRepository.getInstance();
     }
 
     private void initViews(){
@@ -65,11 +69,13 @@ public class MyTargetActivity extends BaseActivity implements AverageEnergyCostR
 
     @Override
     public void onAverageCostResponse(float averageCost) {
+        removeProgress(mContainer);
         mAdapter.setCurrentCost(averageCost);
     }
 
     @Override
     public void onErrorResponse(String error) {
+        removeProgress(mContainer);
         showToast(error);
     }
 
