@@ -87,8 +87,11 @@ public class NewTargetActivity extends BaseActivity implements AverageEnergyCost
 
     @Override
     public void onAverageCostResponse(float averageCost) {
-        mAverageCost = averageCost;
-        mTargetsAdapter.setCurrentCost(mAverageCost);
+        int temp = Math.round(averageCost * 1000) / 1000;
+        if (temp != 0) {
+            mAverageCost = averageCost;
+            mTargetsAdapter.setCurrentCost(mAverageCost);
+        }
     }
 
     @Override
