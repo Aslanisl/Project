@@ -2,7 +2,7 @@ package com.livetyping.moydom.ui.custom;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.utils.MPPointF;
 import com.livetyping.moydom.R;
@@ -22,14 +22,10 @@ public class MyMarkerView extends com.github.mikephil.charting.components.Marker
     }
 
     public void setHeight(int height){
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        RelativeLayout.LayoutParams lp = (LayoutParams) view.getLayoutParams();
         lp.height = height;
         view.setLayoutParams(lp);
         view.invalidate();
-        lp = getLayoutParams();
-        lp.height = height;
-        setLayoutParams(lp);
-        invalidate();
     }
     @Override
     public MPPointF getOffset() {

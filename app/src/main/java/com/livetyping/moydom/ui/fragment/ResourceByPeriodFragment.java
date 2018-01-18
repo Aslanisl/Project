@@ -8,14 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,6 +35,7 @@ import com.livetyping.moydom.ui.custom.MyMarkerView;
 import com.livetyping.moydom.ui.custom.SwipeableTextView;
 import com.livetyping.moydom.ui.custom.ZoneDetailsView;
 import com.livetyping.moydom.utils.CalendarUtils;
+import com.livetyping.moydom.utils.GlideApp;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -84,8 +84,8 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
     TextView labelCost;
     @BindView(R.id.label_data)
     TextView labelData;
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    @BindView(R.id.progress_view)
+    ImageView mProgressView;
     @BindView(R.id.error)
     TextView mError;
     @BindView(R.id.content)
@@ -101,6 +101,8 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
     @BindView(R.id.statistics_container)
     ViewGroup mStatisticsContainer;
+    @BindView(R.id.statistics_zones_container)
+    ViewGroup mStatisticsZonesContainer;
 
     @BindView(R.id.nothing_found)
     ViewGroup mNothingFound;
@@ -143,7 +145,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
             case EnergySwitchModel.ENERGY_TYPE_YEAR:
                 EnergyRepository.getInstance().removeYearGraphEnergy();
                 break;
-
         }
     }
 
@@ -159,11 +160,11 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
             mHeaderContainer.setVisibility(View.GONE);
         }
 
-        ((MyMarkerView) mChart.getMarker()).setHeight((int) (h.getYPx()));
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) indicator.getLayoutParams();
-        lp.leftMargin = Math.round(h.getXPx());
+        lp.leftMargin = Math.round(h.getXPx()) - 1;
         indicator.setLayoutParams(lp);
         indicator.invalidate();
+        ((MyMarkerView) mChart.getMarker()).setHeight((int) (h.getYPx()));
 
         labelCost.setText(String.format(Locale.US, getString(R.string.rub_measure),
                 mChart.getBarData()
@@ -213,8 +214,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         label.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         int marginMax = displayMetrics.widthPixels - label.getMeasuredWidth() - marginMin;
 
-        Log.d("***", displayMetrics.widthPixels + " " + label.getWidth() + " " + marginMin);
-
         lp.leftMargin = Math.min(Math.max(margin, marginMin), marginMax);
         label.setLayoutParams(lp);
         label.invalidate();
@@ -236,7 +235,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
         getActivity().runOnUiThread(() -> {
 
-
             BarData barData = energy.getGraphData(periodType);
 
             if (barData.getEntryCount() == 0) {
@@ -247,8 +245,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                 mChart.invalidate();
                 return;
             }
-
-
             mChart.setData(barData);
             mChart.notifyDataSetChanged();
             mChart.invalidate();
@@ -274,14 +270,13 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                     energy.getAveragePower()));
 
 
-            mProgressBar.setVisibility(View.GONE);
+            mProgressView.setVisibility(View.GONE);
             mError.setVisibility(View.GONE);
             mContent.setVisibility(View.VISIBLE);
 
             mShare.setOnClickListener((view) -> {
 
-                if (wasSharePressed)
-                    return;
+                if (wasSharePressed) { return; }
                 wasSharePressed = true;
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -294,9 +289,12 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                 intentPick.setAction(Intent.ACTION_PICK_ACTIVITY);
                 intentPick.putExtra(Intent.EXTRA_TITLE, "Launch using");
                 intentPick.putExtra(Intent.EXTRA_INTENT, sharingIntent);
-                this.startActivityForResult(Intent.createChooser(sharingIntent, "Поделиться статистикой"), REQUEST_CODE_MY_PICK);
+                this.startActivityForResult(Intent.createChooser(sharingIntent,
+                        "Поделиться статистикой"), REQUEST_CODE_MY_PICK);
 
             });
+
+            mStatisticsZonesContainer.removeAllViews();
 
             List<GraphEnergyModel.ZoneSummary> zoneSummaries = energy.getZones();
 
@@ -307,7 +305,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                         new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT);
                 zoneDetailsView.setLayoutParams(lp);
-                mStatisticsContainer.addView(zoneDetailsView);
+                mStatisticsZonesContainer.addView(zoneDetailsView);
 //
 //                if (i == 0) {
 //
@@ -430,7 +428,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         if (code == 2007) {
             showNothingFound();
         } else {
-            mProgressBar.setVisibility(View.GONE);
+            mProgressView.setVisibility(View.GONE);
             mError.setVisibility(View.VISIBLE);
             mContent.setVisibility(View.GONE);
             mError.setText(String.format("Произошла ошибка: %s", message));
@@ -440,7 +438,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
     private void showNothingFound() {
         mContent.setVisibility(View.VISIBLE);
-        mProgressBar.setVisibility(View.GONE);
+        mProgressView.setVisibility(View.GONE);
         mError.setVisibility(View.GONE);
         mNothingFound.setVisibility(View.VISIBLE);
         mStatisticsContainer.setVisibility(View.GONE);
@@ -544,13 +542,13 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 //        mChart.setData(barData);
 //
 //        mContent.setVisibility(View.VISIBLE);
-//        mProgressBar.setVisibility(View.GONE);
+//        mProgressView.setVisibility(View.GONE);
 //        mError.setVisibility(View.GONE);
 
         removeEndpointCallbacks();
 
         mContent.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
+        mProgressView.setVisibility(View.VISIBLE);
         mError.setVisibility(View.GONE);
 
         switch (periodType) {
@@ -572,7 +570,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_MY_PICK){
+        if (requestCode == REQUEST_CODE_MY_PICK) {
             wasSharePressed = false;
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -597,6 +595,9 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mUnbinder = ButterKnife.bind(this, view);
 
         initData();
+
+
+        GlideApp.with(this).asGif().load(R.drawable.loader).into(mProgressView);
 
         label.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_DOWN) { mChart.highlightValue(0, - 1); }
@@ -674,6 +675,7 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
         mChart.setNoDataText(getString(R.string.no_data));
         mChart.setNoDataTextColor(Color.parseColor("#8a1a1a1a"));
 
+
         mChart.setOnTouchListener(new ChartTouchListener(mChart) {
 
             boolean highlighting = false;
@@ -687,9 +689,9 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                     case MotionEvent.ACTION_DOWN:
                         Highlight h = mChart.getHighlightByTouchPoint(event.getX(), event.getY());
                         if (h == null) { return false; }
-                        highlighting = (h.getYPx() < event.getY());
+                        highlighting = (h.getYPx() < event.getY() && h.getY() > 0 &&
+                                mChart.getContentRect().contains(h.getXPx(), event.getY()));
                         startX = event.getX();
-                        onNothingSelected();
                         if (highlighting) {
                             ResourceByPeriodFragment.this.mChart.highlightValue(
                                     ResourceByPeriodFragment.this.mChart.getHighlightByTouchPoint(
@@ -702,10 +704,10 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                         break;
                     case MotionEvent.ACTION_MOVE:
                         if (highlighting) {
-
                             h = mChart.getHighlightByTouchPoint(event.getX(), event.getY());
                             if (h == null) { return false; }
-                            if (h.getYPx() < event.getY() && h.getY() > 0){
+                            if (h.getYPx() < event.getY() && h.getY() > 0 &&
+                                    mChart.getContentRect().contains(h.getXPx(), event.getY())) {
                                 ResourceByPeriodFragment.this.mChart.highlightValue(
                                         ResourceByPeriodFragment.this.mChart.getHighlightByTouchPoint(
                                                 event.getX(),
@@ -737,8 +739,6 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
             mChart.zoom(31 / 12.5f, 1, 0, 0);
             mChart.setDragEnabled(true);
         }
-
-
         mHeader.setOnSwipeListener(this);
         load();
         return view;

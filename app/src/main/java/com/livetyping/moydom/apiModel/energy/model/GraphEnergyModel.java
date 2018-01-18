@@ -343,22 +343,50 @@ public class GraphEnergyModel {
 
     public float getAveragePowerCost() {
         float cost = 0;
+        int startIndex = 0;
+        int endIndex = childModels.size();
+        for (int i = 0; i < childModels.size(); i++) {
+            if (childModels.get(i).getPowerCost() > 0) {
+                startIndex = i;
+                break;
+            }
+        }
+        for (int i = childModels.size() - 1; i >= 0; i--) {
+            if (childModels.get(i).getPowerCost() > 0) {
+                endIndex = i;
+                break;
+            }
+        }
         if (childModels != null && ! childModels.isEmpty()) {
             for (GraphItemEnergyModel model : childModels) {
                 cost = cost + model.getPowerCost();
             }
-            cost /= childModels.size();
+            cost /= (endIndex - startIndex);
         }
         return cost;
     }
 
     public float getAveragePower() {
         float power = 0;
+        int startIndex = 0;
+        int endIndex = childModels.size();
+        for (int i = 0; i < childModels.size(); i++) {
+            if (childModels.get(i).getPowerCost() > 0) {
+                startIndex = i;
+                break;
+            }
+        }
+        for (int i = childModels.size() - 1; i >= 0; i--) {
+            if (childModels.get(i).getPowerCost() > 0) {
+                endIndex = i;
+                break;
+            }
+        }
         if (childModels != null && ! childModels.isEmpty()) {
             for (GraphItemEnergyModel model : childModels) {
                 power = power + model.getPower();
             }
-            power /= childModels.size();
+            power /= (endIndex - startIndex);
         }
         return power;
     }

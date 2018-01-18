@@ -118,7 +118,7 @@ public class TodayEnergyModel {
                     tariffId == anotherModel.tariffId &&
                     tariffTypeId == anotherModel.tariffTypeId &&
                     tariffValue == anotherModel.tariffValue &&
-                    date.equals(anotherModel.date);
+                    (date == null || date.equals(anotherModel.date));
         }
         return super.equals(obj);
     }
