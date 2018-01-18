@@ -108,6 +108,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         initToolBar();
         mPhotoAdapter = new AppealPhotoRecyclerAdapter();
         mPhotosRecycler.setAdapter(mPhotoAdapter);
+        mPhotoAdapter.setOnDeletePhotoListener(this::removeFile);
         //width photo view in dp
         int width = (int)(getResources().getDimension(R.dimen.appeal_photo_width_height) / getResources().getDisplayMetrics().density);
         mPhotosRecycler.setLayoutManager(new GridLayoutManager(this, HelpUtils.calculateNoOfColumns(this, width)));
@@ -364,8 +365,14 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         mPhotoAdapter.addFile(file);
     }
 
+    private void removeFile(int position){
+        if (position < mPhotoFiles.size()){
+            mPhotoFiles.remove(position);
+        }
+    }
+
     private void sendAppeal(){
-        HelpUtils.hideSoftKeyborad(this);
+        HelpUtils.hideSoftKeyboard(this, mAppealBody.getWindowToken());
         Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_EMAIL, mSelectedModel.getEmail() != null ? new String[] { mSelectedModel.getEmail() } : " ");
@@ -375,12 +382,13 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
         intent.putExtra(Intent.EXTRA_TEXT, mAppealBody.getText().toString());
         ArrayList<Uri> uris = new ArrayList<>();
         for (File file : mPhotoFiles){
-            Uri uri = Uri.fromFile(file);
+            Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".fileprovider", file);
             uris.add(uri);
         }
         if (!uris.isEmpty()) {
             intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
         }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Intent emailIntent = Intent.createChooser(intent, getString(R.string.send_appeal_with_email));
         if (emailIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(emailIntent, REQUEST_CODE_SEND_APPEAL);
@@ -390,6 +398,7 @@ public class AppealActivity extends BaseActivity implements AppealPhotoSelectorF
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        HelpUtils.hideSoftKeyboard(this, mAppealBody.getWindowToken());
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) mCompositeDisposable.dispose();
         if (mMenuItemHandler != null && mChangeMenuItemRunnable != null) mMenuItemHandler.removeCallbacks(mChangeMenuItemRunnable);
     }

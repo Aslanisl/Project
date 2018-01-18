@@ -17,7 +17,6 @@ import com.livetyping.moydom.ui.fragment.BaseFragment;
 import com.livetyping.moydom.utils.AlertDialogUtils;
 import com.livetyping.moydom.utils.HelpUtils;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;

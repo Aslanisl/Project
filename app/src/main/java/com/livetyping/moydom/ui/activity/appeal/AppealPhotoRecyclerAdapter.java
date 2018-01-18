@@ -29,7 +29,17 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
 
     private List<File> mPhotoFiles = new ArrayList<>();
 
+    public interface OnDeletePhotoListener{
+        void deletePhoto(int position);
+    }
+
+    private OnDeletePhotoListener mOnDeletePhotoListener;
+
     public AppealPhotoRecyclerAdapter() {
+    }
+
+    public void setOnDeletePhotoListener(OnDeletePhotoListener listener){
+        mOnDeletePhotoListener = listener;
     }
 
     public void addFiles(List<File> files){
@@ -47,6 +57,9 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
     public void removeFile(File file){
         int position = mPhotoFiles.indexOf(file);
         if (position != -1){
+            if (mOnDeletePhotoListener != null){
+                mOnDeletePhotoListener.deletePhoto(position);
+            }
             mPhotoFiles.remove(file);
             notifyItemRemoved(position);
         }
@@ -54,6 +67,9 @@ public class AppealPhotoRecyclerAdapter extends RecyclerView.Adapter<AppealPhoto
 
     public void removeFile(int position){
         if (position < mPhotoFiles.size()){
+            if (mOnDeletePhotoListener != null){
+                mOnDeletePhotoListener.deletePhoto(position);
+            }
             mPhotoFiles.remove(position);
             notifyItemRemoved(position);
         }

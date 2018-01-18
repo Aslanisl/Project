@@ -1,13 +1,11 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -20,7 +18,6 @@ import com.livetyping.moydom.ui.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.utils.HelpUtils;
 import com.livetyping.moydom.utils.NetworkUtil;
-import com.livetyping.moydom.api.ServerCallback;
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
 
 import butterknife.BindView;
@@ -88,7 +85,7 @@ public class EnterPhoneActivity extends BaseActivity implements MaskedTextChange
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_done:
-                HelpUtils.hideSoftKeyborad(this);
+                HelpUtils.hideSoftKeyboard(this);
                 enableOptionMenu(false);
                 sendPhone();
                 return true;
