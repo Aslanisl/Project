@@ -1,14 +1,10 @@
 package com.livetyping.moydom.ui.activity.authorization;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -128,7 +124,7 @@ public class ManuallyEnterCodeActivity extends AuthorizationActivity {
 
     private void callCode(){
         enableOptionMenu(false);
-        HelpUtils.hideSoftKeyborad(this);
+        HelpUtils.hideSoftKeyboard(this);
         callAuthorization(mCode, mContainer);
     }
 }

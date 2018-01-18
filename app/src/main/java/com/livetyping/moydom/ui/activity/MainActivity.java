@@ -16,6 +16,7 @@ import com.livetyping.moydom.ui.fragment.mainScreen.CamerasFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.MyHomeFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.OtherFragment;
 import com.livetyping.moydom.ui.fragment.mainScreen.ResourcesFragment;
+import com.livetyping.moydom.utils.HelpUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

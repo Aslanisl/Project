@@ -1,7 +1,10 @@
 package com.livetyping.moydom.utils;
 
 import android.content.Context;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -51,11 +54,19 @@ public class HelpUtils {
         }
     }
 
-    public static void hideSoftKeyborad(Context context){
+    public static void hideSoftKeyboard(Context context){
         InputMethodManager imm = (InputMethodManager)
                 context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm != null){
-            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+    public static void hideSoftKeyboard(Context context, IBinder windowToken) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(windowToken, 0);
         }
     }
 
