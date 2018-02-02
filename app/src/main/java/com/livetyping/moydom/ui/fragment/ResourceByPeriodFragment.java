@@ -259,16 +259,13 @@ public class ResourceByPeriodFragment extends BaseFragment implements OnChartVal
                     getString(R.string.short_energy_measure),
                     energy.getTotalPower()));
             mAverageCost.setText(String.format(Locale.US,
-                    periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
-                            getString(R.string.short_rub_measure) :
-                            getString(R.string.short_rub_measure),
-                    energy.getAveragePowerCost(periodType)));
+                    getString(R.string.short_rub_measure),
+                    ((float) Math.round(energy.getAveragePowerCost(periodType)))));
             mAverageValue.setText(String.format(Locale.US,
                     periodType == EnergySwitchModel.ENERGY_TYPE_YEAR ?
                             getString(R.string.short_energy_measure) :
                             getString(R.string.energy_measure),
                     energy.getAveragePower(periodType)));
-
 
             mProgressView.setVisibility(View.GONE);
             mError.setVisibility(View.GONE);
