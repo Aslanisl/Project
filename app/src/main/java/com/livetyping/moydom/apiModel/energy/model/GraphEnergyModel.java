@@ -49,12 +49,13 @@ public class GraphEnergyModel {
 
         SparseIntArray associatedColors = new SparseIntArray();
 
-        Collections.sort(childModels, (m1,m2) -> m1.getTariff().getTariffId() -
+        Collections.sort(childModels, (m1, m2) -> m1.getTariff().getTariffId() -
                 m2.getTariff().getTariffId());
 
-        for (GraphItemEnergyModel model : childModels){
-            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0){
-                associatedColors.append(model.getTariff().getTariffId(), COLORS[associatedColors.size()]);
+        for (GraphItemEnergyModel model : childModels) {
+            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0) {
+                associatedColors.append(model.getTariff().getTariffId(),
+                        COLORS[associatedColors.size()]);
             }
         }
 
@@ -90,8 +91,7 @@ public class GraphEnergyModel {
                     zoneSummary.color = R.drawable.energy_zone_yellow_gradient;
                 } else if (associatedColors.get(zoneSummary.id) == COLOR_PINK) {
                     zoneSummary.color = R.drawable.energy_zone_pink_gradient;
-                } else
-                    zoneSummary.color = R.drawable.energy_zone_violet_gradient;
+                } else { zoneSummary.color = R.drawable.energy_zone_violet_gradient; }
 
                 zoneSummaries.add(zoneSummary);
             }
@@ -113,13 +113,14 @@ public class GraphEnergyModel {
         ArrayList<Integer> colors = new ArrayList<>();
         SparseIntArray associatedColors = new SparseIntArray();
 
-        Collections.sort(childModels, (m1,m2) -> m1.getTariff().getTariffId() -
+        Collections.sort(childModels, (m1, m2) -> m1.getTariff().getTariffId() -
                 m2.getTariff().getTariffId());
 
-        for (GraphItemEnergyModel model : childModels){
+        for (GraphItemEnergyModel model : childModels) {
 
-            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0){
-                associatedColors.append(model.getTariff().getTariffId(), COLORS[associatedColors.size()]);
+            if (associatedColors.indexOfKey(model.getTariff().getTariffId()) < 0) {
+                associatedColors.append(model.getTariff().getTariffId(),
+                        COLORS[associatedColors.size()]);
             }
         }
         Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
@@ -217,8 +218,8 @@ public class GraphEnergyModel {
         }
 
 
-        for (BarEntry entry1 : entries){
-            if (entry1.isStacked()){
+        for (BarEntry entry1 : entries) {
+            if (entry1.isStacked()) {
                 Log.d("dataset" + type, entry1.getX() + " " + Arrays.toString(entry1.getYVals()));
             } else {
                 Log.d("dataset" + type, entry1.getX() + " " + entry1.getY());
@@ -259,7 +260,7 @@ public class GraphEnergyModel {
                 }
             }
         }
-        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH){
+        if (type == EnergySwitchModel.ENERGY_TYPE_THIS_MONTH) {
             entries.remove(0);
         }
 
@@ -274,8 +275,8 @@ public class GraphEnergyModel {
             }
         }
 
-        for (BarEntry entry1 : entries){
-            if (entry1.isStacked()){
+        for (BarEntry entry1 : entries) {
+            if (entry1.isStacked()) {
                 Log.d("dataset" + type, entry1.getX() + " " + Arrays.toString(entry1.getYVals()));
             } else {
                 Log.d("dataset" + type, entry1.getX() + " " + entry1.getY());
@@ -341,54 +342,103 @@ public class GraphEnergyModel {
         return result.toString();
     }
 
-    public float getAveragePowerCost() {
+    public float getAveragePowerCost(int type) {
         float cost = 0;
-        int startIndex = 0;
-        int endIndex = childModels.size();
+        String startStringDate = "";
+        String endStringDate = "";
+
+        if (childModels == null || childModels.isEmpty()) {
+            return 0;
+        }
+
+        Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
+            if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())) {
+                return graphItemEnergyModel.getTariff().getTariffId() -
+                        t1.getTariff().getTariffId();
+            } else {
+                try {
+                    return graphItemEnergyModel.getDate().compareTo(t1.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
+
+        for (GraphItemEnergyModel model : childModels) {
+            cost = cost + model.getPowerCost();
+        }
+        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
+            return cost / childModels.size();
+        }
+
         for (int i = 0; i < childModels.size(); i++) {
             if (childModels.get(i).getPowerCost() > 0) {
-                startIndex = i;
+                startStringDate = childModels.get(i).getStringDate();
                 break;
             }
         }
         for (int i = childModels.size() - 1; i >= 0; i--) {
             if (childModels.get(i).getPowerCost() > 0) {
-                endIndex = i;
+                endStringDate = childModels.get(i).getStringDate();
                 break;
             }
         }
-        if (childModels != null && ! childModels.isEmpty()) {
-            for (GraphItemEnergyModel model : childModels) {
-                cost = cost + model.getPowerCost();
-            }
-            cost /= (endIndex - startIndex);
-        }
-        return cost;
+
+        return cost / (CalendarUtils.getDiffInUnits(startStringDate,
+                endStringDate,
+                type == EnergySwitchModel.ENERGY_TYPE_YEAR ? Calendar.MONTH :
+                        Calendar.DAY_OF_YEAR) + 1);
     }
 
-    public float getAveragePower() {
+    public float getAveragePower(int type) {
+        if (childModels == null || childModels.isEmpty()) {
+            return 0;
+        }
+
         float power = 0;
-        int startIndex = 0;
-        int endIndex = childModels.size();
+        String startStringDate = "";
+        String endStringDate = "";
+
+
+        Collections.sort(childModels, (graphItemEnergyModel, t1) -> {
+            if (graphItemEnergyModel.getStringDate().equals(t1.getStringDate())) {
+                return graphItemEnergyModel.getTariff().getTariffId() -
+                        t1.getTariff().getTariffId();
+            } else {
+                try {
+                    return graphItemEnergyModel.getDate().compareTo(t1.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
+
+        if (type == EnergySwitchModel.ENERGY_TYPE_TODAY) {
+            return power / childModels.size();
+        }
         for (int i = 0; i < childModels.size(); i++) {
             if (childModels.get(i).getPowerCost() > 0) {
-                startIndex = i;
+                startStringDate = childModels.get(i).getStringDate();
                 break;
             }
         }
         for (int i = childModels.size() - 1; i >= 0; i--) {
             if (childModels.get(i).getPowerCost() > 0) {
-                endIndex = i;
+                endStringDate = childModels.get(i).getStringDate();
                 break;
             }
         }
-        if (childModels != null && ! childModels.isEmpty()) {
-            for (GraphItemEnergyModel model : childModels) {
-                power = power + model.getPower();
-            }
-            power /= (endIndex - startIndex);
+
+        for (GraphItemEnergyModel model : childModels) {
+            power = power + model.getPower();
         }
-        return power;
+        return power / (CalendarUtils.getDiffInUnits(startStringDate,
+                endStringDate,
+                type == EnergySwitchModel.ENERGY_TYPE_YEAR ? Calendar.MONTH :
+                        Calendar.DAY_OF_YEAR) + 1);
+
     }
 
     public String getWeekDate() {
@@ -419,7 +469,8 @@ public class GraphEnergyModel {
         public int entriesCount;
         public float totalEnergy;
         public float totalEnergyCost;
-        @DrawableRes public int color;
+        @DrawableRes
+        public int color;
     }
 
 }

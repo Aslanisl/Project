@@ -195,4 +195,19 @@ public class CalendarUtils {
         result += " - " + new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(date);
         return result;
     }
+
+    public static float getDiffInUnits(String startStringDate, String endStringDate, int i) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_SERVER_TIMESTAMP_FORMAT,
+                Locale.getDefault());
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        try {
+            start.setTime(sdf.parse(startStringDate));
+            end.setTime(sdf.parse(endStringDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        return end.get(i) - start.get(i);
+    }
 }
