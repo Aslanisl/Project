@@ -8,6 +8,10 @@ import com.livetyping.moydom.utils.CalendarUtils;
 
 import org.simpleframework.xml.Root;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,15 +57,25 @@ public class WeekEnergyResponse extends BaseModel{
 
     public TodayEnergyModel getTodayEnergyModel(){
         if (records != null && !records.isEmpty()) {
+            List<TodayEnergyModel> todayModels = new ArrayList<>();
+
             for (int i = 0; i < records.size(); i++) {
                 Record record = records.get(i);
                 Map<String, String> values = record.getRecords();
                 if (values != null) {
                     String recordDate = values.get(DT);
                     if (recordDate != null && CalendarUtils.isTodayDate(recordDate)) {
-                        return getDayEnergyModel(values);
+                        todayModels.add(getDayEnergyModel(values));
                     }
                 }
+            }
+
+            if (!todayModels.isEmpty()){
+                TodayEnergyModel todayEnergyModel = new TodayEnergyModel();
+                for (TodayEnergyModel model : todayModels){
+                    todayEnergyModel.sumTodayModelEnergyValues(model);
+                }
+                return todayEnergyModel;
             }
         }
         return new TodayEnergyModel();

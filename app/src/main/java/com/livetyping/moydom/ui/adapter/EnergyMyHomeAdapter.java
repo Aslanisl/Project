@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -236,7 +237,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     class EnergyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_energy_container) RelativeLayout mContainer;
+        @BindView(R.id.item_energy_container) ViewGroup mContainer;
         @BindView(R.id.item_energy_current_period) TextView mCurrentPeriod;
         @BindView(R.id.item_energy_current_date) TextView mCurrentDate;
         @BindView(R.id.item_energy_measure) TextView mMeasure;
@@ -245,7 +246,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         @BindView(R.id.item_energy_progress_bar) ProgressBar mProgress;
         @BindView(R.id.item_energy_wave) ImageView mWave;
 
-        @BindView(R.id.item_energy_month_container) RelativeLayout mMonthContainer;
+        @BindView(R.id.item_energy_month_container) ViewGroup mMonthContainer;
         @BindView(R.id.item_energy_month_current_period) TextView mMonthCurrentPeriod;
         @BindView(R.id.item_energy_month_current_date) TextView mMonthCurrentDate;
         @BindView(R.id.item_energy_month_measure) TextView mMonthMeasure;
@@ -330,7 +331,7 @@ public class EnergyMyHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
-        private void bindContainerWaveColor(RelativeLayout container, ImageView wave,
+        private void bindContainerWaveColor(ViewGroup container, ImageView wave,
                                             float cost, int type){
             float targetCost = 0;
             switch (type) {

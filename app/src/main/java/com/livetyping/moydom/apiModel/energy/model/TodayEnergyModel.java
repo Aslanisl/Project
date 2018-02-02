@@ -85,6 +85,13 @@ public class TodayEnergyModel {
         this.tariffTimes.add(tariffTime);
     }
 
+    /** sum this today model with another model with results */
+    public void sumTodayModelEnergyValues(TodayEnergyModel model){
+        this.power += model.getPower();
+        this.powerCost += model.getPowerCost();
+        this.tariffValue += model.getTariffValue();
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof  TodayEnergyModel){
