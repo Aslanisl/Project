@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/azul</color>
+    <color name="colorPrimaryDark">@color/sapphire</color>
+    <color name="colorAccent">@color/azul</color>
+
+    <color name="azul">#315ee4</color>
+    <color name="sapphire">#2547ab</color>
+
+    <color name="white">#ffffff</color>
+    <color name="white_gray">#f5f5f5</color>
+    <color name="close_gray">#ff737374</color>
+    <color name="blue_gray">#FFA0AFF0</color>
+    <color name="gray">#1a1a1a</color>
+    <color name="black_gray">#61000000</color>
+    <color name="close_black">#de000000</color>
+    <color name="black">#000000</color>
+
+    <color name="qr_viewfinder_mask">#85000000</color>
+
+    <color name="bottom_navigation_view_background">#f8f8f9</color>
+
+    <color name="internet_not_connected_color">#ef1c0b</color>
+    <color name="internet_connecting_color">#a1a1a1</color>
+    <color name="internet_connected_color">#189f4f</color>
+
 </resources>

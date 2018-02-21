@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    app:background="?attr/selectableItemBackground">
+
+    <FrameLayout
+        android:id="@+id/item_energy_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/item_energy_wave"
+            android:layout_width="276dp"
+            android:layout_height="74dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginEnd="-14dp"
+            android:layout_marginTop="26dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/item_energy_progress_bar"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_margin="@dimen/spacing_normal"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/item_energy_current_period"
+                style="@style/White16LeftBld"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginTop="@dimen/spacing_normal"
+                android:layout_toStartOf="@+id/item_energy_price"/>
+
+            <TextView
+                android:id="@+id/item_energy_current_date"
+                style="@style/White14LeftMd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/item_energy_current_period"
+                android:layout_marginBottom="@dimen/spacing_tiny"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_toStartOf="@+id/item_energy_price"/>
+
+            <TextView
+                android:id="@+id/item_energy_price"
+                style="@style/White52RightRg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_toStartOf="@id/item_energy_measure"
+                android:maxLines="1"/>
+
+            <TextView
+                android:id="@+id/item_energy_unit"
+                style="@style/White14RightBld"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/item_energy_price"
+                android:layout_marginBottom="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_normal"/>
+
+            <TextView
+                android:id="@+id/item_energy_measure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/item_energy_unit"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_big"/>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/item_energy_month_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_tiny"
+        android:background="?attr/selectableItemBackground"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/item_energy_month_wave"
+            android:layout_width="276dp"
+            android:layout_height="74dp"
+            android:layout_gravity="end|bottom"
+            android:layout_marginBottom="-8dp"
+            android:layout_marginEnd="-14dp"
+            android:layout_marginTop="26dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/item_energy_month_top_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/item_energy_month_current_period"
+                    style="@style/White16LeftBld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_toStartOf="@+id/item_energy_month_price"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_current_date"
+                    style="@style/White14LeftMd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/item_energy_month_current_period"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_toStartOf="@+id/item_energy_month_price"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_price"
+                    style="@style/White52RightRg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_toStartOf="@+id/item_energy_month_measure"
+                    android:maxLines="1"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_measure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/item_energy_month_price"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_big"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_unit"
+                    style="@style/White14RightBld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/item_energy_month_price"
+                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginTop="-6dp"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_tiny">
+
+                <View
+                    android:id="@+id/item_energy_month_separating_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:background="@color/white"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_prediction_period"
+                    style="@style/White16LeftBld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/item_energy_month_separating_line"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:text="@string/prediction"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_prediction_unit"
+                    style="@style/White14RightBld"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/item_energy_month_prediction_price"
+                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:layout_marginEnd="@dimen/spacing_normal"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_prediction_measure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/item_energy_month_prediction_price"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="@dimen/spacing_normal"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_big"/>
+
+                <TextView
+                    android:id="@+id/item_energy_month_prediction_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_energy_month_separating_line"
+                    android:layout_marginStart="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_tiny"
+                    android:layout_toStartOf="@id/item_energy_month_prediction_measure"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="32sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

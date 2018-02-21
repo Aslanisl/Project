@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_my_home"
+        android:icon="@drawable/home_inactive"
+        app:showAsAction="always|withText"
+        android:title="@string/my_home"/>
+    <item
+        android:id="@+id/action_resources"
+        android:icon="@drawable/resources_inactive"
+        app:showAsAction="always|withText"
+        android:title="@string/resources"/>
+    <item
+        android:id="@+id/action_cameras"
+        android:icon="@drawable/cameras_inactive"
+        app:showAsAction="always|withText"
+        android:title="@string/cameras"/>
+    <item
+        android:id="@+id/action_other"
+        android:icon="@drawable/more_inactive"
+        app:showAsAction="always|withText"
+        android:title="@string/other"/>
+</menu>

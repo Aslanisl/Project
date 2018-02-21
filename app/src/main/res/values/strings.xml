@@ -1,3 +1,133 @@
 <resources>
-    <string name="app_name">Moy Dom</string>
+    <string name="app_name">Мой дом</string>
+    <string name="no_internet_connection">Нет интернет соединения</string>
+    <string name="check_internet_settings">Проверьте настройки вашего интернета и попробуйте еще раз</string>
+    <string name="check_again">Попробовать еще раз</string>
+    <string name="bring_list_with_code_qr">Поднесите лист с кодом полученный от управляющей компании</string>
+    <string name="enter_code_manually">Ввести код вручную</string>
+    <string name="dont_have_permission_to_camera">Похоже, у нас нет доступа к вашей камере</string>
+    <string name="please_need_request_to_camera_for_enter_app">Пожалуйста, разрешите доступ к вашей камере, это необходимо для входа в приложение</string>
+    <string name="enable_access">Разрешить доступ</string>
+    <string name="enable_access_settings">Перейти в настройки</string>
+    <string name="have_to_go_setting_to_enable_access_to_camera">Необходимо перейти в настройки, чтобы предоставить доступ</string>
+    <string name="enter_manually">Ввести вручную</string>
+    <string name="done">Готово</string>
+    <string name="code">Код</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="leave_number">Оставить номер</string>
+    <string name="phone">Телефон</string>
+    <string name="code_not_found">К сожалению, такой\nкод не найден</string>
+    <string name="leave_phone_number">Если вы уверены, что ваш код верный, обратитесь в управляющую компанию или оставьте ваш номер телефона и мы вам перезвоним</string>
+    <string name="leave_phone_number_we_will_call">Оставьте номер телефона и мы свяжемся с вами</string>
+    <string name="enter_code_from_company">Введите код полученный от управляющей компании</string>
+    <string name="please_wait">Пожалуйста, подождите</string>
+
+    <string name="your_application_is_accepted">Ваша заявка принята</string>
+    <string name="we_will_contact_shortly">Мы свяжемся с вами в ближайшее время</string>
+    <string name="good">Хорошо</string>
+    <string name="settings">Настройки</string>
+
+    <string name="my_home">Мой дом</string>
+    <string name="resources">Ресурсы</string>
+    <string name="cameras">Видеокамеры</string>
+    <string name="other">Другое</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="see_all">Посмотреть все</string>
+    <string name="electric_energy">Электроэнергия</string>
+
+    <string-array name="cameras_names">
+        <item>Задний двор</item>
+        <item>Подъезд</item>
+        <item>Гостиная</item>
+    </string-array>
+
+    <string-array name="electric_energy_names">
+        <item>Статистика за месяц</item>
+        <item>Статистика за неделю</item>
+        <item>Статистика за день</item>
+        <item>В текущий момент</item>
+    </string-array>
+
+    <string name="current_energy_power">Потребление\nв данный момент</string>
+    <string name="today">Сегодня</string>
+    <string name="this_week">Текущая неделя</string>
+    <string name="this_month">Текущий месяц</string>
+
+    <string name="electric_energy_this_month">Статистика за месяц</string>
+    <string name="electric_energy_this_week">Статистика за неделю</string>
+    <string name="electric_energy_this_day">Статистика за день</string>
+    <string name="electric_energy_current">В текущий момент</string>
+
+    <string name="no_connection_with_internet">Нет соединения с интернетом</string>
+    <string name="connecting_with_internet">Подключаемся</string>
+    <string name="connected_with_internet">Подключено</string>
+
+    <string name="rub">&#8381;</string>
+    <string name="rub_hour">&#8381;/ч</string>
+
+    <string name="short_energy_measure">%.0f кВт•ч</string>
+    <string name="energy_measure">%.1f кВт•ч</string>
+
+    <string name="camera_online">В эфире</string>
+    <string name="camera_offline">Не в эфире</string>
+
+    <string name="appeal">Обращение</string>
+    <string name="appeal_from_category">Обращение от пользователя МойДом - %s</string>
+    <string name="send">Отправить</string>
+
+    <string name="category">Категория</string>
+    <string name="chose_category">Выберите категорию</string>
+    <string name="chose_reason">Выберите причину</string>
+
+    <string name="cancel">Отмена</string>
+
+    <string name="attach_photo">Прикрепить фото</string>
+    <string name="what_the_problem_you_have">Какая проблема у вас возникла?</string>
+    <string name="day">День</string>
+    <string name="week">Неделя</string>
+    <string name="month">Месяц</string>
+    <string name="year">Год</string>
+    <string name="energy_label">Электроэнергия</string>
+    <string name="short_rub_measure">%.0f &#8381;</string>
+    <string name="rub_measure">%.1f &#8381;</string>
+    <string name="total">Всего</string>
+    <string name="average">В среднем</string>
+
+    <string name="select_file">Выбрать файл</string>
+    <string name="select_photo">Сделать фото</string>
+
+    <string name="no_camera">На Вашем устройстве отсутствует камера</string>
+
+    <string name="chose_picture">Выберите фото</string>
+    <string name="gallery_permission">Для просмотра фотографий из галереи, небходимо разрешение.</string>
+    <string name="gallery_permission_request">Откройте разрешения и добавьте разрешение на доступ к памяти.</string>
+
+    <string name="apply_to_support">Обратиться в поддержку</string>
+
+    <string name="intercom">Домофон</string>
+    <string name="notifications">Уведомления</string>
+    <string name="my_target">Моя цель</string>
+
+    <string name="change_target">Изменить цель</string>
+    <string name="new_target">Новая цель</string>
+
+    <string name="how_many_you_want_to_pay_for_energy">Сколько вы хотите тратить на электроэнергию ежемесячно?</string>
+
+    <string name="energy_less_percent">На %d%% меньше чем сейчас</string>
+    <string name="about_cost_of_your">≈ %d&#8381;</string>
+    <string name="prediction">Прогноз</string>
+    <string name="share_usage">Поделиться статистикой</string>
+
+    <string name="next">Далее</string>
+    <string name="look_who_come_open_door">Смотри, кто к тебе пришел и открывай дверь, где бы ты ни был!</string>
+    <string name="videophone">Видеофон</string>
+
+    <string name="categories_loading">Подождите, категории загружаются…</string>
+
+    <string name="send_appeal_with_email">Отправьте обращение через почтовый клиент</string>
+
+    <string name="no_data_for_period"><![CDATA[Нет данных за выбранный период]]></string>
+    <string name="no_data">Нет данных</string>
+
 </resources>

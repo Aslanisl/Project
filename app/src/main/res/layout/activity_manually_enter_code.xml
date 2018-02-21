@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.livetyping.moydom.ui.activity.authorization.ManuallyEnterCodeActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/activity_manually_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Gray12LeftRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal"
+            android:alpha="0.54"
+            android:text="@string/enter_code_from_company"/>
+
+        <EditText
+            android:id="@+id/activity_manually_code_edit"
+            style="@style/Gray16LeftRg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:hint="@string/code"
+            android:imeOptions="actionDone"
+            android:inputType="textNoSuggestions|textVisiblePassword"/>
+
+    </LinearLayout>
+
+</LinearLayout>

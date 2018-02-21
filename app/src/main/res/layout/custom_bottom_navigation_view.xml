@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFF9F9F9"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:id="@+id/custom_bottom_view_my_home"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingBottom="@dimen/padding_tiny">
+
+        <ImageView
+            android:id="@+id/custom_bottom_view_my_home_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:src="@drawable/home_inactive"/>
+
+        <TextView
+            android:id="@+id/custom_bottom_view_my_home_text"
+            style="@style/Gray12CenteredRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_bottom_view_my_home_icon"
+            android:layout_centerHorizontal="true"
+            android:text="@string/my_home"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/custom_bottom_view_resources"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingBottom="@dimen/padding_tiny">
+
+        <ImageView
+            android:id="@+id/custom_bottom_view_resources_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:src="@drawable/resources_inactive"/>
+
+        <TextView
+            android:id="@+id/custom_bottom_view_resources_text"
+            style="@style/Gray12CenteredRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_bottom_view_resources_icon"
+            android:layout_centerHorizontal="true"
+            android:text="@string/resources"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/custom_bottom_view_cameras"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingBottom="@dimen/padding_tiny">
+
+        <ImageView
+            android:id="@+id/custom_bottom_view_cameras_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:src="@drawable/cameras_inactive"/>
+
+        <TextView
+            android:id="@+id/custom_bottom_view_cameras_text"
+            style="@style/Gray12CenteredRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_bottom_view_cameras_icon"
+            android:layout_centerHorizontal="true"
+            android:text="@string/cameras"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/custom_bottom_view_other"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?selectableItemBackgroundBorderless"
+        android:paddingBottom="@dimen/padding_tiny">
+
+        <ImageView
+            android:id="@+id/custom_bottom_view_other_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/spacing_tiny"
+            android:src="@drawable/more_inactive"/>
+
+        <TextView
+            android:id="@+id/custom_bottom_view_other_text"
+            style="@style/Gray12CenteredRg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/custom_bottom_view_other_icon"
+            android:layout_centerHorizontal="true"
+            android:text="@string/other"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
