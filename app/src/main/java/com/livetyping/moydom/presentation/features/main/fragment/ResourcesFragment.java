@@ -37,7 +37,7 @@ import static com.livetyping.moydom.api.Api.API_RETRY_CALL_COUNT;
 import static com.livetyping.moydom.api.Api.API_RETRY_CALL_TIME;
 import static com.livetyping.moydom.apiModel.advice.AdviceModel.STATUS_READED;
 
-public class ResourcesFragment extends BaseFragment implements EnergyRepository.EnergyCallback{
+public class ResourcesFragment extends BaseMainFragment implements EnergyRepository.EnergyCallback{
     public static final String TAG = ResourcesFragment.class.getSimpleName();
 
     @BindView(R.id.fragment_resources_recycler) RecyclerView mResourcesRecycler;

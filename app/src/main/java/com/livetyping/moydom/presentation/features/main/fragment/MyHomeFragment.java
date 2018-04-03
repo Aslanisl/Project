@@ -1,6 +1,7 @@
 package com.livetyping.moydom.presentation.features.main.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import com.livetyping.moydom.presentation.features.myHomeSettings.activity.Setti
 import com.livetyping.moydom.presentation.features.main.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.presentation.features.main.adapter.EnergyMyHomeAdapter;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
+import com.livetyping.moydom.presentation.utils.SelectMenuItemListener;
 
 import java.util.List;
 
@@ -40,7 +42,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static android.app.Activity.RESULT_OK;
 
-public class MyHomeFragment extends BaseFragment implements EnergyRepository.EnergyCallback, CamerasRepository.CamerasCallback{
+public class MyHomeFragment extends BaseMainFragment implements EnergyRepository.EnergyCallback, CamerasRepository.CamerasCallback{
     public static final String TAG = MyHomeFragment.class.getSimpleName();
 
     private static final int SETTINGS_REQUEST_CODE = 2;
@@ -144,18 +146,14 @@ public class MyHomeFragment extends BaseFragment implements EnergyRepository.Ene
 
     @OnClick(R.id.fragment_my_home_cameras_all)
     void showAllCameras(){
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity){
-            ((MainActivity) activity).selectItemId(CustomBottomNavigationView.Item.ITEM_CAMERAS);
-        }
+        selectMenuItem(CustomBottomNavigationView.Item.ITEM_CAMERAS);
+
     }
 
     @OnClick(R.id.fragment_my_home_energy_all)
     void showAllEnergy(){
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity){
-            ((MainActivity) activity).selectItemId(CustomBottomNavigationView.Item.ITEM_RESOURCES);
-        }
+        selectMenuItem(CustomBottomNavigationView.Item.ITEM_RESOURCES);
+
     }
 
     @Override

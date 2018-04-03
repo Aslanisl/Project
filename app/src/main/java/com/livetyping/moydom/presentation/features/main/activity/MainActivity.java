@@ -13,15 +13,17 @@ import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
 import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView.Item;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
+import com.livetyping.moydom.presentation.features.main.fragment.BaseMainFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.CamerasFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.MyHomeFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.OtherFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.ResourcesFragment;
+import com.livetyping.moydom.presentation.utils.SelectMenuItemListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements CustomBottomNavigationView.OnItemClickListener{
+public class MainActivity extends BaseActivity implements CustomBottomNavigationView.OnItemClickListener, SelectMenuItemListener {
     @BindView(R.id.main_activity_container) RelativeLayout mContainer;
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.bottom_navigation_view) CustomBottomNavigationView mBottomNavigationView;
@@ -39,12 +41,13 @@ public class MainActivity extends BaseActivity implements CustomBottomNavigation
 
         mBottomNavigationView.setItemClickListener(this);
 
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             mBottomNavigationView.selectItem(Item.ITEM_MY_HOME);
         }
     }
 
-    public void selectItemId(Item item){
+    @Override
+    public void selectItemId(Item item) {
         mBottomNavigationView.selectItem(item);
     }
 
@@ -52,7 +55,7 @@ public class MainActivity extends BaseActivity implements CustomBottomNavigation
     public void onItemSelected(Item item) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        BaseFragment fragment = null;
+        BaseMainFragment fragment = null;
         String tag = null;
 
         String toolBarTitle = null;
@@ -82,8 +85,8 @@ public class MainActivity extends BaseActivity implements CustomBottomNavigation
         fragmentTransaction.replace(R.id.main_activity_fragment_container, fragment, tag);
         fragmentTransaction.commit();
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            if (toolBarTitle == null){
+        if (actionBar != null) {
+            if (toolBarTitle == null) {
                 actionBar.setTitle(" ");
                 actionBar.setIcon(R.drawable.logotype);
             } else {

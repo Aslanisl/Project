@@ -22,7 +22,7 @@ import butterknife.Unbinder;
 
 import static android.app.Activity.RESULT_OK;
 
-public class OtherFragment extends BaseFragment {
+public class OtherFragment extends BaseMainFragment {
     public static final String TAG = OtherFragment.class.getSimpleName();
 
     private static final int REQUEST_CODE_SEND_APPEAL = 1;
@@ -65,11 +65,7 @@ public class OtherFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_SEND_APPEAL && resultCode == RESULT_OK){
-            Activity activity = getActivity();
-            if (activity instanceof MainActivity){
-                AlertDialogUtils.showAlertDone(activity);
-                ((MainActivity) activity).selectItemId(CustomBottomNavigationView.Item.ITEM_MY_HOME);
-            }
+            selectMenuItem(CustomBottomNavigationView.Item.ITEM_MY_HOME);
         }
     }
 

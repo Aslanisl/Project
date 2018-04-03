@@ -12,7 +12,7 @@ import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class CamerasFragment extends BaseFragment {
+public class CamerasFragment extends BaseMainFragment {
     public static final String TAG = CamerasFragment.class.getSimpleName();
 
     private Unbinder mUnbinder;
