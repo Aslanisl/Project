@@ -10,28 +10,28 @@
 
     <include layout="@layout/toolbar"/>
 
-    <com.livetyping.moydom.presentation.features.base.custom.SelectListView
+    <com.livetyping.moydom.presentation.base.custom.SelectListView
         android:id="@+id/activity_other_settings_intercom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:selectText="@string/intercom">
 
-    </com.livetyping.moydom.presentation.features.base.custom.SelectListView>
+    </com.livetyping.moydom.presentation.base.custom.SelectListView>
 
-    <com.livetyping.moydom.presentation.features.base.custom.SelectListView
+    <com.livetyping.moydom.presentation.base.custom.SelectListView
         android:id="@+id/activity_other_settings_notifications"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:selectText="@string/notifications">
 
-    </com.livetyping.moydom.presentation.features.base.custom.SelectListView>
+    </com.livetyping.moydom.presentation.base.custom.SelectListView>
 
-    <com.livetyping.moydom.presentation.features.base.custom.SelectListView
+    <com.livetyping.moydom.presentation.base.custom.SelectListView
         android:id="@+id/activity_other_settings_my_target"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:selectText="@string/my_target">
 
-    </com.livetyping.moydom.presentation.features.base.custom.SelectListView>
+    </com.livetyping.moydom.presentation.base.custom.SelectListView>
 
 </LinearLayout>
