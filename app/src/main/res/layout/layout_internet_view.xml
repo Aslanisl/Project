@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.livetyping.moydom.presentation.features.base.custom.InternetView
+<com.livetyping.moydom.presentation.base.custom.InternetView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/internet_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-</com.livetyping.moydom.presentation.features.base.custom.InternetView>
+    android:layout_height="wrap_content"/>

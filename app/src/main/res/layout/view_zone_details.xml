@@ -62,7 +62,7 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
-            <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+            <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                 android:id="@+id/zone_total_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -98,7 +98,7 @@
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
-            <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+            <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                 android:id="@+id/zone_average_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -23,11 +23,11 @@ import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.CamerasRepository;
 import com.livetyping.moydom.data.repository.EnergyRepository;
+import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.presentation.features.main.activity.MainActivity;
 import com.livetyping.moydom.presentation.features.myHomeSettings.activity.SettingsActivity;
 import com.livetyping.moydom.presentation.features.main.adapter.CameraMyHomeAdapter;
 import com.livetyping.moydom.presentation.features.main.adapter.EnergyMyHomeAdapter;
-import com.livetyping.moydom.presentation.features.base.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 
 import java.util.List;

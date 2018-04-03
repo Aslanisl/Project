@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.presentation.features.main.activity.MainActivity;
 import com.livetyping.moydom.presentation.features.appeal.activity.AppealActivity;
 import com.livetyping.moydom.presentation.features.otherSettings.activity.OtherSettingsActivity;
-import com.livetyping.moydom.presentation.features.base.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 import com.livetyping.moydom.presentation.utils.AlertDialogUtils;
 

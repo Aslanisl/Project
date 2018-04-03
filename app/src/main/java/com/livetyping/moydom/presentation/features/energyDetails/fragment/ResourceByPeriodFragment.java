@@ -29,12 +29,12 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.apiModel.energy.model.GraphEnergyModel;
 import com.livetyping.moydom.data.repository.EnergyRepository;
+import com.livetyping.moydom.presentation.base.custom.ChartDataRenderer;
+import com.livetyping.moydom.presentation.base.custom.MyMarkerView;
+import com.livetyping.moydom.presentation.base.custom.SwipeableTextView;
+import com.livetyping.moydom.presentation.base.custom.ZoneDetailsView;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 import com.livetyping.moydom.presentation.features.myHomeSettings.model.EnergySwitchModel;
-import com.livetyping.moydom.presentation.features.base.custom.ChartDataRenderer;
-import com.livetyping.moydom.presentation.features.base.custom.MyMarkerView;
-import com.livetyping.moydom.presentation.features.base.custom.SwipeableTextView;
-import com.livetyping.moydom.presentation.features.base.custom.ZoneDetailsView;
 import com.livetyping.moydom.presentation.utils.CalendarUtils;
 import com.livetyping.moydom.presentation.utils.GlideApp;
 

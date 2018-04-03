@@ -1,4 +1,4 @@
-package com.livetyping.moydom.presentation.features.base.custom;
+package com.livetyping.moydom.presentation.base.custom;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

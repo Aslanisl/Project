@@ -10,9 +10,9 @@ import android.view.View;
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.AverageEnergyCostRepository;
+import com.livetyping.moydom.presentation.base.custom.CustomButtonView;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
 import com.livetyping.moydom.presentation.features.main.activity.MainActivity;
-import com.livetyping.moydom.presentation.features.base.custom.CustomButtonView;
 import com.livetyping.moydom.presentation.features.otherSettings.MyTargetRecyclerAdapter;
 
 import butterknife.BindView;

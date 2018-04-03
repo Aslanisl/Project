@@ -9,9 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.widget.RelativeLayout;
 
 import com.livetyping.moydom.R;
+import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
-import com.livetyping.moydom.presentation.features.base.custom.CustomBottomNavigationView;
-import com.livetyping.moydom.presentation.features.base.custom.CustomBottomNavigationView.Item;
+import com.livetyping.moydom.presentation.base.custom.CustomBottomNavigationView.Item;
 import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.CamerasFragment;
 import com.livetyping.moydom.presentation.features.main.fragment.MyHomeFragment;

@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.api.ServerCallback;
-import com.livetyping.moydom.presentation.features.base.custom.CustomButtonView;
-import com.livetyping.moydom.presentation.features.base.custom.InternetView;
+import com.livetyping.moydom.presentation.base.custom.CustomButtonView;
+import com.livetyping.moydom.presentation.base.custom.InternetView;
 import com.livetyping.moydom.presentation.utils.GlideApp;
 import com.livetyping.moydom.presentation.utils.HelpUtils;
 
@@ -23,7 +23,7 @@ import com.livetyping.moydom.presentation.utils.HelpUtils;
  * Created by Ivan on 25.11.2017.
  */
 
-public class BaseActivity extends AppCompatActivity implements ServerCallback{
+public abstract class BaseActivity extends AppCompatActivity implements ServerCallback{
 
     private static final int LOADING_CONTAINER_WIDTH_HEIGHT_NORMAL = 80;
     private static final int LOADING_CONTAINER_WIDTH_HEIGHT_SMALL = 64;

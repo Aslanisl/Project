@@ -95,7 +95,7 @@
                     android:layout_centerVertical="true"
                     android:orientation="vertical"
                     android:paddingStart="@dimen/padding_normal">
-                    <com.livetyping.moydom.presentation.features.base.custom.SwipeableTextView
+                    <com.livetyping.moydom.presentation.base.custom.SwipeableTextView
                         android:id="@+id/header_type"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -164,7 +164,7 @@
                             android:textColor="#61000000"
                             android:textSize="16sp"
                             android:textStyle="normal"/>
-                        <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+                        <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                             android:id="@+id/total_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -177,7 +177,7 @@
                             app:secondPartTextSize="20sp"
                             app:withSpace="false"/>
 
-                        <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+                        <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                             android:id="@+id/total_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -204,7 +204,7 @@
                             android:textColor="#61000000"
                             android:textSize="16sp"
                             android:textStyle="normal"/>
-                        <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+                        <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                             android:id="@+id/average_cost"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
                             app:firstPartTextSize="32sp"
                             app:secondPartTextSize="20sp"
                             app:withSpace="false"/>
-                        <com.livetyping.moydom.presentation.features.base.custom.MultisizeTextView
+                        <com.livetyping.moydom.presentation.base.custom.MultisizeTextView
                             android:id="@+id/average_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

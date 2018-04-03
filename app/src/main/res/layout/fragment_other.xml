@@ -8,20 +8,16 @@
     android:orientation="vertical"
     tools:context="com.livetyping.moydom.presentation.features.main.fragment.OtherFragment">
 
-    <com.livetyping.moydom.presentation.features.base.custom.SelectListView
+    <com.livetyping.moydom.presentation.base.custom.SelectListView
         android:id="@+id/fragment_other_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:selectText="@string/settings">
+        app:selectText="@string/settings"/>
 
-    </com.livetyping.moydom.presentation.features.base.custom.SelectListView>
-
-    <com.livetyping.moydom.presentation.features.base.custom.SelectListView
+    <com.livetyping.moydom.presentation.base.custom.SelectListView
         android:id="@+id/fragment_other_appeal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:selectText="@string/apply_to_support">
-
-    </com.livetyping.moydom.presentation.features.base.custom.SelectListView>
+        app:selectText="@string/apply_to_support"/>
 
 </LinearLayout>
