@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.authorization.LauncherActivity"
+            android:name=".presentation.features.authorization.LauncherActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -24,42 +24,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name=".presentation.features.main.activity.MainActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.authorization.QrScannerActivity"
+            android:name=".presentation.features.authorization.QrScannerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.FullScreen">
         </activity>
         <activity
-            android:name=".ui.activity.authorization.CameraPermissionActivity"
+            android:name=".presentation.features.authorization.CameraPermissionActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.authorization.ManuallyEnterCodeActivity"
+            android:name=".presentation.features.authorization.ManuallyEnterCodeActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.authorization.EnterPhoneActivity"
+            android:name=".presentation.features.authorization.EnterPhoneActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.authorization.CodeNotFoundActivity"
+            android:name=".presentation.features.authorization.CodeNotFoundActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.settings.SettingsActivity"
+            android:name=".presentation.features.myHomeSettings.activity.SettingsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.appeal.AppealActivity"
+            android:name=".presentation.features.appeal.activity.AppealActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
         </activity>
 
         <provider
-            android:name=".utils.MyFileProvider"
+            android:name=".presentation.utils.MyFileProvider"
             android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -70,11 +70,11 @@
         </provider>
 
         <activity
-            android:name=".ui.activity.appeal.AppealCategoryActivity"
+            android:name=".presentation.features.appeal.activity.AppealCategoryActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.appeal.AppealSelectCategoryActivity"
+            android:name=".presentation.features.appeal.activity.AppealSelectCategoryActivity"
             android:screenOrientation="portrait">
         </activity>
 
@@ -83,22 +83,22 @@
             android:value="ce2a0f98edaf0ce615ae2f127e3ee80aff9ade97"/>
 
         <activity
-            android:name=".ui.activity.otherSettings.OtherSettingsActivity"
+            android:name=".presentation.features.otherSettings.activity.OtherSettingsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.otherSettings.MyTargetActivity"
+            android:name=".presentation.features.otherSettings.activity.MyTargetActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.otherSettings.NewTargetActivity"
+            android:name=".presentation.features.otherSettings.activity.NewTargetActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".ui.activity.ResourcesActivity"
+            android:name=".presentation.features.energyDetails.activity.ResourcesActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.activity.authorization.OnboardingActivity">
+        <activity android:name=".presentation.features.authorization.OnboardingActivity">
         </activity>
     </application>
 

@@ -2,7 +2,7 @@ package com.livetyping.moydom.apiModel.energy.model;
 
 import android.util.Log;
 
-import com.livetyping.moydom.utils.CalendarUtils;
+import com.livetyping.moydom.presentation.utils.CalendarUtils;
 
 import java.util.ArrayList;
 import java.util.List;

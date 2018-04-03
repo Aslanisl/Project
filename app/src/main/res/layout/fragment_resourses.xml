@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:clipToPadding="false"
-    tools:context="com.livetyping.moydom.ui.fragment.mainScreen.ResourcesFragment">
+    tools:context="com.livetyping.moydom.presentation.features.main.fragment.ResourcesFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

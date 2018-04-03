@@ -14,8 +14,8 @@ import com.livetyping.moydom.apiModel.energy.response.CurrentEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.GraphEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.MonthEnergyResponse;
 import com.livetyping.moydom.apiModel.energy.response.WeekEnergyResponse;
-import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.ui.fragment.BaseFragment;
+import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
+import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;

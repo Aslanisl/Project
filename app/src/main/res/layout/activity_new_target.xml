@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.livetyping.moydom.ui.activity.otherSettings.NewTargetActivity">
+    tools:context=".presentation.features.otherSettings.activity.NewTargetActivity">
 
     <include layout="@layout/toolbar"/>
 
@@ -39,7 +39,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <com.livetyping.moydom.ui.custom.CustomButtonView
+        <com.livetyping.moydom.presentation.features.base.custom.CustomButtonView
             android:id="@+id/activity_new_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
             android:layout_marginBottom="@dimen/spacing_two_normal"
             app:buttonText="@string/done">
 
-        </com.livetyping.moydom.ui.custom.CustomButtonView>
+        </com.livetyping.moydom.presentation.features.base.custom.CustomButtonView>
 
     </RelativeLayout>
 

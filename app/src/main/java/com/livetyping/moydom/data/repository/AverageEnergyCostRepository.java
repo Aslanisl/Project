@@ -6,8 +6,8 @@ import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.api.ServerCallback;
 import com.livetyping.moydom.apiModel.myTarget.AverageEnergyCostResponse;
-import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.ui.fragment.BaseFragment;
+import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
+import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
 

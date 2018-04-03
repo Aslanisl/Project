@@ -5,20 +5,18 @@ import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.api.CallbackWrapper;
 import com.livetyping.moydom.api.RetryApiCallWithDelay;
 import com.livetyping.moydom.api.ServerCallback;
-import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.cameras.CameraModel;
 import com.livetyping.moydom.apiModel.cameras.CamerasResponse;
 import com.livetyping.moydom.data.Prefs;
-import com.livetyping.moydom.ui.activity.BaseActivity;
-import com.livetyping.moydom.ui.activity.settings.CamerasSwitchModel;
-import com.livetyping.moydom.ui.fragment.BaseFragment;
+import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
+import com.livetyping.moydom.presentation.features.myHomeSettings.model.CamerasSwitchModel;
+import com.livetyping.moydom.presentation.features.base.fragment.BaseFragment;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;

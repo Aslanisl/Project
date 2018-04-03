@@ -9,9 +9,9 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
-import com.livetyping.moydom.utils.CalendarUtils;
-import com.livetyping.moydom.utils.HelpUtils;
+import com.livetyping.moydom.presentation.features.myHomeSettings.model.EnergySwitchModel;
+import com.livetyping.moydom.presentation.utils.CalendarUtils;
+import com.livetyping.moydom.presentation.utils.HelpUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

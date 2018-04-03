@@ -7,8 +7,8 @@ import com.ironz.binaryprefs.BinaryPreferencesBuilder;
 import com.ironz.binaryprefs.Preferences;
 import com.livetyping.moydom.App;
 import com.livetyping.moydom.R;
-import com.livetyping.moydom.ui.activity.settings.CamerasSwitchModel;
-import com.livetyping.moydom.ui.activity.settings.EnergySwitchModel;
+import com.livetyping.moydom.presentation.features.myHomeSettings.model.CamerasSwitchModel;
+import com.livetyping.moydom.presentation.features.myHomeSettings.model.EnergySwitchModel;
 
 import java.util.ArrayList;
 import java.util.List;

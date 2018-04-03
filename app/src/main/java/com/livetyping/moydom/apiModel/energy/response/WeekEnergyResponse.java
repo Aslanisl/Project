@@ -4,13 +4,11 @@ import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.apiModel.Record;
 import com.livetyping.moydom.apiModel.energy.model.TodayEnergyModel;
 import com.livetyping.moydom.apiModel.energy.model.WeekEnergyModel;
-import com.livetyping.moydom.utils.CalendarUtils;
+import com.livetyping.moydom.presentation.utils.CalendarUtils;
 
 import org.simpleframework.xml.Root;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

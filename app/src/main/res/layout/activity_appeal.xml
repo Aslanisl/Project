@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.livetyping.moydom.ui.activity.appeal.AppealActivity">
+    tools:context=".presentation.features.appeal.activity.AppealActivity">
 
     <include layout="@layout/toolbar"/>
 

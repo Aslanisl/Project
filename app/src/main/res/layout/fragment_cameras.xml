@@ -2,7 +2,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="com.livetyping.moydom.ui.fragment.mainScreen.CamerasFragment">
+             tools:context="com.livetyping.moydom.presentation.features.main.fragment.CamerasFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
