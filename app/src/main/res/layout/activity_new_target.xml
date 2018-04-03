@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.features.otherSettings.activity.NewTargetActivity">
+    tools:context=".presentation.features.target.activity.NewTargetActivity">
 
     <include layout="@layout/toolbar"/>
 

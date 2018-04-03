@@ -1,4 +1,4 @@
-package com.livetyping.moydom.presentation.features.otherSettings.activity;
+package com.livetyping.moydom.presentation.features.target.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.data.repository.AverageEnergyCostRepository;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
-import com.livetyping.moydom.presentation.features.otherSettings.MyTargetRecyclerAdapter;
+import com.livetyping.moydom.presentation.features.target.adapter.MyTargetRecyclerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

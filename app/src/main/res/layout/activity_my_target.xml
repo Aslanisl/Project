@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white_gray"
     android:orientation="vertical"
-    tools:context=".presentation.features.otherSettings.activity.MyTargetActivity">
+    tools:context=".presentation.features.target.activity.MyTargetActivity">
 
     <include layout="@layout/toolbar"/>
 

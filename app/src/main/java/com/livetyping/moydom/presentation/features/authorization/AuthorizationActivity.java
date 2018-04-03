@@ -7,7 +7,7 @@ import com.livetyping.moydom.api.Api;
 import com.livetyping.moydom.api.ApiUrlService;
 import com.livetyping.moydom.apiModel.BaseModel;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
-import com.livetyping.moydom.presentation.features.otherSettings.activity.NewTargetActivity;
+import com.livetyping.moydom.presentation.features.target.activity.NewTargetActivity;
 import com.livetyping.moydom.presentation.features.base.fragment.NoInternetDialogFragment;
 import com.livetyping.moydom.data.Prefs;
 import com.livetyping.moydom.api.CallbackWrapper;

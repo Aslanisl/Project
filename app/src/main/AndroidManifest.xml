@@ -87,11 +87,11 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".presentation.features.otherSettings.activity.MyTargetActivity"
+            android:name=".presentation.features.target.activity.MyTargetActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".presentation.features.otherSettings.activity.NewTargetActivity"
+            android:name=".presentation.features.target.activity.NewTargetActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity

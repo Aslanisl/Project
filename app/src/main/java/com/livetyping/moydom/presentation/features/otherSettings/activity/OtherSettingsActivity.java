@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.livetyping.moydom.R;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
-import com.livetyping.moydom.presentation.features.otherSettings.activity.MyTargetActivity;
+import com.livetyping.moydom.presentation.features.target.activity.MyTargetActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -8,7 +8,7 @@ import com.livetyping.moydom.R;
 import com.livetyping.moydom.presentation.features.base.activity.BaseActivity;
 import com.livetyping.moydom.presentation.features.main.activity.MainActivity;
 import com.livetyping.moydom.data.Prefs;
-import com.livetyping.moydom.presentation.features.otherSettings.activity.NewTargetActivity;
+import com.livetyping.moydom.presentation.features.target.activity.NewTargetActivity;
 
 public class LauncherActivity extends BaseActivity {
 

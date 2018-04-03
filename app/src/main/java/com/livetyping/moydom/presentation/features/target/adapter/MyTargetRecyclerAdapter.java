@@ -1,4 +1,4 @@
-package com.livetyping.moydom.presentation.features.otherSettings;
+package com.livetyping.moydom.presentation.features.target.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
